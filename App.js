@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
+// import MyMap from './components/MyMap';
 
 const INIT_REGION = {
   latitude: 31.728371,
@@ -62,10 +63,11 @@ export default function App() {
       <Text key='location'>{text}</Text>
       <Button title={textButton}
         onPress={() => { setMyLocation() }} />
+      {/* <MyMap /> */}
       <MapView
         style={styles.mapStyle}
         region={region}
-        onRegionChange={(region) => onRegionChange(region )}
+        onRegionChangeComplete={(region) => onRegionChange(region )}
       />
     </View>
   );
