@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
+import MapView from 'react-native-maps';
 
 export default function App() {
   const [locationStatus, setLocationStatus] = useState(false);
@@ -44,6 +45,7 @@ export default function App() {
       <Text key='location'>{text}</Text>
       <Button title={textButton}
         onPress={() => { setMyLocation() }} />
+      <MapView style={styles.mapStyle} />
     </View>
   );
 }
@@ -54,5 +56,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  mapStyle: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height *0.7,
   },
 });
