@@ -1,10 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 export default function App() {
+  const [isGetLocation, setGetLocation] = React.useState(false);
+  const textStatus = (isGetLocation)? 'Getting Location' : 'No Location';
+  const textButton = (isGetLocation)? 'Stop Locating' : 'Start Locating';
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text key='status'>{textStatus}</Text>
+      <Button title={textButton} onPress={()=>setGetLocation(!isGetLocation)}/>
     </View>
   );
 }
