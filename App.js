@@ -22,7 +22,7 @@ export default function App() {
 
   const textStatus = (locationStatus) ? 'Getting Location' : 'No Location';
   const textButton = (locationStatus) ? 'Stop Locating' : 'Start Locating!';
-  function getLoaction1() {
+  function getLoaction() {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
@@ -44,7 +44,7 @@ export default function App() {
   }
   const setMyLocation = () => {
     setLocationStatus(!locationStatus);
-    getLoaction1();
+    getLoaction();
   }
   let text = 'Waiting..';
   if (errorMsg) {
