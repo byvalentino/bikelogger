@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
+import Header from './components/Header'
 // import MyMap from './components/MyMap';
 
 const INIT_REGION = {
@@ -59,6 +60,7 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
+      <Header />
       <Text key='status'>{textStatus}</Text>
       <Text key='location'>{text}</Text>
       <Button title={textButton}
