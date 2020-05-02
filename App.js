@@ -21,29 +21,23 @@ export default function App() {
   const [region, setRegion] = useState(INIT_REGION);
 
   const textStatus = (locationStatus) ? 'Getting Location' : 'No Location';
-  const textButton = (locationStatus) ? 'Stop Locating' : 'Start Locating';
+  const textButton = (locationStatus) ? 'Stop Locating' : 'Start Locating!';
   function getLoaction1() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      setErrorMsg(
-        'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
-      );
-    } else {
-      (async () => {
-        let { status } = await Location.requestPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-        }
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-        const newRegion = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01
-        };
-        setRegion(newRegion);
-      })();
-    }
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      const newRegion = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01
+      };
+      setRegion(newRegion);
+    })();
   }
   const onRegionChange = (region) => {
     setRegion(region);
@@ -69,7 +63,7 @@ export default function App() {
       <MapView
         style={styles.mapStyle}
         region={region}
-        onRegionChangeComplete={(region) => onRegionChange(region )}
+        onRegionChangeComplete={(region) => onRegionChange(region)}
       />
     </View>
   );
