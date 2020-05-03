@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -40,6 +40,7 @@ export default class MyMap2 extends Component {
             region: null,
             error: '',
             grantedLocation: false,
+            location: null,
         };
     }
 
@@ -65,7 +66,7 @@ export default class MyMap2 extends Component {
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01
                 };
-                this.setState({ region: region });
+                this.setState(() => ({ region: region, location: newLocation }));
             },
             error => console.log(error)
         );
@@ -76,10 +77,10 @@ export default class MyMap2 extends Component {
         // Asking for device location permission
         const { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status === "granted") {
+            this.setState({ grantedLocation: true });
             this.getLocationAsync();
-            this.setState({grantedLocation: true});
         } else {
-            this.setState({ error: "Locations services needed" });
+            this.setState(() => ({ error: "Locations services needed", grantedLocation: false }));
         }
         //userId = (await AsyncStorage.getItem("userId")) || "none";
         //userName = (await AsyncStorage.getItem("userName")) || "none";
@@ -93,18 +94,28 @@ export default class MyMap2 extends Component {
             console.log(status);
         }
     }
+    // this.text = 'Waiting..';
+    // if (this.state.error) {
+    //     this.text = this.state.error;
+    // } else if (this.state.location) {
+    //     this.text = JSON.stringify(this.state.location);
+    // }
     render() {
         return (
-            <MapView
-                initialRegion={this.state.region}
-                showsCompass={true}
-                showsUserLocation={this.state.grantedLocation}
-                rotateEnabled={true}
-                ref={map => {
-                    this.map = map;
-                }}
-                style={styles.mapStyle2}
-            />
+            <View>
+                <MapView
+                    initialRegion={this.state.region}
+                    showsCompass={true}
+                    showsUserLocation={this.state.grantedLocation}
+                    rotateEnabled={true}
+                    ref={map => {
+                        this.map = map;
+                    }}
+                    style={styles.mapStyle2}
+                />
+                <Text style={{paddingTop:10}} key='location'>{JSON.stringify(this.state.location)}</Text>
+            </View>
+
         );
     }
 }
@@ -120,7 +131,7 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * 1,
     },
     mapStyle2: {
-        width:'100%', 
-        height:'80%',
+        width: '100%',
+        height: '80%',
     },
 });
