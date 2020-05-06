@@ -9,6 +9,8 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+constants/ApyKeys.js
 
 # macOS
 .DS_Store
+

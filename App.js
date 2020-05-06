@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
+import * as FireBase from 'firebase';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
-import Header from './components/Header'
+
+import ApyKeys from './constants/ApyKeys';
+import Header from './components/Header';
 import MyMap2 from './components/MyMap2';
 
 const INIT_REGION = {
@@ -13,12 +16,21 @@ const INIT_REGION = {
   longitudeDelta: 1,
 }
 
+const initDataBase =() =>{
+  if (!FireBase.apps.length)
+    FireBase.initializeApp(ApyKeys.FireBaseConfig);
+}
+
 export default function App() {
   const [locationStatus, setLocationStatus] = useState(false);
   const [textLocation, setTextLocation] = useState('');
   const [errorMsg, setErrorMsg] = useState(null);
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(INIT_REGION);
+
+  useEffect(() => {
+    initDataBase();
+  }, []);
 
   const textStatus = (locationStatus) ? 'Getting Location' : 'No Location';
   const textButton = (locationStatus) ? 'Stop Locating' : 'Start Locating';
