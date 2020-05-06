@@ -72,8 +72,7 @@ export default class MyMap2 extends Component {
         );
         return this.location;
     };
-
-    async componentDidMount() {
+    startServiceLocation = async() =>{
         // Asking for device location permission
         const { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status === "granted") {
@@ -85,7 +84,7 @@ export default class MyMap2 extends Component {
         //userId = (await AsyncStorage.getItem("userId")) || "none";
         //userName = (await AsyncStorage.getItem("userName")) || "none";
     }
-    async componentWillUnmount() {
+    endServiceLocation = async() =>{
         try {
             const status = await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
             if (status != undefined)
@@ -94,12 +93,13 @@ export default class MyMap2 extends Component {
             console.log(status);
         }
     }
-    // this.text = 'Waiting..';
-    // if (this.state.error) {
-    //     this.text = this.state.error;
-    // } else if (this.state.location) {
-    //     this.text = JSON.stringify(this.state.location);
-    // }
+
+    async componentDidMount() {
+        this.startServiceLocation();
+    }
+    async componentWillUnmount() {
+        this.endServiceLocation();
+    }
     render() {
         return (
             <View>
@@ -115,7 +115,6 @@ export default class MyMap2 extends Component {
                 />
                 <Text style={{paddingTop:10}} key='location'>{JSON.stringify(this.state.location)}</Text>
             </View>
-
         );
     }
 }
