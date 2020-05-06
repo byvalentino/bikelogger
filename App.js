@@ -5,20 +5,15 @@ import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 
-import ApyKeys from './constants/ApyKeys';
 import Header from './components/Header';
 import MyMap2 from './components/MyMap2';
+import {addUser} from './services/FirestoreService';
 
 const INIT_REGION = {
   latitude: 31.728371,
   longitude: 35.040161,
   latitudeDelta: 1,
   longitudeDelta: 1,
-}
-
-const initDataBase =() =>{
-  if (!FireBase.apps.length)
-    FireBase.initializeApp(ApyKeys.FireBaseConfig);
 }
 
 export default function App() {
@@ -29,7 +24,7 @@ export default function App() {
   const [region, setRegion] = useState(INIT_REGION);
 
   useEffect(() => {
-    initDataBase();
+    // addUser('david shalom', 'david.shalom@gmail.com');
   }, []);
 
   const textStatus = (locationStatus) ? 'Getting Location' : 'No Location';
