@@ -85,7 +85,11 @@ export default function MapForegroundLocation(initRegion) {
                 style={styles.mapStyle}
             />
             <Text style={styles.text}>{JSON.stringify(myState.location)}</Text>
-            <Button title={textButton} onPress={() => { setLocationStaus() }} />
+            <View style={styles.buttonContainer}>
+                <Button title={textButton} onPress={() => { setLocationStaus() }} />
+                <Button title="Add Route" onPress={() => { sendRoute() }} />
+            </View>
+            
         </View>
     );
 }
@@ -96,5 +100,31 @@ const styles = StyleSheet.create({
     },
     text: {
         paddingTop: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     }
 });
+
+const sendRoute = () => {
+    const geojsonRoute = {
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": [
+                [100.0, 0.0],
+                [101.0, 1.0]
+            ]
+        },
+        "properties": {
+            "name": "Route1",
+            "startDate": "Fri May  8 06:29:50 2020",
+            "times": [
+                "Fri May  8 06:29:50 2020",
+                "Fri May  8 06:29:55 2020"
+            ]
+        }
+    };
+    console.log(geojsonRoute);
+}

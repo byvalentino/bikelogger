@@ -7,7 +7,7 @@ import MapView from 'react-native-maps';
 
 import Header from './components/Header';
 import MapForegroundLocation from './components/MapForegroundLocation';
-import {addUser} from './services/FirestoreService';
+// import {addUser} from './services/FirestoreService';
 
 const INIT_REGION = {
   latitude: 31.728371,
