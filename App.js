@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 
 import Header from './components/Header';
-import MyMap from './components/MyMap';
+import MapForegroundLocation from './components/MapForegroundLocation';
 import {addUser} from './services/FirestoreService';
 
 const INIT_REGION = {
@@ -71,7 +71,7 @@ export default function App() {
           onPress={() => { setMyLocation() }} />
       </View> */}
         <Header/>
-        <MyMap />
+        <MapForegroundLocation />
       
         {/* <MapView
         region={region}
