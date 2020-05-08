@@ -13,5 +13,7 @@ const db = firebase.firestore();
 //   };
 
 export const addRoute = (route) => {
-    const userRef = db.collection("routes").add(route); 
-  };
+  db.collection("routes").doc("one").set(route).then(function () {
+    console.log("Document successfully written!");
+  });
+};

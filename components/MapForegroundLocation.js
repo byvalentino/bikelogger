@@ -3,6 +3,8 @@ import { View, Text, Button, StyleSheet, Dimensions, } from 'react-native';
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import * as firebase from 'firebase'
+import {addRoute} from '../services/FirestoreService';
 
 const INIT_REGION = {
     latitude: 31.728371,
@@ -108,23 +110,24 @@ const styles = StyleSheet.create({
 });
 
 const sendRoute = () => {
-    const geojsonRoute = {
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [
-                [100.0, 0.0],
-                [101.0, 1.0]
-            ]
-        },
-        "properties": {
-            "name": "Route1",
-            "startDate": "Fri May  8 06:29:50 2020",
-            "times": [
+    const  geojsonRoute = {
+        type: "Feature",
+        properties: {
+            name: "Route1",
+            startDate: firebase.firestore.Timestamp.fromDate(new Date("December 10, 1815")),
+            times: [
                 "Fri May  8 06:29:50 2020",
                 "Fri May  8 06:29:55 2020"
             ]
+        },
+        geometry: {
+            type: "LineString",
+            coordinates: [
+              "[100.0, 0.0]",
+              "[101.0, 1.0]"  
+            ]
         }
-    };
+      };
     console.log(geojsonRoute);
+    addRoute(geojsonRoute);
 }
