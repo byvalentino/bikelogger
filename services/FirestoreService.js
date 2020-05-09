@@ -12,8 +12,8 @@ const db = firebase.firestore();
 //     }); 
 //   };
 
-export const addRoute = (route) => {
-  db.collection("routes").doc("one").set(route).then(function () {
+export const addRouteAsync = async (route, name) => {
+  await db.collection("routes").doc(name).set(route).then(function () {
     console.log("Document successfully written!");
   });
 };

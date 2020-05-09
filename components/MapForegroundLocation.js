@@ -3,11 +3,8 @@ import { View, Text, Button, StyleSheet, Dimensions, } from 'react-native';
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-
 import { inject, observer } from 'mobx-react';
-
 import LocationView from './LocationView';
-import {addRoute} from '../services/FirestoreService';
 
 const INIT_REGION = {
     latitude: 31.728371,
@@ -114,6 +111,5 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     }
 });
-
 
 export default inject("store")(observer(MapForegroundLocation));

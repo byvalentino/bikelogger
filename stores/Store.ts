@@ -1,6 +1,8 @@
 import { decorate, observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import * as firebase from 'firebase';
+import { addRouteAsync } from '../services/FirestoreService';
+//import 'intl';
 
 class Store {
     // observable to save search query
@@ -15,43 +17,56 @@ class Store {
 
     @action updatelocationData = (data: LocationData) => {
         this.locationData = data;
-        let { timestamp } = data;
-        let date = new Date(timestamp);
-        console.log(date.toLocaleString());
-        //console.log(this.locationData.coords);
         const point: number[] = [data.coords.latitude, data.coords.longitude];
         this.InsertToPointsArr(point);
-        
+        this.InsertToDatesArr(data.timestamp);
     }
 
-    @observable pointsArr:  any[] = [];
+    @observable pointsArr: any[] = [];
 
-    @action InsertToPointsArr =(point : number[]) => {
+    @action InsertToPointsArr = (point: number[]) => {
         this.pointsArr.push(point);
     }
 
+    @observable datesArr: Date[] = [];
+
+    @action InsertToDatesArr = (timestamp: number) => {
+        let date = new Date(timestamp);
+        this.datesArr.push(date);
+        console.log(date.toLocaleString());
+    }
+
     @action sendRoute = () => {
-        const  geojsonRoute = {
+        if (this.datesArr.length < 2)
+            return;
+        const times = this.datesArr.map(date => this.formatDate(date));
+        const coords = this.pointsArr.map(p => '[' + p.join() + ']');
+        const startTime = this.datesArr[0];
+        const endTime = new Date(Date.now());
+        const name = "route-" + this.formatDate(endTime);
+        const geojsonRoute = {
             type: "Feature",
             properties: {
-                name: "Route1",
-                startDate: firebase.firestore.Timestamp.fromDate(new Date("December 10, 1815")),
-                times: [
-                    "Fri May  8 06:29:50 2020",
-                    "Fri May  8 06:29:55 2020"
-                ]
+                name: name,
+                startDate: firebase.firestore.Timestamp.fromDate(startTime),
+                times: times
             },
             geometry: {
                 type: "LineString",
-                coordinates: [
-                  "[100.0, 0.0]",
-                  "[101.0, 1.0]"  
-                ]
+                coordinates: coords
             }
-          };
-        //console.log(geojsonRoute);
-        // console.log(this.pointsArr); 
-        //addRoute(geojsonRoute);
+        };
+        console.log(geojsonRoute);
+        addRouteAsync(geojsonRoute, name);
+    }
+
+    formatDate = (dt: Date) => {
+        return `${dt.getDate().toString().padStart(2, '0')}-${
+            (dt.getMonth() + 1).toString().padStart(2, '0')}-${
+            dt.getFullYear().toString().padStart(4, '0')},${
+            dt.getHours().toString().padStart(2, '0')}:${
+            dt.getMinutes().toString().padStart(2, '0')}:${
+            dt.getSeconds().toString().padStart(2, '0')}`;
     }
 }
 
