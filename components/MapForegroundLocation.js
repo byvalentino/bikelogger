@@ -3,7 +3,9 @@ import { View, Text, Button, StyleSheet, Dimensions, } from 'react-native';
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-import * as firebase from 'firebase'
+
+import { inject, observer } from 'mobx-react';
+
 import LocationView from './LocationView';
 import {addRoute} from '../services/FirestoreService';
 
@@ -14,7 +16,8 @@ const INIT_REGION = {
     longitudeDelta: 1,
 }
 // map and foregroundLocation using watchPositionAsync
-export default function MapForegroundLocation(initRegion) {
+function MapForegroundLocation(props,initRegion) {
+    const { updatelocationData , updateText , sendRoute} = props.store;
     const [myState, setMyState] = useState(
         {
             locationStatus: false,
@@ -36,8 +39,6 @@ export default function MapForegroundLocation(initRegion) {
             newLocation => {
                 let { coords, timestamp } = newLocation;
                 //console.log(coords);
-                let date = new Date(timestamp);
-                console.log(date.toLocaleString());
                 //TOD - write to local DB - update route
                 let region = {
                     latitude: coords.latitude,
@@ -45,6 +46,8 @@ export default function MapForegroundLocation(initRegion) {
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005
                 };
+                updatelocationData(newLocation);
+                updateText('locating...');
                 setMyState(prev => ({ ...prev, location: newLocation, region: region, }));
             },
             error => console.log(error)
@@ -69,7 +72,9 @@ export default function MapForegroundLocation(initRegion) {
             myState.watchPositionObject.remove();
             // console.log("stop locating")
         }
+        updateText('not locating');
         setMyState(prev => ({ ...prev, watchPositionObject: null, locationStatus: false }));
+        sendRoute();
     }
     const setLocationStaus = () => {
         if (!myState.locationStatus)
@@ -99,7 +104,7 @@ export default function MapForegroundLocation(initRegion) {
 const styles = StyleSheet.create({
     mapStyle: {
         width: '100%',
-        height: '80%',
+        height: '70%',
     },
     text: {
         paddingTop: 10,
@@ -110,25 +115,5 @@ const styles = StyleSheet.create({
     }
 });
 
-const sendRoute = () => {
-    const  geojsonRoute = {
-        type: "Feature",
-        properties: {
-            name: "Route1",
-            startDate: firebase.firestore.Timestamp.fromDate(new Date("December 10, 1815")),
-            times: [
-                "Fri May  8 06:29:50 2020",
-                "Fri May  8 06:29:55 2020"
-            ]
-        },
-        geometry: {
-            type: "LineString",
-            coordinates: [
-              "[100.0, 0.0]",
-              "[101.0, 1.0]"  
-            ]
-        }
-      };
-    console.log(geojsonRoute);
-    addRoute(geojsonRoute);
-}
+
+export default inject("store")(observer(MapForegroundLocation));
