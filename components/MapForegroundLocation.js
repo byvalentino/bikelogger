@@ -88,7 +88,6 @@ export default function MapForegroundLocation(initRegion) {
                 style={styles.mapStyle}
             />
             <LocationView location={myState.location}/>
-            <Text style={styles.text}>{JSON.stringify(myState.location)}</Text>
             <View style={styles.buttonContainer}>
                 <Button title={textButton} onPress={() => { setLocationStaus() }} />
                 <Button title="Add Route" onPress={() => { sendRoute() }} />

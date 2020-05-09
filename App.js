@@ -8,6 +8,7 @@ import MapView from 'react-native-maps';
 // imports Provider and store
 import { Provider } from 'mobx-react';
 import store from './stores/Store';
+import 'mobx-react-lite/batchingForReactNative';
 
 import Header from './components/Header';
 import MapForegroundLocation from './components/MapForegroundLocation';
