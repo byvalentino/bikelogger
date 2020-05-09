@@ -5,6 +5,10 @@ import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 
+// imports Provider and store
+import { Provider } from 'mobx-react';
+import store from './stores/Store';
+
 import Header from './components/Header';
 import MapForegroundLocation from './components/MapForegroundLocation';
 // import {addUser} from './services/FirestoreService';
@@ -60,26 +64,27 @@ export default function App() {
     text = JSON.stringify(location);
   }
   return (
-    <View style={styles.container1}>
-       {/* <View>
+    <Provider store={store}>
+      <View style={styles.container1}>
+        {/* <View>
         <Header />
       </View> */}
-      {/*<View>
+        {/*<View>
         <Text key='status'>{textStatus}</Text>
         <Text key='location'>{text}</Text>
         <Button title={textButton}
           onPress={() => { setMyLocation() }} />
       </View> */}
-        <Header/>
+        <Header />
         <MapForegroundLocation />
-      
+
         {/* <MapView
         region={region}
         onRegionChangeComplete={(region) => onRegionChange(region)}
         style={styles.mapStyle}
         /> */}
-      
-    </View>
+      </View>
+    </Provider>
   );
 }
 const styles = StyleSheet.create({
@@ -87,10 +92,10 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     flex: 1
   },
-  container1:{
-    width:'100%', 
-    height:'100%', 
-    paddingTop:30
+  container1: {
+    width: '100%',
+    height: '100%',
+    paddingTop: 30
   },
   mapStyle: {
     width: Dimensions.get('window').width,

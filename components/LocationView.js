@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { inject, observer } from 'mobx-react';
 
-export default function LocationView(props) {
-    const text = JSON.stringify(props.location);
+function LocationView(props) {
+    const { text } = props.store;
+    const textLocation = JSON.stringify(props.location);
     return (
         <View style={styles.view}>
             <Text>{text}</Text>
+            <Text>{textLocation}</Text>
         </View>
     );
 }
@@ -14,3 +17,4 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
 });
+export default inject("store")(observer(LocationView));
