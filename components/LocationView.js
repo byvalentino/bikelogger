@@ -14,7 +14,7 @@ function LocationView(props) {
 }
 const styles = StyleSheet.create({
     view: {
-        paddingTop: 10,
+        padding: 10,
     },
 });
 export default inject("store")(observer(LocationView));

@@ -1,10 +1,17 @@
 import { decorate, observable, action } from "mobx";
 import { LocationData } from "expo-location";
-import * as firebase from 'firebase';
+import { firestore } from 'firebase';
 import { addRouteAsync } from '../services/FirestoreService';
 //import 'intl';
 
 class Store {
+
+    @observable userId = '111';
+
+    @action updateUserId = (uid: string) => {
+        this.userId = uid;
+    }
+
     // observable to save search query
     @observable text = '';
 
@@ -28,6 +35,10 @@ class Store {
         this.pointsArr.push(point);
     }
 
+    @action initPointsArr = () => {
+        this.pointsArr = [];
+    }
+
     @observable datesArr: Date[] = [];
 
     @action InsertToDatesArr = (timestamp: number) => {
@@ -35,20 +46,23 @@ class Store {
         this.datesArr.push(date);
         console.log(date.toLocaleString());
     }
+    @action initDatesArr = () => {
+        this.datesArr = [];
+    }
 
     @action sendRoute = () => {
         if (this.datesArr.length < 2)
             return;
         const times = this.datesArr.map(date => this.formatDate(date));
-        const coords = this.pointsArr.map(p => '[' + p.join() + ']');
+        const coords = this.pointsArr.map(p => new firestore.GeoPoint(p[0], p[1]));
         const startTime = this.datesArr[0];
-        const endTime = new Date(Date.now());
-        const name = "route-" + this.formatDate(endTime);
+        // const endTime = new Date(Date.now());
+        const name = "route-" + this.userId + '-' + this.formatDate(startTime);
         const geojsonRoute = {
             type: "Feature",
             properties: {
                 name: name,
-                startDate: firebase.firestore.Timestamp.fromDate(startTime),
+                startDate: firestore.Timestamp.fromDate(startTime),
                 times: times
             },
             geometry: {
@@ -56,8 +70,10 @@ class Store {
                 coordinates: coords
             }
         };
-        console.log(geojsonRoute);
+        //console.log(geojsonRoute);
         addRouteAsync(geojsonRoute, name);
+        this.initDatesArr();
+        this.initPointsArr();
     }
 
     formatDate = (dt: Date) => {
