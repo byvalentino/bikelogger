@@ -4,6 +4,7 @@ import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import * as firebase from 'firebase'
+import LocationView from './LocationView';
 import {addRoute} from '../services/FirestoreService';
 
 const INIT_REGION = {
@@ -86,6 +87,7 @@ export default function MapForegroundLocation(initRegion) {
                 rotateEnabled={true}
                 style={styles.mapStyle}
             />
+            <LocationView location={myState.location}/>
             <Text style={styles.text}>{JSON.stringify(myState.location)}</Text>
             <View style={styles.buttonContainer}>
                 <Button title={textButton} onPress={() => { setLocationStaus() }} />
