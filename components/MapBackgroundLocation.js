@@ -5,6 +5,7 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
+import {toJS} from 'mobx';
 
 import LocationView from './LocationView';
 import LocationTaskExecutor from '../services/TaskLocation'
@@ -12,17 +13,10 @@ import LocationTaskExecutor from '../services/TaskLocation'
 const LOCATION_TASK_NAME = "background-location-task";
 defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
 
-const INIT_REGION = {
-    latitude: 31.728371,
-    longitude: 35.040161,
-    latitudeDelta: 1,
-    longitudeDelta: 1,
-}
 // map and background Location 
 function MapBackgroundLocation(props, initRegion) {
     const { isTracking, updateIsTracking, updatelocationData, updateStatusText, sendRoute, region } = props.store;
-    // console.log(region);
-    const region1 = INIT_REGION;
+    const reactRegion = toJS(region);
 
     const startLocationTaskAsync = async () => {
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
@@ -49,12 +43,14 @@ function MapBackgroundLocation(props, initRegion) {
             updateStatusText('Locations services needed');
         }
     }
+
     const stopGetLocationAsync = async () => {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
         updateStatusText('Not Locating');
         updateIsTracking(false);
         sendRoute();
     }
+    
     const setLocationStaus = () => {
         if (!isTracking)
             startGetLocationAsync();
@@ -65,7 +61,7 @@ function MapBackgroundLocation(props, initRegion) {
     return (
         <View>
             <MapView
-                initialRegion={region1}
+                region={reactRegion}
                 showsCompass={true}
                 showsUserLocation={isTracking}
                 rotateEnabled={true}
