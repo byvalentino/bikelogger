@@ -41,7 +41,7 @@ class Store {
         const date = new Date(data.timestamp);
         const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
         console.log(textlog);
-        const textUI = '(' + data.coords.latitude + ',' + data.coords.longitude + ') acc: ' + data.coords.accuracy + ' spd: ' + data.coords.speed ;
+        const textUI = '(' + data.coords.latitude + ',' + data.coords.longitude + ') acc: ' + data.coords.accuracy.toFixed(1) + ' spd: ' + data.coords.speed.toFixed(1);
         this.updateLocationText(textUI);
     }
 
