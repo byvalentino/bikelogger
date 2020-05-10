@@ -6,20 +6,10 @@ import * as Permissions from "expo-permissions";
 import * as TaskManager from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
 import LocationView from './LocationView';
+import LocationTaskExecutor from '../services/taskLocation'
 
 const LOCATION_TASK_NAME = "background-location-task";
-TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
-    if (error) {
-        console.log(error);
-        return;
-    }
-    if (data) {
-        const { locations } = data;
-        let lat = locations[0].coords.latitude;
-        let long = locations[0].coords.longitude;
-        console.log(lat);
-    }
-});
+TaskManager.defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
 
 const INIT_REGION = {
     latitude: 31.728371,
