@@ -11,7 +11,8 @@ import store from './stores/Store';
 import 'mobx-react-lite/batchingForReactNative';
 
 import Header from './components/Header';
-import MapForegroundLocation from './components/MapForegroundLocation'
+//import MapForegroundLocation from './components/MapForegroundLocation'
+import MapBackgroundLocation from './components/MapBackgroundLocation'
 
 // ignore firebase Setting a timer for a long period of time 
 // See https://github.com/facebook/react-native/issues/12981 for more info
@@ -82,13 +83,7 @@ export default function App() {
           onPress={() => { setMyLocation() }} />
       </View> */}
         <Header />
-        <MapForegroundLocation />
-
-        {/* <MapView
-        region={region}
-        onRegionChangeComplete={(region) => onRegionChange(region)}
-        style={styles.mapStyle}
-        /> */}
+        <MapBackgroundLocation />
       </View>
     </Provider>
   );
