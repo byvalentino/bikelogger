@@ -6,7 +6,7 @@ import * as Permissions from "expo-permissions";
 import * as TaskManager from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
 import LocationView from './LocationView';
-import LocationTaskExecutor from '../services/taskLocation'
+import LocationTaskExecutor from '../services/TaskLocation'
 
 const LOCATION_TASK_NAME = "background-location-task";
 TaskManager.defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
