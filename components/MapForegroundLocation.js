@@ -89,7 +89,7 @@ function MapForegroundLocation(props,initRegion) {
                 rotateEnabled={true}
                 style={styles.mapStyle}
             />
-            <LocationView location={myState.location}/>
+            <LocationView />
             <View style={styles.buttonContainer}>
                 <Button title={textButton} onPress={() => { setLocationStaus() }} />
                 <Button title="Add Route" onPress={() => { sendRoute() }} />

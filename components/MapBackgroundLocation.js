@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, } from 'react-native';
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-import * as TaskManager from "expo-task-manager";
+import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
+
 import LocationView from './LocationView';
 import LocationTaskExecutor from '../services/TaskLocation'
 
 const LOCATION_TASK_NAME = "background-location-task";
-TaskManager.defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
+defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
 
 const INIT_REGION = {
     latitude: 31.728371,
@@ -19,15 +20,9 @@ const INIT_REGION = {
 }
 // map and background Location 
 function MapBackgroundLocation(props, initRegion) {
-    const { isTracking, updateIsTracking, updatelocationData, updateStatusText, sendRoute , region} = props.store;
-    console.log(region);
-    const [myState, setMyState] = useState(
-        {
-            error: '',
-            location: null,
-            region1: INIT_REGION
-        }
-    );
+    const { isTracking, updateIsTracking, updatelocationData, updateStatusText, sendRoute, region } = props.store;
+    // console.log(region);
+    const region1 = INIT_REGION;
 
     const startLocationTaskAsync = async () => {
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
@@ -36,8 +31,8 @@ function MapBackgroundLocation(props, initRegion) {
             timeInterval: 5000,
             foregroundService: {
                 notificationTitle: 'Bike Location',
-                notificationBody: 'enable this to make GPS alive'
-              }, 
+                notificationBody: 'Enable this to make GPS alive'
+            },
         });
     };
 
@@ -51,7 +46,7 @@ function MapBackgroundLocation(props, initRegion) {
             // console.log("start locating")
         } else {
             updateIsTracking(false);
-            setMyState(prev => ({ ...prev, error: "Locations services needed"}));
+            updateStatusText('Locations services needed');
         }
     }
     const stopGetLocationAsync = async () => {
@@ -70,13 +65,13 @@ function MapBackgroundLocation(props, initRegion) {
     return (
         <View>
             <MapView
-                initialRegion={myState.region1}
+                initialRegion={region1}
                 showsCompass={true}
                 showsUserLocation={isTracking}
                 rotateEnabled={true}
                 style={styles.mapStyle}
             />
-            <LocationView location={myState.location} />
+            <LocationView />
             <View style={styles.buttonContainer}>
                 <View style={styles.button}>
                     <Button title={textButton} onPress={() => { setLocationStaus() }} />
@@ -98,7 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
     },
-    button :{
+    button: {
         width: 200,
     },
 });
