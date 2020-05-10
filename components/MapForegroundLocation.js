@@ -14,7 +14,7 @@ const INIT_REGION = {
 }
 // map and foregroundLocation using watchPositionAsync
 function MapForegroundLocation(props,initRegion) {
-    const { updatelocationData , updateText , sendRoute} = props.store;
+    const { updatelocationData , updateStatusText , sendRoute} = props.store;
     const [myState, setMyState] = useState(
         {
             locationStatus: false,
@@ -44,7 +44,7 @@ function MapForegroundLocation(props,initRegion) {
                     longitudeDelta: 0.005
                 };
                 updatelocationData(newLocation);
-                updateText('locating...');
+                updateStatusText('locating...');
                 setMyState(prev => ({ ...prev, location: newLocation, region: region, }));
             },
             error => console.log(error)
@@ -69,7 +69,7 @@ function MapForegroundLocation(props,initRegion) {
             myState.watchPositionObject.remove();
             // console.log("stop locating")
         }
-        updateText('not locating');
+        updateStatusText('not locating');
         setMyState(prev => ({ ...prev, watchPositionObject: null, locationStatus: false }));
         sendRoute();
     }

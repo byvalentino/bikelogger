@@ -9,13 +9,8 @@ const LocationTaskExecutor: TaskManagerTaskExecutor = async (body: TaskManagerTa
     if (body.data) {
         // @ts-ignore
         const { locations } = body.data;
-        const lat = locations[0].coords.latitude;
-        const long = locations[0].coords.longitude;
-        const date = new Date(locations[0].timestamp);
-        const text = lat +',' + long +',' + date.toLocaleString();
-        console.log (text);
-        Store.text = text;
+        const locationData  = locations[0];
+        Store.updatelocationData(locationData);
     }
 };
-//export default inject("store")(observer(LocationTaskExecutor));
 export default LocationTaskExecutor;

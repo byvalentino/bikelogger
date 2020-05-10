@@ -3,12 +3,11 @@ import { StyleSheet, View, Text } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
 function LocationView(props) {
-    const { text } = props.store;
-    const textLocation = JSON.stringify(props.location);
+    const { statusText, locationText } = props.store;
     return (
         <View style={styles.view}>
-            <Text>{text}</Text>
-            <Text>{textLocation}</Text>
+            <Text>{statusText}</Text>
+            <Text>{locationText}</Text>
         </View>
     );
 }

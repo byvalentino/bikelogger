@@ -12,13 +12,23 @@ class Store {
         this.userId = uid;
     }
 
-    // observable to save search query
-    @observable text = '';
+    // observable to statusText
+    @observable statusText = '';
 
-    // action to update text
-    @action updateText = (text: string) => {
-        this.text = text;
+    // action to update statusText
+    @action updateStatusText = (text: string) => {
+        this.statusText = text;
     }
+
+    // observable to statusText
+    @observable locationText = '';
+
+    // action to update statusText
+    @action updateLocationText = (text: string) => {
+        this.locationText = text;
+    }
+
+
     // observable for locationData - current location
     @observable locationData: LocationData | null = null;
 
@@ -27,6 +37,12 @@ class Store {
         const point: number[] = [data.coords.latitude, data.coords.longitude];
         this.InsertToPointsArr(point);
         this.InsertToDatesArr(data.timestamp);
+        //update ui and log
+        const date = new Date(data.timestamp);
+        const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
+        console.log(textlog);
+        const textUI = '(' + data.coords.latitude + ',' + data.coords.longitude + ') acc: ' + data.coords.accuracy + ' spd: ' + data.coords.speed ;
+        this.updateLocationText(textUI);
     }
 
     @observable pointsArr: any[] = [];
@@ -44,8 +60,8 @@ class Store {
     @action InsertToDatesArr = (timestamp: number) => {
         let date = new Date(timestamp);
         this.datesArr.push(date);
-        console.log(date.toLocaleString());
     }
+
     @action initDatesArr = () => {
         this.datesArr = [];
     }

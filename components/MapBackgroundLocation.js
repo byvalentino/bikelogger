@@ -19,7 +19,7 @@ const INIT_REGION = {
 }
 // map and background Location 
 function MapBackgroundLocation(props, initRegion) {
-    const { updatelocationData, updateText, sendRoute } = props.store;
+    const { updatelocationData, updateStatusText, sendRoute } = props.store;
     const [myState, setMyState] = useState(
         {
             locationStatus: false,
@@ -46,6 +46,7 @@ function MapBackgroundLocation(props, initRegion) {
         const { status } = await Location.requestPermissionsAsync()
         if (status === "granted") {
             await startLocationTaskAsync();
+            updateStatusText('Locating...');
             // console.log("start locating")
             setMyState(prev => ({ ...prev, locationStatus: true }));
         } else {
@@ -54,9 +55,9 @@ function MapBackgroundLocation(props, initRegion) {
     }
     const stopGetLocationAsync = async () => {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-        updateText('not locating');
+        updateStatusText('Not Locating');
         setMyState(prev => ({ ...prev, locationStatus: false }));
-        //sendRoute();
+        sendRoute();
     }
     const setLocationStaus = () => {
         if (!myState.locationStatus)
@@ -76,8 +77,9 @@ function MapBackgroundLocation(props, initRegion) {
             />
             <LocationView location={myState.location} />
             <View style={styles.buttonContainer}>
-                <Button title={textButton} onPress={() => { setLocationStaus() }} />
-                <Button title="Add Route" onPress={() => { sendRoute() }} />
+                <View style={styles.button}>
+                    <Button title={textButton} onPress={() => { setLocationStaus() }} />
+                </View>
             </View>
 
         </View>
@@ -94,7 +96,10 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-    }
+    },
+    button :{
+        width: 200,
+    },
 });
 
 export default inject("store")(observer(MapBackgroundLocation));
