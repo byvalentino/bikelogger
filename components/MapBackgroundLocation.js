@@ -19,13 +19,13 @@ const INIT_REGION = {
 }
 // map and background Location 
 function MapBackgroundLocation(props, initRegion) {
-    const { updatelocationData, updateStatusText, sendRoute } = props.store;
+    const { isTracking, updateIsTracking, updatelocationData, updateStatusText, sendRoute , region} = props.store;
+    console.log(region);
     const [myState, setMyState] = useState(
         {
-            locationStatus: false,
             error: '',
             location: null,
-            region: INIT_REGION
+            region1: INIT_REGION
         }
     );
 
@@ -47,31 +47,32 @@ function MapBackgroundLocation(props, initRegion) {
         if (status === "granted") {
             await startLocationTaskAsync();
             updateStatusText('Locating...');
+            updateIsTracking(true);
             // console.log("start locating")
-            setMyState(prev => ({ ...prev, locationStatus: true }));
         } else {
-            setMyState(prev => ({ ...prev, error: "Locations services needed", locationStatus: false }));
+            updateIsTracking(false);
+            setMyState(prev => ({ ...prev, error: "Locations services needed"}));
         }
     }
     const stopGetLocationAsync = async () => {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
         updateStatusText('Not Locating');
-        setMyState(prev => ({ ...prev, locationStatus: false }));
+        updateIsTracking(false);
         sendRoute();
     }
     const setLocationStaus = () => {
-        if (!myState.locationStatus)
+        if (!isTracking)
             startGetLocationAsync();
         else
             stopGetLocationAsync();
     }
-    const textButton = (myState.locationStatus) ? 'Stop Locating' : 'Start Locating';
+    const textButton = (isTracking) ? 'Stop Locating' : 'Start Locating';
     return (
         <View>
             <MapView
-                initialRegion={myState.region}
+                initialRegion={myState.region1}
                 showsCompass={true}
-                showsUserLocation={myState.locationStatus}
+                showsUserLocation={isTracking}
                 rotateEnabled={true}
                 style={styles.mapStyle}
             />

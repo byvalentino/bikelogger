@@ -4,12 +4,31 @@ import { firestore } from 'firebase';
 import { addRouteAsync } from '../services/FirestoreService';
 //import 'intl';
 
+const INIT_REGION = {
+    latitude: 31.728371,
+    longitude: 35.040161,
+    latitudeDelta: 1,
+    longitudeDelta: 1,
+}
+
 class Store {
 
     @observable userId = '111';
 
     @action updateUserId = (uid: string) => {
         this.userId = uid;
+    }
+
+    // is gps location Tracking is on
+    @observable isTracking = false;
+    @action updateIsTracking = (isTrack: boolean) => {
+        this.isTracking = isTrack;
+    }
+
+    // region in the map 
+    @observable region: any = INIT_REGION;
+    @action updateRegion = (newRegion: any) => {
+        this.region = newRegion;
     }
 
     // observable to statusText
@@ -43,6 +62,14 @@ class Store {
         console.log(textlog);
         const textUI = '(' + data.coords.latitude + ',' + data.coords.longitude + ') acc: ' + data.coords.accuracy.toFixed(1) + ' spd: ' + data.coords.speed.toFixed(1);
         this.updateLocationText(textUI);
+        //update map
+        const region = {
+            latitude: data.coords.latitude,
+            longitude: data.coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005
+        };
+        this.updateRegion(region);
     }
 
     @observable pointsArr: any[] = [];
@@ -66,14 +93,11 @@ class Store {
         this.datesArr = [];
     }
 
-    @action sendRoute = () => {
+    createGeoJsonRoute = (name: string, startTime: Date) => {
         if (this.datesArr.length < 2)
-            return;
+            return null;
         const times = this.datesArr.map(date => this.formatDate(date));
         const coords = this.pointsArr.map(p => new firestore.GeoPoint(p[0], p[1]));
-        const startTime = this.datesArr[0];
-        // const endTime = new Date(Date.now());
-        const name = "route-" + this.userId + '-' + this.formatDate(startTime);
         const geojsonRoute = {
             type: "Feature",
             properties: {
@@ -86,8 +110,18 @@ class Store {
                 coordinates: coords
             }
         };
+        return geojsonRoute;
+    }
+
+    @observable isSendRoute = true;
+    @action sendRoute = () => {
+        const startTime = this.datesArr[0];
+        const name = "route-" + this.userId + '-' + this.formatDate(startTime);
+        const geojsonRoute = this.createGeoJsonRoute(name, startTime);
         //console.log(geojsonRoute);
-        addRouteAsync(geojsonRoute, name);
+        if (this.isSendRoute && geojsonRoute !== null) {
+            addRouteAsync(geojsonRoute, name);
+        }
         this.initDatesArr();
         this.initPointsArr();
     }
