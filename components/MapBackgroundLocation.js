@@ -8,6 +8,7 @@ import { inject, observer } from 'mobx-react';
 import {toJS} from 'mobx';
 
 import LocationView from './LocationView';
+import MyMapView from './MyMapView';
 import LocationTaskExecutor from '../services/TaskLocation'
 
 const LOCATION_TASK_NAME = "background-location-task";
@@ -60,13 +61,7 @@ function MapBackgroundLocation(props, initRegion) {
     const textButton = (isTracking) ? 'Stop Locating' : 'Start Locating';
     return (
         <View>
-            <MapView
-                region={reactRegion}
-                showsCompass={true}
-                showsUserLocation={isTracking}
-                rotateEnabled={true}
-                style={styles.mapStyle}
-            />
+            <MyMapView />
             <LocationView />
             <View style={styles.buttonContainer}>
                 <View style={styles.button}>

@@ -2,7 +2,11 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
-function LocationView(props) {
+export interface Props {
+    store: any;
+  }
+
+const LocationView: React.FC<Props> = (props:Props) => {
     const { statusText, locationText } = props.store;
     return (
         <View style={styles.view}>
