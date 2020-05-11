@@ -3,7 +3,6 @@ import { View, Button, StyleSheet } from 'react-native';
 import * as Location from "expo-location";
 import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
-import {toJS} from 'mobx';
 
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
