@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
 export interface Props {
-    store: any;
+    store?: any;
   }
 
 const LocationView: React.FC<Props> = (props:Props) => {
