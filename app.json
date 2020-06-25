@@ -21,6 +21,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "bike_locatin_rn",
+    },
     "ios": {
       "supportsTablet": true
     },
