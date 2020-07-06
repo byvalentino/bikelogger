@@ -1,0 +1,90 @@
+import React ,{useState} from 'react';
+import {  View, Text, Button, StyleSheet, } from 'react-native';
+import * as firebase from 'firebase'
+import Input from '../components/Input';
+
+export interface Props {
+  }
+const LoginScreen: React.FC<Props> = (props:Props) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [myState, setMyState] = useState(
+        {
+            error: '',
+            loading: false,
+        }
+    );
+    const emailInputHandler = (text) => {
+        setEmail(text);
+    }
+    const passwordInputHandler = (text) => {
+        setPassword(text);
+    }
+    const onLoginPress = () => {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(()=>{
+            setMyState(prev => ({ ...prev, error: '', loading: false, }));
+        })
+        .catch(()=>{
+            setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
+        })
+    }
+    const onSignUpPress = () => {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(()=>{
+            setMyState(prev => ({ ...prev, error: '', loading: false, }));
+        })
+        .catch(()=>{
+            setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
+        })
+    }
+    const renderButtonOrLoading =() =>{
+        if (myState.loading){
+            return <Text> Loading</Text>
+        }
+        else {
+            return <View>
+                <Button title='SignUp' onPress={() => { onSignUpPress() }} />
+                <Button title='Login' onPress={() => { onLoginPress() }} />
+            </View>
+        }
+
+    }
+    return (
+        <View style={styles.view}>
+            <Text>Email:</Text>
+            <Input
+                style={styles.input}
+                blurOnSubmit
+                autoCapitalize='none'
+                autoCorrect={false}
+                maxLength={50}
+                onChangeText={emailInputHandler}
+                value={email}
+            />
+            <Text>Password:</Text>
+            <Input
+                style={styles.input}
+                blurOnSubmit
+                autoCapitalize='none'
+                autoCorrect={false}
+                maxLength={50}
+                onChangeText={passwordInputHandler}
+                value={password}
+            />
+            <Text>{myState.error}</Text>
+            {renderButtonOrLoading()}
+        </View>
+    ); 
+}
+
+const styles = StyleSheet.create({
+    view: {
+        padding: 10,
+    },
+    input: {
+        width: 250,
+        textAlign: 'left',
+    },
+});
+export default LoginScreen;

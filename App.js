@@ -6,6 +6,7 @@ import 'mobx-react-lite/batchingForReactNative';
 
 import store from './stores/Store';
 import Header from './components/Header';
+import LoginScreen from './screens/LoginScreen';
 //import MapForegroundLocation from './components/MapForegroundLocation'
 import MapBackgroundLocation from './components/MapBackgroundLocation'
 // ignore firebase Setting a timer for a long period of time 
@@ -17,8 +18,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <View style={styles.container1}>
-        <Header />
-        <MapBackgroundLocation />
+        {/* <Header />
+        <MapBackgroundLocation /> */}
+        <LoginScreen />
       </View>
     </Provider>
   );
