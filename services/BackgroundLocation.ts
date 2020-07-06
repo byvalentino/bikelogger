@@ -2,13 +2,14 @@ import { requestPermissionsAsync, startLocationUpdatesAsync, stopLocationUpdates
 import Store from '../stores/Store';
 
 const LOCATION_TASK_NAME = "background-location-task";
+const TIME_INTERVAL = 3000;
 
 const startLocationTaskAsync = async () => {
     await startLocationUpdatesAsync(LOCATION_TASK_NAME, {
          // @ts-ignore
         enableHighAccuracy: true,
         distanceInterval: 1,
-        timeInterval: 5000,
+        timeInterval: TIME_INTERVAL,
         foregroundService: {
             notificationTitle: 'Bike Location',
             notificationBody: 'Enable this to make GPS alive'
