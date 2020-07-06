@@ -1,11 +1,15 @@
 import React ,{useState} from 'react';
 import {  View, Text, Button, StyleSheet, } from 'react-native';
 import * as firebase from 'firebase'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Input from '../components/Input';
 
 export interface Props {
   }
-const LoginScreen: React.FC<Props> = (props:Props) => {
+//const LoginScreen: React.FC<Props> = (props:Props, navigation : any) => {
+
+function LoginScreen({ navigation }) {    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [myState, setMyState] = useState(
@@ -24,6 +28,7 @@ const LoginScreen: React.FC<Props> = (props:Props) => {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(()=>{
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
+            navigation.navigate('Main')
         })
         .catch(()=>{
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
@@ -33,6 +38,7 @@ const LoginScreen: React.FC<Props> = (props:Props) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(()=>{
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
+            navigation.navigate('Main')
         })
         .catch(()=>{
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
