@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 // imports Provider and store
 import { Provider } from 'mobx-react';
 import 'mobx-react-lite/batchingForReactNative';
 
 import store from './stores/Store';
 import Header from './components/Header';
+import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
 //import MapForegroundLocation from './components/MapForegroundLocation'
 import MapBackgroundLocation from './components/MapBackgroundLocation'
@@ -14,14 +17,17 @@ import MapBackgroundLocation from './components/MapBackgroundLocation'
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Setting a timer']);
 
+const Stack = createStackNavigator();
+
 export default function App() {
   return (
     <Provider store={store}>
-      <View style={styles.container1}>
-        {/* <Header />
-        <MapBackgroundLocation /> */}
-        <LoginScreen />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Main">
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Main" component={MainScreen} />
+        </Stack.Navigator>
+     </NavigationContainer>
     </Provider>
   );
 }

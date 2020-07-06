@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet} from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import Header from '../components/Header';
 //import MapForegroundLocation from '../components/MapForegroundLocation'
 import MapBackgroundLocation from  '../components/MapBackgroundLocation'

@@ -10,7 +10,7 @@ npm-debug.*
 web-build/
 web-report/
 constants/ApyKeys.js
+yarn-error.log
 
 # macOS
 .DS_Store
-

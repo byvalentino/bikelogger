@@ -22,7 +22,7 @@
       "**/*"
     ],
     "android": {
-      "package": "bike_locatin_rn",
+      "package": "org.uk.bike-locatin"
     },
     "ios": {
       "supportsTablet": true
