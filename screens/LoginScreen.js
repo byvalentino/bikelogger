@@ -3,6 +3,7 @@ import {  View, Text, Button, StyleSheet, } from 'react-native';
 import * as firebase from 'firebase'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Store from '../stores/Store';
 import Input from '../components/Input';
 
 export interface Props {
@@ -27,10 +28,21 @@ function LoginScreen({ navigation }) {
     const onLoginPress = () => {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(()=>{
+            //alert(firebase.auth().currentUser.uid);
+            console.log(firebase.auth().currentUser.uid);
+            Store.updateUserId(firebase.auth().currentUser.uid);
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
             navigation.navigate('Main')
         })
-        .catch(()=>{
+        .catch((error)=>{
+            let errorCode = error.code;
+            let errorMessage = error.message;
+            if (errorCode === 'auth/wrong-password') {
+                alert('Wrong password.');
+            } else {
+                alert(errorMessage);
+            }
+            console.log(error);
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
         })
     }
