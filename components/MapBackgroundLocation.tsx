@@ -19,7 +19,7 @@ export interface Props {
 
 // map and background Location 
 const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
-    const { isTracking, SetConfigModalVisible } = props.store;
+    const { isTracking, setConfigModalVisible } = props.store;
     const setLocationStaus = () => {
         if (!isTracking)
             startGetLocationAsync();
@@ -36,7 +36,7 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
                     <Button title={textButton} onPress={() => { setLocationStaus() }} />
                 </View>
                 <View style={styles.button}>
-                    <Button title='Config' onPress={() => { SetConfigModalVisible(true) }} />
+                    <Button title='Config' onPress={() => { setConfigModalVisible(true) }} />
                 </View>
             </View>
             <ConfigScreen />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableHighlight,Alert } from "react-native";
+import { View, Text, StyleSheet, Modal, Button, Keyboard, Alert } from "react-native";
 import { inject, observer } from 'mobx-react';
-import Card from '../components/Card';
+//import Card from '../components/Card';
 import Input from '../components/Input';
 import Colors from '../constants/colors';
 
@@ -9,7 +9,31 @@ export interface Props {
     store?: any;
 }
 const ConfigScreen: React.FC<Props> = (props: Props) => {
-    const { configModalVisible, SetConfigModalVisible } = props.store;
+    const { configModalVisible, setConfigModalVisible ,trackingTimeInterval, setTrackingTimeInterval} = props.store;
+    const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
+    const numberInputHandler = (text) => {
+        setEnteredText(text.replace(/[^0-9]/g, ''));
+    }
+    const cacnelButtonHandler = () => {
+        setEnteredText(trackingTimeInterval.toString()); 
+        setConfigModalVisible(false);
+    }
+    const confirmedButtonHandler = () => {
+        const intervalNumnber = parseInt(enteredText)
+        if (isNaN(intervalNumnber) || intervalNumnber <= 0 || intervalNumnber > 30) {
+            Alert.alert(
+                'Invalid Interval',
+                'Interval has to be between 1 and 30 sec.',
+                [{ text: 'Okay', style: 'destructive' }]
+            );
+            setEnteredText(trackingTimeInterval.toString()); 
+            return;
+        }
+        else {
+            setTrackingTimeInterval(intervalNumnber);
+            setConfigModalVisible(false);
+        }
+    }
     return (
         <Modal
             animationType="slide"
@@ -21,16 +45,25 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Hello World!</Text>
-
-                    <TouchableHighlight
-                        style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                        onPress={() => {
-                            SetConfigModalVisible(!configModalVisible);
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Hide Modal</Text>
-                    </TouchableHighlight>
+                <Text>Time Interval:</Text>
+                    <Input
+                        style={styles.input}
+                        blurOnSubmit
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        keyboardType='number-pad'
+                        maxLength={2}
+                        onChangeText={numberInputHandler}
+                        value={enteredText}
+                    />
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.button}>
+                            <Button title="Cancel" color={Colors.secondary} onPress={cacnelButtonHandler} />
+                        </View>
+                        <View style={styles.button}>
+                            <Button title="Confirm" color={Colors.primary} onPress={confirmedButtonHandler} />
+                        </View>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -59,6 +92,24 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5
+    },
+    button: {
+        width: 100,
+    },
+    cardStyle: {
+        width: 300,
+        maxWidth: '80%',
+        alignItems: 'center',
+    },
+    input: {
+        width: 50,
+        textAlign: 'center',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
     },
     textStyle: {
         color: "white",

@@ -13,16 +13,24 @@ const INIT_REGION = {
 
 class Store {
 
+    /// UI Store //////////////////
     @observable configModalVisible = false;
-
-    @action SetConfigModalVisible = (isVisable: boolean) => {
+    @action setConfigModalVisible = (isVisable: boolean) => {
         this.configModalVisible = isVisable;
     }
-
+    
+    /// User Store //////////////////
     @observable userId = '111';
-
     @action updateUserId = (uid: string) => {
         this.userId = uid;
+    }
+
+    /// Tracking Store //////////////////
+
+    //tracking Time Interval in sec
+    @observable trackingTimeInterval = 3;
+    @action setTrackingTimeInterval = (timeInterval: number) => {
+        this.trackingTimeInterval = timeInterval;
     }
 
     // is gps location Tracking is on
