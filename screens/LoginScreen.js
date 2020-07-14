@@ -3,6 +3,7 @@ import {  View, Text, Button, StyleSheet, } from 'react-native';
 import * as firebase from 'firebase'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Colors from '../constants/colors';
 import Store from '../stores/Store';
 import Input from '../components/Input';
 
@@ -61,9 +62,13 @@ function LoginScreen({ navigation }) {
             return <Text> Loading</Text>
         }
         else {
-            return <View>
-                <Button title='SignUp' onPress={() => { onSignUpPress() }} />
-                <Button title='Login' onPress={() => { onLoginPress() }} />
+            return <View style={styles.buttonContainer}>
+                <View style={styles.button}>
+                    <Button title='SignUp' color={Colors.primary} onPress={() => { onSignUpPress() }} />
+                </View>
+                <View style={styles.button}>
+                    <Button title='Login'color={Colors.primary} onPress={() => { onLoginPress() }} />
+                </View>
             </View>
         }
 
@@ -99,10 +104,18 @@ function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
     view: {
         padding: 10,
+        width: '100%',
     },
     input: {
         width: 250,
         textAlign: 'left',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    button: {
+        width: 150,
     },
 });
 export default LoginScreen;

@@ -3,6 +3,7 @@ import { View, Button, StyleSheet } from 'react-native';
 import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
 
+import Colors from '../constants/colors';
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
 import {startGetLocationAsync, stopGetLocationAsync} from '../services/BackgroundLocation';
@@ -33,10 +34,10 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
             <LocationView />
             <View style={styles.buttonContainer}>
                 <View style={styles.button}>
-                    <Button title={textButton} onPress={() => { setLocationStaus() }} />
+                    <Button title={textButton} color={Colors.primary} onPress={() => { setLocationStaus() }} />
                 </View>
                 <View style={styles.button}>
-                    <Button title='Config' onPress={() => { setConfigModalVisible(true) }} />
+                    <Button title='Config' color={Colors.primary} onPress={() => { setConfigModalVisible(true) }} />
                 </View>
             </View>
             <ConfigScreen />
