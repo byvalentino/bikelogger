@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet} from 'react-native';
 import Header from '../components/Header';
 //import MapForegroundLocation from '../components/MapForegroundLocation'
-import MapBackgroundLocation from  '../components/MapBackgroundLocation'
+import MapBackgroundLocation from  '../components/MapBackgroundLocation';
 
 export interface Props {
 }

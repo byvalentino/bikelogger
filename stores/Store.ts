@@ -13,6 +13,12 @@ const INIT_REGION = {
 
 class Store {
 
+    @observable configModalVisible = false;
+
+    @action SetConfigModalVisible = (isVisable: boolean) => {
+        this.configModalVisible = isVisable;
+    }
+
     @observable userId = '111';
 
     @action updateUserId = (uid: string) => {

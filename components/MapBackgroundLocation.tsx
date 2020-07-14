@@ -6,6 +6,8 @@ import { inject, observer } from 'mobx-react';
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
 import {startGetLocationAsync, stopGetLocationAsync} from '../services/BackgroundLocation';
+import ConfigScreen from  '../screens/ConfigScreen';
+
 import LocationTaskExecutor from '../services/taskLocation';
 
 const LOCATION_TASK_NAME = "background-location-task";
@@ -17,8 +19,7 @@ export interface Props {
 
 // map and background Location 
 const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
-    const { isTracking } = props.store;
-
+    const { isTracking, SetConfigModalVisible } = props.store;
     const setLocationStaus = () => {
         if (!isTracking)
             startGetLocationAsync();
@@ -34,8 +35,11 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
                 <View style={styles.button}>
                     <Button title={textButton} onPress={() => { setLocationStaus() }} />
                 </View>
+                <View style={styles.button}>
+                    <Button title='Config' onPress={() => { SetConfigModalVisible(true) }} />
+                </View>
             </View>
-
+            <ConfigScreen />
         </View>
     );
 }
