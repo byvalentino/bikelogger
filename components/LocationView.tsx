@@ -7,11 +7,12 @@ export interface Props {
   }
 
 const LocationView: React.FC<Props> = (props:Props) => {
-    const { statusText, locationText } = props.store;
+    const { statusText, locationText ,routeDistance } = props.store;
+    const dist = 'km: ' + routeDistance.toFixed(1);
     return (
         <View style={styles.view}>
             <Text>{statusText}</Text>
-            <Text>{locationText}</Text>
+            <Text>{locationText} {dist}</Text>
         </View>
     );
 }

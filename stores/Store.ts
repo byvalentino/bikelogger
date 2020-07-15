@@ -2,6 +2,7 @@ import { decorate, observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
 import { addRouteAsync } from '../services/FirestoreService';
+import { getDistanceKm } from '../services/GeoUtils';
 //import 'intl';
 
 const INIT_REGION = {
@@ -47,7 +48,6 @@ class Store {
 
     // observable to statusText
     @observable statusText = '';
-
     // action to update statusText
     @action updateStatusText = (text: string) => {
         this.statusText = text;
@@ -55,7 +55,6 @@ class Store {
 
     // observable to statusText
     @observable locationText = '';
-
     // action to update statusText
     @action updateLocationText = (text: string) => {
         this.locationText = text;
@@ -64,12 +63,12 @@ class Store {
 
     // observable for locationData - current location
     @observable locationData: LocationData | null = null;
-
     @action updatelocationData = (data: LocationData) => {
         this.locationData = data;
         const point: number[] = [data.coords.latitude, data.coords.longitude];
         this.InsertToPointsArr(point);
         this.InsertToDatesArr(data.timestamp);
+        this.setRouteDistance(point);
         //update ui and log
         const date = new Date(data.timestamp);
         const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
@@ -87,22 +86,29 @@ class Store {
     }
 
     @observable pointsArr: any[] = [];
-
     @action InsertToPointsArr = (point: number[]) => {
         this.pointsArr.push(point);
     }
-
     @action initPointsArr = () => {
         this.pointsArr = [];
     }
 
-    @observable datesArr: Date[] = [];
+    //routeDistance in KM
+    @observable routeDistance: number = 0;
+    @action setRouteDistance = (point1:number[]) => {
+        if (this.pointsArr.length > 1){
+            let point2 = this.pointsArr[this.pointsArr.length - 2];
+            let addedDist =  getDistanceKm(point1[0],point1[1],point2[0],point2[1]);
+            this.routeDistance += addedDist;
+        }
 
+    }
+
+    @observable datesArr: Date[] = [];
     @action InsertToDatesArr = (timestamp: number) => {
         let date = new Date(timestamp);
         this.datesArr.push(date);
     }
-
     @action initDatesArr = () => {
         this.datesArr = [];
     }
