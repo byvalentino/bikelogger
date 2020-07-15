@@ -47,17 +47,34 @@ class Store {
     }
 
     // observable to statusText
-    @observable statusText = '';
+    @observable statusText = 'Not Tracking';
     // action to update statusText
     @action updateStatusText = (text: string) => {
         this.statusText = text;
     }
 
-    // observable to statusText
+    // observable to locationText
     @observable locationText = '';
-    // action to update statusText
-    @action updateLocationText = (text: string) => {
+    // action to update locationText
+    @action setLocationText = (text: string) => {
         this.locationText = text;
+    }
+    // observable to accuracy
+    @observable accuracy = 0;
+    // action to update accuracy
+    @action setAcuracy = (acc: number) => {
+        this.accuracy = acc;
+    }
+    // observable to speed
+    @observable speed = 0;
+    // action to update speed
+    @action setSpeed = (spd: number) => {
+        this.speed = spd;
+    }
+    @observable altitude = 0;
+    // action to update speed
+    @action setAltitude = (alt: number) => {
+        this.altitude = alt;
     }
 
 
@@ -73,8 +90,11 @@ class Store {
         const date = new Date(data.timestamp);
         const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
         console.log(textlog);
-        const textUI = '(' + data.coords.latitude + ',' + data.coords.longitude + ') acc: ' + data.coords.accuracy.toFixed(1) + ' spd: ' + data.coords.speed.toFixed(1);
-        this.updateLocationText(textUI);
+        const textUI = '(' + data.coords.latitude + ', ' + data.coords.longitude + ')';
+        this.setLocationText(textUI);
+        this.setAcuracy(data.coords.accuracy);
+        this.setAltitude(data.coords.altitude);
+        this.setSpeed(data.coords.speed);
         //update map
         const region = {
             latitude: data.coords.latitude,
@@ -113,7 +133,7 @@ class Store {
         this.datesArr = [];
     }
 
-    createGeoJsonRoute = (name: string, startTime: Date) => {
+    createGeoJsonRoute = (name: string, startTime: Date, dist: number) => {
         if (this.datesArr.length < 2)
             return null;
         const times = this.datesArr.map(date => this.formatDate(date));
@@ -123,6 +143,7 @@ class Store {
             properties: {
                 name: name,
                 startDate: firestore.Timestamp.fromDate(startTime),
+                dist: dist.toFixed(2),
                 times: times
             },
             geometry: {
@@ -137,7 +158,7 @@ class Store {
     @action sendRoute = () => {
         const startTime = this.datesArr[0];
         const name = "route-" + this.userId + '-' + this.formatDate(startTime);
-        const geojsonRoute = this.createGeoJsonRoute(name, startTime);
+        const geojsonRoute = this.createGeoJsonRoute(name, startTime, this.routeDistance);
         //console.log(geojsonRoute);
         if (this.isSendRoute && geojsonRoute !== null) {
             addRouteAsync(geojsonRoute, name);

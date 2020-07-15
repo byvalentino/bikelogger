@@ -33,7 +33,7 @@ function LoginScreen({ navigation }) {
             console.log(firebase.auth().currentUser.uid);
             Store.updateUserId(firebase.auth().currentUser.uid);
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
-            navigation.navigate('Main')
+            navigation.navigate('Bike Tracker')
         })
         .catch((error)=>{
             let errorCode = error.code;
@@ -75,7 +75,7 @@ function LoginScreen({ navigation }) {
     }
     return (
         <View style={styles.view}>
-            <Text>Email:</Text>
+            <Text style={styles.text}>Email:</Text>
             <Input
                 style={styles.input}
                 blurOnSubmit
@@ -85,7 +85,7 @@ function LoginScreen({ navigation }) {
                 onChangeText={emailInputHandler}
                 value={email}
             />
-            <Text>Password:</Text>
+            <Text style={styles.text}>Password:</Text>
             <Input
                 style={styles.input}
                 blurOnSubmit
@@ -117,5 +117,8 @@ const styles = StyleSheet.create({
     button: {
         width: 150,
     },
+    text: {
+        fontSize: 14,
+    }
 });
 export default LoginScreen;

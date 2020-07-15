@@ -27,7 +27,7 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
         else
             stopGetLocationAsync();
     }
-    const textButton = (isTracking) ? 'Stop Locating' : 'Start Locating!';
+    const textButton = (isTracking) ? 'STOP TRACKING' : 'START TRACKING';
     return (
         <View>
             <MyMapView />

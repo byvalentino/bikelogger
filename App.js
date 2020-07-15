@@ -23,9 +23,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Bike Tracker">
               <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen name="Bike Tracker" component={MainScreen} />
         </Stack.Navigator>
      </NavigationContainer>
     </Provider>

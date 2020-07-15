@@ -9,7 +9,7 @@ export interface Props {
 const MainScreen: React.FC<Props> = (props:Props) => {
   return (
       <View style={styles.container1}>
-        <Header />
+        {/* <Header /> */}
         <MapBackgroundLocation />
       </View>
   );
