@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
+import { I18nManager} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 // imports Provider and store
 import { Provider } from 'mobx-react';
 import 'mobx-react-lite/batchingForReactNative';
@@ -18,6 +20,7 @@ import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Setting a timer']);
 
 const Stack = createStackNavigator();
+I18nManager.allowRTL(false);
 
 export default function App() {
   return (
