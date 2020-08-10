@@ -3,6 +3,7 @@ import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
 import { addRouteAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
+import { storeLocalData, getLocalData} from '../services/LocalStorage';
 //import 'intl';
 
 const INIT_REGION = {
@@ -14,6 +15,29 @@ const INIT_REGION = {
 
 class Store {
 
+    // constructor(){
+    //     console.log ('init Store');
+    //     (async () => {
+    //         const data = await this.initUserEmail();
+    //     })();
+    //     getLocalData('@password').then(res =>{
+    //         if (res !== undefined )
+    //         this.userPassword = res;
+    //     });
+    //     console.log ('finish init Store');
+    // }
+
+    init = async () => {
+        console.log ('init Store');
+        const data  = await this.initUserEmail();
+        getLocalData('@password').then(res =>{
+            if (res !== undefined )
+            this.userPassword = res;
+        });
+        console.log ('finish init Store');
+    }
+   
+
     /// UI Store //////////////////
     @observable configModalVisible = false;
     @action setConfigModalVisible = (isVisable: boolean) => {
@@ -24,6 +48,31 @@ class Store {
     @observable userId = '111';
     @action updateUserId = (uid: string) => {
         this.userId = uid;
+    }
+    @observable tempMail = '';
+    @action setTempMail = (value: string) => {
+        this.tempMail = value;
+    }
+    @observable userEmail = '';
+    @action setUserEmail = (value: string) => {
+        this.userEmail = value;
+        storeLocalData('@email', value);
+    }
+    initUserEmail = async () => {
+        console.log ('init User Email');
+        const email = await getLocalData('@email');
+        if (email !== undefined){
+            //this.userEmail = email;
+            this.setUserEmail(email);
+            this.setTempMail(email);
+            console.log ('get', email);
+        }
+    }
+
+    @observable userPassword = '';
+    @action setUserPassword = (value: string) => {
+        this.userEmail = value;
+        storeLocalData('@password', value);
     }
 
     /// Tracking Store //////////////////
