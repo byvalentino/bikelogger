@@ -47,6 +47,11 @@ class Store {
     @action setConfigModalVisible = (isVisable: boolean) => {
         this.configModalVisible = isVisable;
     }
+    @observable accelerometerModalVisable = false;
+    @action setAccelerometerModalVisable = (isVisable: boolean) => {
+        this.accelerometerModalVisable = isVisable;
+    }
+
     
     /// User Store //////////////////
     @observable userId = '111';
