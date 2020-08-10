@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "rn-location-app",
-    "slug": "rn-location-app",
+    "name": "BikeLogger",
+    "slug": "BikeLogger",
     "platforms": [
       "ios",
       "android",
@@ -22,11 +22,11 @@
       "**/*"
     ],
     "android": {
-      "package": "org.uk.bike-locatin"
+      "package": "org.uk.bikelogger"
     },
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "description": "BikeLogger collects cycling travel data. The data is then used to better plan our cycling infrastructure."
   }
 }
