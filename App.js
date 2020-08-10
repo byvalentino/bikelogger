@@ -12,6 +12,7 @@ import store from './stores/Store';
 import Header from './components/Header';
 import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
+import AccelerometerScreen from './screens/AccelerometerScreen';
 //import MapForegroundLocation from './components/MapForegroundLocation'
 import MapBackgroundLocation from './components/MapBackgroundLocation'
 // ignore firebase Setting a timer for a long period of time 
@@ -26,9 +27,10 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="AccelerometerScreen">
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Bike Tracker" component={MainScreen} />
+              <Stack.Screen name="AccelerometerScreen" component={AccelerometerScreen} />
         </Stack.Navigator>
      </NavigationContainer>
     </Provider>
