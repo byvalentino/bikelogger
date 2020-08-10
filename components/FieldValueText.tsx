@@ -1,15 +1,16 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, } from 'react-native';
 
 export interface Props {
     filed: string;
     value: string;
     units: string;
+    style?: any;
   }
 const FieldValueText = (props:Props) => {
     const { filed, value , units } = props
     return (
-        <View style={styles.lineContainer}>
+        <View style={{...styles.lineContainer, ...props.style}} >
             <Text style={styles.filed}>{filed} </Text>
             <Text style={styles.value}>{value} ({units})</Text>
         </View>
@@ -20,7 +21,7 @@ export default FieldValueText;
 const styles = StyleSheet.create({
     lineContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        /* justifyContent: 'flex-start', */
     },
     filed: {
         fontSize: 18,
