@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     button: {
-        width: 200,
+        width: 170,
     },
 });
 

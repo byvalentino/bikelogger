@@ -16,7 +16,7 @@ function LoginScreen({ navigation }) {
         Store.init();
     });
 
-    const [email, setEmail] = useState(Store.userEmail);
+    const [email, setEmail] = useState('reshef.dror@gmail.com');
     const [password, setPassword] = useState('');
     const [myState, setMyState] = useState(
         {

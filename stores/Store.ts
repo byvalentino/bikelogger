@@ -34,9 +34,13 @@ class Store {
             if (res !== undefined )
             this.userPassword = res;
         });
+        //this.setStoreReady(true);
         console.log ('finish init Store');
     }
-   
+    @observable isStoreReady = false;
+    @action setStoreReady = (value: boolean) => {
+        this.isStoreReady = value;
+    }
 
     /// UI Store //////////////////
     @observable configModalVisible = false;
@@ -49,10 +53,10 @@ class Store {
     @action updateUserId = (uid: string) => {
         this.userId = uid;
     }
-    @observable tempMail = '';
-    @action setTempMail = (value: string) => {
-        this.tempMail = value;
-    }
+    // @observable tempMail = '';
+    // @action setTempMail = (value: string) => {
+    //     this.tempMail = value;
+    // }
     @observable userEmail = '';
     @action setUserEmail = (value: string) => {
         this.userEmail = value;
@@ -64,7 +68,6 @@ class Store {
         if (email !== undefined){
             //this.userEmail = email;
             this.setUserEmail(email);
-            this.setTempMail(email);
             console.log ('get', email);
         }
     }
