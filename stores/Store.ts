@@ -1,4 +1,4 @@
-import { decorate, observable, action } from "mobx";
+import { observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
 import { addRouteAsync } from '../services/FirestoreService';
@@ -28,20 +28,19 @@ class Store {
     // }
 
     init = async () => {
-        console.log ('init Store');
+        // console.log ('init Store');
         const data  = await this.initUserEmail();
         getLocalData('@password').then(res =>{
             if (res !== undefined )
             this.userPassword = res;
         });
-        //this.setStoreReady(true);
-        console.log ('finish init Store');
+        this.setStoreReady(true);
     }
     @observable isStoreReady = false;
     @action setStoreReady = (value: boolean) => {
         this.isStoreReady = value;
     }
-
+ 
     /// UI Store //////////////////
     @observable configModalVisible = false;
     @action setConfigModalVisible = (isVisable: boolean) => {
@@ -68,12 +67,9 @@ class Store {
         storeLocalData('@email', value);
     }
     initUserEmail = async () => {
-        console.log ('init User Email');
         const email = await getLocalData('@email');
         if (email !== undefined){
-            //this.userEmail = email;
             this.setUserEmail(email);
-            console.log ('get', email);
         }
     }
 

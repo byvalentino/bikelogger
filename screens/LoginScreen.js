@@ -3,20 +3,18 @@ import { View, Text, Button, StyleSheet, } from 'react-native';
 import * as firebase from 'firebase'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { inject, observer } from 'mobx-react';
 import Colors from '../constants/colors';
 import Store from '../stores/Store';
 import Input from '../components/Input';
+import { set } from 'mobx';
 
 export interface Props {
 }
 //const LoginScreen: React.FC<Props> = (props:Props, navigation : any) => {
 
 function LoginScreen({ navigation }) {
-    useEffect(() => {
-        Store.init();
-    });
-
-    const [email, setEmail] = useState('reshef.dror@gmail.com');
+    const [email, setEmail] = useState();
     const [password, setPassword] = useState('');
     const [myState, setMyState] = useState(
         {
@@ -24,7 +22,16 @@ function LoginScreen({ navigation }) {
             loading: false,
         }
     );
-    console.log('email', email);
+    useEffect(() => {
+        Store.init();
+    },[]);
+    useEffect(() => {
+        if (Store.isStoreReady)
+        {
+            setEmail(Store.userEmail)
+        }
+    },[Store.isStoreReady])
+    
     const emailInputHandler = (text) => {
         setEmail(text);
         //Store.setTempMail(text)
@@ -129,4 +136,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
     }
 });
-export default LoginScreen;
+export default inject("store")(observer(LoginScreen));
