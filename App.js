@@ -12,6 +12,7 @@ import store from './stores/Store';
 import Header from './components/Header';
 import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
+import LoggerScreen from './screens/LoggerScreen';
 //import AccelerometerScreen from './screens/AccelerometerScreen';
 //import MapForegroundLocation from './components/MapForegroundLocation'
 import MapBackgroundLocation from './components/MapBackgroundLocation'
@@ -30,7 +31,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Bike Tracker" component={MainScreen} />
-              {/* <Stack.Screen name="AccelerometerScreen" component={AccelerometerScreen} /> */}
+              <Stack.Screen name="Logger" component={LoggerScreen} />
         </Stack.Navigator>
      </NavigationContainer>
     </Provider>
