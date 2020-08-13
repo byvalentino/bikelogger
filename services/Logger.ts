@@ -1,4 +1,5 @@
 
+export const logHistory: any[] =[];
 export const log = (message?: any, ...optionalParams: any[]): void => {
     if (optionalParams.length > 0) {
         console.log(message,optionalParams);
@@ -7,6 +8,8 @@ export const log = (message?: any, ...optionalParams: any[]): void => {
     {
         console.log(message);
     }
+    //const da = Date.now();
+    logHistory.push({  id: Date.now().toString(), msg:message});
 }
 
 export const logError = (message?: any, ...optionalParams: any[]): void => {

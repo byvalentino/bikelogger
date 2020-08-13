@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
-
+import { useNavigation } from '@react-navigation/native';
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
 import ConfigScreen from  '../screens/ConfigScreen';
 import AccelerometerScreen from '../screens/AccelerometerScreen';
+import LoggerScreen from '../screens/LoggerModalScreen';
 import {startGetLocationAsync, stopGetLocationAsync} from '../services/BackgroundLocation';
 import LocationTaskExecutor from '../services/taskLocation';
 import Colors from '../constants/colors';
@@ -20,7 +21,15 @@ export interface Props {
 
 // map and background Location 
 const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
-    const { isTracking, setConfigModalVisible, setAccelerometerModalVisable } = props.store;
+    const { 
+        isTracking, 
+        setConfigModalVisible, 
+        setAccelerometerModalVisable,
+        setLoggerModalVisable, } = props.store;
+    const navigation = useNavigation();
+    const buttonLoggerClick =() =>{
+        navigation.navigate('Logger');
+    }
     const setLocationStaus = () => {
         if (!isTracking)
             startGetLocationAsync();
@@ -42,9 +51,13 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
                 <View style={styles.button2}>
                     <Button title='Acc' color={Colors.primary} onPress={() => { setAccelerometerModalVisable(true) }} />
                 </View>
+                <View style={styles.button2}>
+                    <Button title='log' color={Colors.primary} onPress={buttonLoggerClick} />
+                </View>
             </View>
             <ConfigScreen />
             <AccelerometerScreen />
+            <LoggerScreen/>
         </View>
     );
 }
