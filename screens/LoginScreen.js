@@ -49,7 +49,7 @@ function LoginScreen({ navigation }) {
                 Store.setUserPassword(password);
                 Store.updateUserId(firebase.auth().currentUser.uid);
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                navigation.navigate('Bike Tracker')
+                navigation.navigate('Bike Tracker');
             })
             .catch((error) => {
                 let errorCode = error.code;
@@ -67,7 +67,7 @@ function LoginScreen({ navigation }) {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(() => {
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                navigation.navigate('Main')
+                navigation.navigate('Bike Tracker')
             })
             .catch(() => {
                 setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
