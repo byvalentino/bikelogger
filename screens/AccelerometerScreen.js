@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Button, Modal, Alert } from 'react-native';
 import { Accelerometer } from 'expo-sensors';
 import { inject, observer } from 'mobx-react';
+import MyModal from '../components/MyModal';
 import Colors from '../constants/colors';
 
 export interface Props {
@@ -53,15 +54,10 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
 
   let { x, y, z } = data;
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
+    <MyModal 
       visible={accelerometerModalVisable}
-      onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
-      }}
+      closeMethod = {closeButtonHandler} 
     >
-      <View style={styles.modalView}>
         <View style={styles.sensor}>
           <Text style={styles.text}>Accelerometer: (in Gs, 1 G = 9.81 m s^-2)</Text>
           <Text style={styles.text}>
@@ -79,11 +75,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.button2}>
-          <Button title="Close" color={Colors.primary} onPress={closeButtonHandler} />
-        </View>
-      </View>
-    </Modal>
+    </MyModal>
   );
 }
 export default inject("store")(observer(AccelerometerScreen));
@@ -97,21 +89,6 @@ function round(n) {
 }
 
 const styles = StyleSheet.create({
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -123,9 +100,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#eee',
     padding: 10,
-  },
-  button2: {
-    width: 100,
   },
   middleButton: {
     borderLeftWidth: 1,
