@@ -11,7 +11,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-bike.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -25,7 +25,15 @@
       "package": "org.uk.bikelogger"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "BikeLogger uses your location to track cycleing routes.",
+        "NSMotionUsageDescription": "Allow BikeLogger to access your device's accelerometer.",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
     },
     "description": "BikeLogger collects cycling travel data. The data is then used to better plan our cycling infrastructure."
   }

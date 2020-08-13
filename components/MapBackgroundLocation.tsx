@@ -13,6 +13,7 @@ import LocationTaskExecutor from '../services/taskLocation';
 import Colors from '../constants/colors';
 
 const LOCATION_TASK_NAME = "background-location-task";
+// define the task that will run when location is found
 defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
 
 export interface Props {

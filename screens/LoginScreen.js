@@ -139,6 +139,7 @@ function LoginScreen({ navigation }) {
             />
             <Text>{myState.error}</Text>
             {renderButtonOrLoading()}
+            <Text>update: 13/08/2020</Text>
         </View>
     );
 }

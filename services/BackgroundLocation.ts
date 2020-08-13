@@ -5,6 +5,7 @@ import {log} from '../services/Logger';
 const LOCATION_TASK_NAME = "background-location-task";
 
 const startLocationTaskAsync = async () => {
+    log("startLocationTaskAsync");
     await startLocationUpdatesAsync(LOCATION_TASK_NAME, {
          // @ts-ignore
         enableHighAccuracy: true,
