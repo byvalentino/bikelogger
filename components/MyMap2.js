@@ -4,11 +4,12 @@ import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import * as TaskManager from "expo-task-manager";
+import {log} from '../services/Logger';
 
 const LOCATION_TASK_NAME = "background-location-task";
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     if (error) {
-        console.log(error);
+        log(error);
         return;
     }
     if (data) {
@@ -28,7 +29,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
         //     long
         //   }
         // });
-        // console.log("Received new locations for user = ", userId, locations);
+        // log("Received new locations for user = ", userId, locations);
     }
 });
 
@@ -59,7 +60,7 @@ export default class MyMap2 extends Component {
             },
             newLocation => {
                 let { coords } = newLocation;
-                // console.log(coords);
+                // log(coords);
                 let region = {
                     latitude: coords.latitude,
                     longitude: coords.longitude,
@@ -68,7 +69,7 @@ export default class MyMap2 extends Component {
                 };
                 this.setState(() => ({ region: region, location: newLocation }));
             },
-            error => console.log(error)
+            error => log(error)
         );
         return this.location;
     };
@@ -88,9 +89,9 @@ export default class MyMap2 extends Component {
         try {
             const status = await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
             if (status != undefined)
-                console.log(status);
+                log(status);
         } catch (error) {
-            console.log(status);
+            log(status);
         }
     }
 

@@ -1,11 +1,12 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {log} from './Logger';
 
 export const storeLocalData = async (key: string, value: string) => {
     try {
         await AsyncStorage.setItem(key, value)
     } catch (e) {
         // saving error
-        console.log ('storeLocalData', e);
+        log ('storeLocalData', e);
     }
 }
 
@@ -18,6 +19,6 @@ export const getLocalData = async (key: string) => {
         }
     } catch (e) {
         // error reading value
-        console.log ('getLocalData', e);
+        log ('getLocalData', e);
     }
 }

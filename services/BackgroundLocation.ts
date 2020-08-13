@@ -1,5 +1,6 @@
 import { requestPermissionsAsync, startLocationUpdatesAsync, stopLocationUpdatesAsync }  from "expo-location";
 import Store from '../stores/Store';
+import {log} from '../services/Logger';
 
 const LOCATION_TASK_NAME = "background-location-task";
 
@@ -23,7 +24,7 @@ export const startGetLocationAsync = async () => {
         await startLocationTaskAsync();
         Store.updateStatusText('Tracking...');
         Store.updateIsTracking(true);
-        // console.log("start locating")
+        log("start locating")
     } else {
         Store.updateIsTracking(false);
         Store.updateStatusText('Locations services needed');

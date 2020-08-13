@@ -5,6 +5,7 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { inject, observer } from 'mobx-react';
 import LocationView from './LocationView';
+import {log} from '../services/Logger';
 
 const INIT_REGION = {
     latitude: 31.728371,
@@ -35,7 +36,7 @@ function MapForegroundLocation(props,initRegion) {
             },
             newLocation => {
                 let { coords, timestamp } = newLocation;
-                //console.log(coords);
+                //log(coords);
                 //TOD - write to local DB - update route
                 let region = {
                     latitude: coords.latitude,
@@ -47,7 +48,7 @@ function MapForegroundLocation(props,initRegion) {
                 updateStatusText('locating...');
                 setMyState(prev => ({ ...prev, location: newLocation, region: region, }));
             },
-            error => console.log(error)
+            error => log(error)
         );
         return watchPositionObject;
     };
@@ -58,7 +59,7 @@ function MapForegroundLocation(props,initRegion) {
         // Permissions.askAsync(Permissions.LOCATION);
         if (status === "granted") {
             const positionObject = await startWatchPositionAsync();
-            // console.log("start locating")
+            log("start locating")
             setMyState(prev => ({ ...prev, watchPositionObject: positionObject, locationStatus: true }));
         } else {
             setMyState(prev => ({ ...prev, error: "Locations services needed", watchPositionObject: null, locationStatus: false }));
@@ -67,7 +68,7 @@ function MapForegroundLocation(props,initRegion) {
     const stopGetLocationAsync = async () => {
         if (myState.watchPositionObject !== null && myState.watchPositionObject !== undefined) {
             myState.watchPositionObject.remove();
-            // console.log("stop locating")
+            log("stop locating")
         }
         updateStatusText('not locating');
         setMyState(prev => ({ ...prev, watchPositionObject: null, locationStatus: false }));

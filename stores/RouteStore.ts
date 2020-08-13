@@ -1,6 +1,7 @@
 
 import { action, observable } from 'mobx';
 import RootStore from './RootStore'
+import {log} from '../services/Logger';
 
 export default class RouteStore {
   appInitialized = false
@@ -16,6 +17,6 @@ export default class RouteStore {
 
   @action setProperty(newProperty: string) {
     this.property = newProperty;
-    console.log(this.property);
+    log(this.property);
   }
 }

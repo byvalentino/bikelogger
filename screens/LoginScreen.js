@@ -7,6 +7,7 @@ import { inject, observer } from 'mobx-react';
 import Colors from '../constants/colors';
 import Store from '../stores/Store';
 import Input from '../components/Input';
+import {log} from '../services/Logger';
 import { set } from 'mobx';
 
 export interface Props {
@@ -43,7 +44,7 @@ function LoginScreen({ navigation }) {
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
                 // alert(firebase.auth().currentUser.uid);
-                // console.log(firebase.auth().currentUser.uid);
+                // log(firebase.auth().currentUser.uid);
                 Store.setUserEmail(email);
                 Store.setUserPassword(password);
                 Store.updateUserId(firebase.auth().currentUser.uid);
@@ -58,7 +59,7 @@ function LoginScreen({ navigation }) {
                 } else {
                     alert(errorMessage);
                 }
-                console.log(error);
+                log(error);
                 setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
             })
     }

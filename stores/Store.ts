@@ -4,6 +4,7 @@ import { firestore } from 'firebase';
 import { addRouteAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
 import { storeLocalData, getLocalData} from '../services/LocalStorage';
+import {log} from '../services/Logger';
 //import 'intl';
 
 const INIT_REGION = {
@@ -15,20 +16,8 @@ const INIT_REGION = {
 
 class Store {
 
-    // constructor(){
-    //     console.log ('init Store');
-    //     (async () => {
-    //         const data = await this.initUserEmail();
-    //     })();
-    //     getLocalData('@password').then(res =>{
-    //         if (res !== undefined )
-    //         this.userPassword = res;
-    //     });
-    //     console.log ('finish init Store');
-    // }
-
     init = async () => {
-        // console.log ('init Store');
+        log ('init Store');
         const data  = await this.initUserEmail();
         getLocalData('@password').then(res =>{
             if (res !== undefined )
@@ -177,7 +166,7 @@ class Store {
         //update ui and log
         const date = new Date(data.timestamp);
         const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
-        console.log(textlog);
+        log(textlog);
         const textUI = '(' + data.coords.latitude + ', ' + data.coords.longitude + ')';
         this.setLocationText(textUI);
         this.setAcuracy(data.coords.accuracy);
@@ -220,7 +209,7 @@ class Store {
         const startTime = this.datesArr[0];
         const name = "route-" + this.userId + '-' + this.formatDate(startTime);
         const geojsonRoute = this.createGeoJsonRoute(name, startTime, this.routeDistance);
-        //console.log(geojsonRoute);
+        log(geojsonRoute);
         if (this.isSendRoute && geojsonRoute !== null) {
             addRouteAsync(geojsonRoute, name);
         }
