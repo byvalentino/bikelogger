@@ -4,8 +4,10 @@ import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { inject, observer } from 'mobx-react';
+import { useNavigation } from '@react-navigation/native';
 import LocationView from './LocationView';
 import {log} from '../services/Logger';
+import Colors from '../constants/colors';
 
 const INIT_REGION = {
     latitude: 31.728371,
@@ -14,7 +16,8 @@ const INIT_REGION = {
     longitudeDelta: 1,
 }
 // map and foregroundLocation using watchPositionAsync
-function MapForegroundLocation(props,initRegion) {
+//function MapForegroundLocation(props,initRegion) {
+const MapForegroundLocation: React.FC<Props> = (props ) => {    
     const { updatelocationData , updateStatusText , sendRoute} = props.store;
     const [myState, setMyState] = useState(
         {
@@ -25,7 +28,10 @@ function MapForegroundLocation(props,initRegion) {
             region: INIT_REGION
         }
     );
-
+    const navigation = useNavigation();
+    const buttonLoggerClick =() =>{
+        navigation.navigate('Logger');
+    }
     const startWatchPositionAsync = async () => {
         // watchPositionAsync Return Lat & Long on Position Change
         const watchPositionObject = await Location.watchPositionAsync(
@@ -54,6 +60,7 @@ function MapForegroundLocation(props,initRegion) {
     };
 
     const startGetLocationAsync = async () => {
+        log("startGetLocationAsync - forground");
         // Asking for device location permission
         const { status } = await Location.requestPermissionsAsync()
         // Permissions.askAsync(Permissions.LOCATION);
@@ -94,6 +101,9 @@ function MapForegroundLocation(props,initRegion) {
             <View style={styles.buttonContainer}>
                 <Button title={textButton} onPress={() => { setLocationStaus() }} />
                 <Button title="Add Route" onPress={() => { sendRoute() }} />
+                <View style={styles.button2}>
+                    <Button title='log' color={Colors.primary} onPress={buttonLoggerClick} />
+                </View>
             </View>
             
         </View>
@@ -102,7 +112,7 @@ function MapForegroundLocation(props,initRegion) {
 const styles = StyleSheet.create({
     mapStyle: {
         width: '100%',
-        height: '70%',
+        height: '60%',
     },
     text: {
         paddingTop: 10,

@@ -18,13 +18,14 @@ const startLocationTaskAsync = async () => {
 };
 
 export const startGetLocationAsync = async () => {
+    log("startGetLocationAsync - background");
     // Asking for device location permission
     const { status } = await requestPermissionsAsync()
     if (status === "granted") {
         await startLocationTaskAsync();
         Store.updateStatusText('Tracking...');
         Store.updateIsTracking(true);
-        log("start locating")
+        log("start locating");
     } else {
         Store.updateIsTracking(false);
         Store.updateStatusText('Locations services needed');

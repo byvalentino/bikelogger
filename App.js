@@ -13,9 +13,11 @@ import Header from './components/Header';
 import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
 import LoggerScreen from './screens/LoggerScreen';
+import MapForgroundScreen from './screens/MapForgroundScreen'; 
 //import AccelerometerScreen from './screens/AccelerometerScreen';
 //import MapForegroundLocation from './components/MapForegroundLocation'
-import MapBackgroundLocation from './components/MapBackgroundLocation'
+//import MapBackgroundLocation from './components/MapBackgroundLocation';
+
 // ignore firebase Setting a timer for a long period of time 
 // See https://github.com/facebook/react-native/issues/12981 for more info
 import { YellowBox } from 'react-native';
@@ -31,6 +33,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Bike Tracker" component={MainScreen} />
+              <Stack.Screen name="MapForground" component={MapForgroundScreen} />
               <Stack.Screen name="Logger" component={LoggerScreen} />
         </Stack.Navigator>
      </NavigationContainer>

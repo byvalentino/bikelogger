@@ -7,7 +7,7 @@ import LocationView from './LocationView';
 import MyMapView from './MyMapView';
 import ConfigScreen from  '../screens/ConfigScreen';
 import AccelerometerScreen from '../screens/AccelerometerScreen';
-import LoggerScreen from '../screens/LoggerModalScreen';
+import LoggerModalScreen from '../screens/LoggerModalScreen';
 import {startGetLocationAsync, stopGetLocationAsync} from '../services/BackgroundLocation';
 import LocationTaskExecutor from '../services/taskLocation';
 import Colors from '../constants/colors';
@@ -57,7 +57,7 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
             </View>
             <ConfigScreen />
             <AccelerometerScreen />
-            <LoggerScreen/>
+            <LoggerModalScreen/>
         </View>
     );
 }

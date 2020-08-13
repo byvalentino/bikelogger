@@ -63,6 +63,29 @@ function LoginScreen({ navigation }) {
                 setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
             })
     }
+    const onLoginForgroundPress = () => {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+                // alert(firebase.auth().currentUser.uid);
+                // log(firebase.auth().currentUser.uid);
+                Store.setUserEmail(email);
+                Store.setUserPassword(password);
+                Store.updateUserId(firebase.auth().currentUser.uid);
+                setMyState(prev => ({ ...prev, error: '', loading: false, }));
+                navigation.navigate('MapForground');
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                let errorMessage = error.message;
+                if (errorCode === 'auth/wrong-password') {
+                    alert('Wrong password.');
+                } else {
+                    alert(errorMessage);
+                }
+                log(error);
+                setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
+            })
+    }
     const onSignUpPress = () => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(() => {
@@ -84,6 +107,9 @@ function LoginScreen({ navigation }) {
                 </View>
                 <View style={styles.button}>
                     <Button title='Login' color={Colors.primary} onPress={() => { onLoginPress() }} />
+                </View>
+                <View style={styles.button}>
+                    <Button title='Forground' color={Colors.primary} onPress={() => { onLoginForgroundPress() }} />
                 </View>
             </View>
         }
