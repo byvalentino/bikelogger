@@ -40,6 +40,11 @@ class Store {
         this.accelerometerModalVisable = isVisable;
     }
 
+    @observable loggerModalVisable = false;
+    @action setLoggerModalVisable = (isVisable: boolean) => {
+        this.loggerModalVisable = isVisable;
+    }
+
     
     /// User Store //////////////////
     @observable userId = '111';
@@ -209,7 +214,7 @@ class Store {
         const startTime = this.datesArr[0];
         const name = "route-" + this.userId + '-' + this.formatDate(startTime);
         const geojsonRoute = this.createGeoJsonRoute(name, startTime, this.routeDistance);
-        log(geojsonRoute);
+        //log(geojsonRoute);
         if (this.isSendRoute && geojsonRoute !== null) {
             addRouteAsync(geojsonRoute, name);
         }

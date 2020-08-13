@@ -4,6 +4,7 @@ import { Accelerometer } from 'expo-sensors';
 import { inject, observer } from 'mobx-react';
 import MyModal from '../components/MyModal';
 import Colors from '../constants/colors';
+import { log } from '../services/Logger';
 
 export interface Props {
   store?: any;
@@ -14,6 +15,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     _toggle();
+    log('enter AccelerometerScreen');
   }, []);
 
   useEffect(() => {
