@@ -5,12 +5,12 @@ import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
-import ConfigScreen from  '../screens/ConfigScreen';
+import ConfigModalScreen from '../screens/ConfigModalScreen';
 import AccelerometerScreen from '../screens/AccelerometerScreen';
-import LoggerModalScreen from '../screens/LoggerModalScreen';
-import {startGetLocationAsync, stopGetLocationAsync} from '../services/BackgroundLocation';
+import { startGetLocationAsync, stopGetLocationAsync } from '../services/BackgroundLocation';
 import LocationTaskExecutor from '../services/taskLocation';
 import Colors from '../constants/colors';
+import { AntDesign } from '@expo/vector-icons';
 
 const LOCATION_TASK_NAME = "background-location-task";
 // define the task that will run when location is found
@@ -18,17 +18,28 @@ defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
 
 export interface Props {
     store?: any;
-  }
+}
 
 // map and background Location 
-const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
-    const { 
-        isTracking, 
-        setConfigModalVisible, 
+const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
+    const {
+        isTracking,
+        setConfigModalVisible,
         setAccelerometerModalVisable,
         setLoggerModalVisable, } = props.store;
     const navigation = useNavigation();
-    const buttonLoggerClick =() =>{
+
+    const buttonConfigClick = () => {
+        navigation.navigate('Config');
+    }
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <AntDesign.Button style={styles.buttonHead} name='setting' onPress={buttonConfigClick} />
+            ),
+        });
+    }, [navigation]);
+    const buttonLoggerClick = () => {
         navigation.navigate('Logger');
     }
     const setLocationStaus = () => {
@@ -38,6 +49,7 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
             stopGetLocationAsync();
     }
     const textButton = (isTracking) ? 'STOP TRACKING' : 'START TRACKING';
+
     return (
         <View>
             <MyMapView />
@@ -46,9 +58,9 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
                 <View style={styles.button}>
                     <Button title={textButton} color={Colors.primary} onPress={() => { setLocationStaus() }} />
                 </View>
-                <View style={styles.button2}>
+                {/* <View style={styles.button2}>
                     <Button title='Config' color={Colors.primary} onPress={() => { setConfigModalVisible(true) }} />
-                </View>
+                </View> */}
                 <View style={styles.button2}>
                     <Button title='Acc' color={Colors.primary} onPress={() => { setAccelerometerModalVisable(true) }} />
                 </View>
@@ -56,9 +68,8 @@ const MapBackgroundLocation: React.FC<Props> = (props:Props) => {
                     <Button title='log' color={Colors.primary} onPress={buttonLoggerClick} />
                 </View>
             </View>
-            <ConfigScreen />
+            {/* <ConfigModalScreen /> */}
             <AccelerometerScreen />
-            <LoggerModalScreen/>
         </View>
     );
 }
@@ -72,6 +83,10 @@ const styles = StyleSheet.create({
     },
     button2: {
         width: 70,
+    },
+    buttonHead:{
+        backgroundColor: '#0277BD',
+        alignItems:"center",
     },
 });
 

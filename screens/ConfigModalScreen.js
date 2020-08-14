@@ -8,7 +8,7 @@ import Colors from '../constants/colors';
 export interface Props {
     store?: any;
 }
-const ConfigScreen: React.FC<Props> = (props: Props) => {
+const ConfigModalScreen: React.FC<Props> = (props: Props) => {
     const { configModalVisible, setConfigModalVisible ,trackingTimeInterval, setTrackingTimeInterval} = props.store;
     const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
     const numberInputHandler = (text) => {
@@ -69,7 +69,7 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
         </Modal>
     );
 };
-export default inject("store")(observer(ConfigScreen));
+export default inject("store")(observer(ConfigModalScreen));
 
 const styles = StyleSheet.create({
     centeredView: {
