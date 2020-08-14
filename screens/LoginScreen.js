@@ -4,11 +4,11 @@ import * as firebase from 'firebase'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { inject, observer } from 'mobx-react';
-import Colors from '../constants/colors';
 import Store from '../stores/Store';
 import Input from '../components/Input';
 import {log} from '../services/Logger';
-import { set } from 'mobx';
+// import { set } from 'mobx';
+import Colors from '../constants/colors';
 
 export interface Props {
 }
@@ -41,50 +41,33 @@ function LoginScreen({ navigation }) {
         setPassword(text);
     }
     const onLoginPress = () => {
+        tryLogin('MainScreen');
+    }
+    const tryLogin = (navPage:string) =>{
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {
-                // alert(firebase.auth().currentUser.uid);
-                // log(firebase.auth().currentUser.uid);
-                Store.setUserEmail(email);
-                Store.setUserPassword(password);
-                Store.updateUserId(firebase.auth().currentUser.uid);
-                setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                navigation.navigate('Bike Tracker');
-            })
-            .catch((error) => {
-                let errorCode = error.code;
-                let errorMessage = error.message;
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
-                log(error);
-                setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
-            })
+        .then(() => {
+            // alert(firebase.auth().currentUser.uid);
+            // log(firebase.auth().currentUser.uid);
+            Store.setUserEmail(email);
+            Store.setUserPassword(password);
+            Store.updateUserId(firebase.auth().currentUser.uid);
+            setMyState(prev => ({ ...prev, error: '', loading: false, }));
+            navigation.navigate(navPage);
+        })
+        .catch((error) => {
+            let errorCode = error.code;
+            let errorMessage = error.message;
+            if (errorCode === 'auth/wrong-password') {
+                alert('Wrong password.');
+            } else {
+                alert(errorMessage);
+            }
+            log(error);
+            setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
+        })
     }
     const onLoginForgroundPress = () => {
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {
-                // alert(firebase.auth().currentUser.uid);
-                // log(firebase.auth().currentUser.uid);
-                Store.setUserEmail(email);
-                Store.setUserPassword(password);
-                Store.updateUserId(firebase.auth().currentUser.uid);
-                setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                navigation.navigate('MapForground');
-            })
-            .catch((error) => {
-                let errorCode = error.code;
-                let errorMessage = error.message;
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
-                }
-                log(error);
-                setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
-            })
+        tryLogin('MapForground');
     }
     const onSignUpPress = () => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -158,7 +141,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     button: {
-        width: 150,
+        width: 120,
     },
     text: {
         fontSize: 14,

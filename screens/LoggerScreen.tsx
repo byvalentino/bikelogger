@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, Dimensions, Button, StyleSheet } from 'react-native';
 import { logHistory } from '../services/Logger';
+import Colors from '../constants/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -41,12 +42,12 @@ class ScrollFlatList extends Component {
           <Button
             onPress={this.scrollToIndex}
             title="scroll To Index"
-            color="darkblue"
+            color={Colors.primary}
           />
           <Button
             onPress={this.scrollToItem}
             title="scroll To Item"
-            color="purple"
+            color={Colors.primary}
           />
         </View>
         <FlatList

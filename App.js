@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
-import { I18nManager} from 'react-native';
+import { I18nManager } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 // imports Provider and store
 import { Provider } from 'mobx-react';
 import 'mobx-react-lite/batchingForReactNative';
@@ -13,10 +12,8 @@ import Header from './components/Header';
 import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
 import LoggerScreen from './screens/LoggerScreen';
-import MapForgroundScreen from './screens/MapForgroundScreen'; 
-//import AccelerometerScreen from './screens/AccelerometerScreen';
-//import MapForegroundLocation from './components/MapForegroundLocation'
-//import MapBackgroundLocation from './components/MapBackgroundLocation';
+import MapForgroundScreen from './screens/MapForgroundScreen';
+import Colors from './constants/colors';
 
 // ignore firebase Setting a timer for a long period of time 
 // See https://github.com/facebook/react-native/issues/12981 for more info
@@ -30,13 +27,23 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Bike Tracker" component={MainScreen} />
-              <Stack.Screen name="MapForground" component={MapForgroundScreen} />
-              <Stack.Screen name="Logger" component={LoggerScreen} />
+        <Stack.Navigator initialRouteName="Login"
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#373EAC',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        >
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="MainScreen" component={MainScreen} options={{ title: 'Bike Tracker' }} />
+          <Stack.Screen name="MapForground" component={MapForgroundScreen} />
+          <Stack.Screen name="Logger" component={LoggerScreen} />
         </Stack.Navigator>
-     </NavigationContainer>
+      </NavigationContainer>
     </Provider>
   );
 }
