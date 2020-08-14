@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet, TouchableHighlight } from 'react-native';
 import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +10,7 @@ import AccelerometerScreen from '../screens/AccelerometerScreen';
 import { startGetLocationAsync, stopGetLocationAsync } from '../services/BackgroundLocation';
 import LocationTaskExecutor from '../services/taskLocation';
 import Colors from '../constants/colors';
-import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const LOCATION_TASK_NAME = "background-location-task";
 // define the task that will run when location is found
@@ -29,16 +29,16 @@ const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
         setLoggerModalVisable, } = props.store;
     const navigation = useNavigation();
 
-    const buttonConfigClick = () => {
-        navigation.navigate('Config');
-    }
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: () => (
-                <AntDesign.Button style={styles.buttonHead} name='setting' onPress={buttonConfigClick} />
-            ),
-        });
-    }, [navigation]);
+    // const buttonConfigClick = () => {
+    //     navigation.navigate('Config');
+    // }
+    // React.useLayoutEffect(() => {
+    //     navigation.setOptions({
+    //         headerRight: () => (
+    //             <AntDesign.Button style={styles.buttonHead} name='setting' onPress={buttonConfigClick} />
+    //         ),
+    //     });
+    // }, [navigation]);
     const buttonLoggerClick = () => {
         navigation.navigate('Logger');
     }
@@ -70,9 +70,35 @@ const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
             </View>
             {/* <ConfigModalScreen /> */}
             <AccelerometerScreen />
+            <ConfigButton></ConfigButton>
         </View>
     );
 }
+
+const ConfigButton: React.FC<Props> = (props: Props) => {
+    const navigation = useNavigation();
+    const buttonConfigClick = () => {
+        navigation.navigate('Config');
+    }
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <View style={styles.buttonHeadView}>
+                    <TouchableHighlight
+                        onPress={buttonConfigClick}>
+                        <View>
+                            <Ionicons name="md-settings" size={24} color="#fff" />
+                        </View>
+                    </TouchableHighlight>
+                </View>
+            ),
+        });
+    }, [navigation]);
+    return (
+        null
+    )
+}
+
 const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
@@ -84,9 +110,11 @@ const styles = StyleSheet.create({
     button2: {
         width: 70,
     },
-    buttonHead:{
-        backgroundColor: '#0277BD',
-        alignItems:"center",
+    buttonHead: {
+        alignItems: "center",
+    },
+    buttonHeadView: {
+        marginRight: 10,
     },
 });
 
