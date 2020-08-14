@@ -7,11 +7,11 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/bikelogger-icon.png",
     "splash": {
-      "image": "./assets/splash-bike.png",
+      "image": "./assets/bikelogger-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,6 +28,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "BikeLogger uses your location to track cycleing routes.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow BikeLogger to access your location.",
+        "NSLocationAlwaysUsageDescription": "Allow BikeLogger to access your location when app in backround.",
         "NSMotionUsageDescription": "Allow BikeLogger to access your device's accelerometer.",
         "UIBackgroundModes": [
           "location",
