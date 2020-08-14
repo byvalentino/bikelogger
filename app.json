@@ -13,7 +13,7 @@
     "splash": {
       "image": "./assets/bikelogger-splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#373EAC"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
