@@ -1,21 +1,26 @@
-import { requestPermissionsAsync, startLocationUpdatesAsync, stopLocationUpdatesAsync }  from "expo-location";
+import { requestPermissionsAsync, startLocationUpdatesAsync, stopLocationUpdatesAsync } from "expo-location";
 import Store from '../stores/Store';
-import {log} from '../services/Logger';
+import { log } from '../services/Logger';
 
 const LOCATION_TASK_NAME = "background-location-task";
 
 const startLocationTaskAsync = async () => {
-    log("startLocationTaskAsync");
-    await startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-         // @ts-ignore
-        enableHighAccuracy: true,
-        distanceInterval: 1,
-        timeInterval: Store.trackingTimeInterval*1000,
-        foregroundService: {
-            notificationTitle: 'Bike Location',
-            notificationBody: 'Enable this to make GPS alive'
-        },
-    });
+    try {
+        log("startLocationTaskAsync");
+        await startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+            // @ts-ignore
+            enableHighAccuracy: true,
+            distanceInterval: 1,
+            timeInterval: Store.trackingTimeInterval * 1000,
+            foregroundService: {
+                notificationTitle: 'Bike Location',
+                notificationBody: 'Enable this to make GPS alive'
+            },
+        });
+    } catch (error) {
+        log(error.message);
+        throw(error);
+    }
 };
 
 export const startGetLocationAsync = async () => {
