@@ -9,6 +9,7 @@ import Input from '../components/Input';
 import {log} from '../services/Logger';
 // import { set } from 'mobx';
 import Colors from '../constants/colors';
+import AuthContext from '../constants/MyContext';
 
 export interface Props {
 }
@@ -23,9 +24,10 @@ function LoginScreen({ navigation }) {
             loading: false,
         }
     );
-    useEffect(() => {
-        Store.init();
-    },[]);
+    const { signIn, signUp} = React.useContext(AuthContext);
+    // useEffect(() => {
+    //     Store.init();
+    // },[]);
     useEffect(() => {
         if (Store.isStoreReady)
         {
@@ -46,13 +48,12 @@ function LoginScreen({ navigation }) {
     const tryLogin = (navPage:string) =>{
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(() => {
-            // alert(firebase.auth().currentUser.uid);
-            // log(firebase.auth().currentUser.uid);
             Store.setUserEmail(email);
             Store.setUserPassword(password);
-            Store.setUserId(firebase.auth().currentUser.uid);
+            Store.setUserToken(firebase.auth().currentUser.uid);
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
-            navigation.navigate(navPage);
+            // navigation.navigate(navPage);
+            signIn({ email, password });
         })
         .catch((error) => {
             let errorCode = error.code;
@@ -66,14 +67,15 @@ function LoginScreen({ navigation }) {
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
         })
     }
-    const onLoginForgroundPress = () => {
-        tryLogin('MapForground');
-    }
+    // const onLoginForgroundPress = () => {
+    //     tryLogin('MapForground');
+    // }
     const onSignUpPress = () => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(() => {
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                navigation.navigate('Bike Tracker')
+                //navigation.navigate('Bike Tracker')
+                signUp({ email, password });
             })
             .catch(() => {
                 setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
@@ -91,9 +93,9 @@ function LoginScreen({ navigation }) {
                 <View style={styles.button}>
                     <Button title='Login' color={Colors.primary} onPress={() => { onLoginPress() }} />
                 </View>
-                <View style={styles.button}>
+                {/* <View style={styles.button}>
                     <Button title='Forground' color={Colors.primary} onPress={() => { onLoginForgroundPress() }} />
-                </View>
+                </View> */}
             </View>
         }
 

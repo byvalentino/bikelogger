@@ -20,6 +20,9 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
     setEnteredText(trackingTimeInterval.toString());
     navigation.goBack();
   }
+  const onForgroundPress =() => {
+    navigation.navigate('MapForground');
+  }
   const confirmedButtonHandler = () => {
     const intervalNumnber = parseInt(enteredText)
     if (isNaN(intervalNumnber) || intervalNumnber <= 0 || intervalNumnber > 30) {
@@ -50,6 +53,9 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
         onChangeText={numberInputHandler}
         value={enteredText}
       />
+      <View style={styles.button}>
+          <Button title='Forground' color={Colors.primary} onPress={onForgroundPress} />
+      </View>
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
           <Button title="Cancel" color={Colors.secondary} onPress={cacnelButtonHandler} />

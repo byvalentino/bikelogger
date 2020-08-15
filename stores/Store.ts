@@ -18,6 +18,7 @@ class Store {
 
     init = async () => {
         log ('init Store');
+        const dataUserToken = await this.initUserToken();
         const data  = await this.initUserEmail();
         getLocalData('@password').then(res =>{
             if (res !== undefined )
@@ -47,9 +48,16 @@ class Store {
 
     
     /// User Store //////////////////
-    @observable userId = '111';
-    @action setUserId = (uid: string) => {
-        this.userId = uid;
+    @observable userToken = '';
+    @action setUserToken = (value: string) => {
+        this.userToken = value;
+        storeLocalData('@userToken', value);
+    }
+    initUserToken = async () => {
+        const val = await getLocalData('@userToken');
+        if (val !== undefined){
+            this.setUserToken(val);
+        }
     }
     // @observable tempMail = '';
     // @action setTempMail = (value: string) => {
@@ -214,7 +222,7 @@ class Store {
     @observable isSendRoute = true;
     @action sendRoute = () => {
         const startTime = this.datesArr[0];
-        const name = "route-" + this.userId + '-' + this.formatDate(startTime);
+        const name = "route-" + this.userToken + '-' + this.formatDate(startTime);
         const geojsonRoute = this.createGeoJsonRoute(name, startTime, this.routeDistance);
         //log(geojsonRoute);
         if (this.isSendRoute && geojsonRoute !== null) {
