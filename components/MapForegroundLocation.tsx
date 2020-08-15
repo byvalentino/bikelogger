@@ -15,10 +15,13 @@ const INIT_REGION = {
     latitudeDelta: 1,
     longitudeDelta: 1,
 }
+export interface Props {
+    store?: any;
+}
 // map and foregroundLocation using watchPositionAsync
 //function MapForegroundLocation(props,initRegion) {
-const MapForegroundLocation: React.FC<Props> = (props ) => {    
-    const { updatelocationData , updateStatusText , sendRoute} = props.store;
+const MapForegroundLocation: React.FC<Props> = (props: Props) => {    
+    const { setLocationData , setStatusText , sendRoute} = props.store;
     const [myState, setMyState] = useState(
         {
             locationStatus: false,
@@ -50,13 +53,13 @@ const MapForegroundLocation: React.FC<Props> = (props ) => {
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005
                 };
-                updatelocationData(newLocation);
-                updateStatusText('locating...');
-                setMyState(prev => ({ ...prev, location: newLocation, region: region, }));
-            },
-            error => log(error)
-        );
-        return watchPositionObject;
+                setLocationData(newLocation);
+                setStatusText('locating...');
+                setMyState((prev:any) => ({ ...prev, location: newLocation, region: region, }));
+            }
+        ).catch((error) => {
+             log(error)
+        });
     };
 
     const startGetLocationAsync = async () => {
@@ -67,17 +70,18 @@ const MapForegroundLocation: React.FC<Props> = (props ) => {
         if (status === "granted") {
             const positionObject = await startWatchPositionAsync();
             log("start locating")
-            setMyState(prev => ({ ...prev, watchPositionObject: positionObject, locationStatus: true }));
+            setMyState((prev:any) => ({ ...prev, watchPositionObject: positionObject, locationStatus: true }));
         } else {
             setMyState(prev => ({ ...prev, error: "Locations services needed", watchPositionObject: null, locationStatus: false }));
         }
     }
     const stopGetLocationAsync = async () => {
         if (myState.watchPositionObject !== null && myState.watchPositionObject !== undefined) {
+            //@ts-ignore
             myState.watchPositionObject.remove();
             log("stop locating")
         }
-        updateStatusText('not locating');
+        setStatusText('not locating');
         setMyState(prev => ({ ...prev, watchPositionObject: null, locationStatus: false }));
         sendRoute();
     }
@@ -120,7 +124,10 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-    }
+    },
+    button2: {
+        width: 70,
+    },
 });
 
 export default inject("store")(observer(MapForegroundLocation));

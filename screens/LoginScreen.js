@@ -50,7 +50,7 @@ function LoginScreen({ navigation }) {
             // log(firebase.auth().currentUser.uid);
             Store.setUserEmail(email);
             Store.setUserPassword(password);
-            Store.updateUserId(firebase.auth().currentUser.uid);
+            Store.setUserId(firebase.auth().currentUser.uid);
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
             navigation.navigate(navPage);
         })

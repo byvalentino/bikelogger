@@ -48,7 +48,7 @@ class Store {
     
     /// User Store //////////////////
     @observable userId = '111';
-    @action updateUserId = (uid: string) => {
+    @action setUserId = (uid: string) => {
         this.userId = uid;
     }
     // @observable tempMail = '';
@@ -73,6 +73,8 @@ class Store {
         storeLocalData('@password', value);
     }
 
+
+
     /// Tracking Store //////////////////
 
     //tracking Time Interval in sec
@@ -83,20 +85,20 @@ class Store {
 
     // is gps location Tracking is on
     @observable isTracking = false;
-    @action updateIsTracking = (isTrack: boolean) => {
+    @action setIsTracking = (isTrack: boolean) => {
         this.isTracking = isTrack;
     }
 
     // region in the map 
     @observable region: any = INIT_REGION;
-    @action updateRegion = (newRegion: any) => {
+    @action setRegion = (newRegion: any) => {
         this.region = newRegion;
     }
 
     // observable to statusText
     @observable statusText = 'Not Tracking';
-    // action to update statusText
-    @action updateStatusText = (text: string) => {
+    // action to set statusText
+    @action setStatusText = (text: string) => {
         this.statusText = text;
     }
 
@@ -108,18 +110,18 @@ class Store {
     }
     // observable to accuracy
     @observable accuracy = 0;
-    // action to update accuracy
+    // action to set accuracy
     @action setAcuracy = (acc: number) => {
         this.accuracy = acc;
     }
     // observable to speed
     @observable speed = 0;
-    // action to update speed
+    // action to set speed
     @action setSpeed = (spd: number) => {
         this.speed = spd;
     }
     @observable altitude = 0;
-    // action to update speed
+    // action to set altitude
     @action setAltitude = (alt: number) => {
         this.altitude = alt;
     }
@@ -161,7 +163,7 @@ class Store {
 
     // observable for locationData - current location
     @observable locationData: LocationData | null = null;
-    @action updatelocationData = (data: LocationData) => {
+    @action setLocationData = (data: LocationData) => {
         this.locationData = data;
         const point: number[] = [data.coords.latitude, data.coords.longitude];
         this.InsertToPointsArr(point);
@@ -184,7 +186,7 @@ class Store {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005
         };
-        this.updateRegion(region);
+        this.setRegion(region);
     }
 
     createGeoJsonRoute = (name: string, startTime: Date, dist: number) => {

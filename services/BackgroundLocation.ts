@@ -29,19 +29,19 @@ export const startGetLocationAsync = async () => {
     const { status } = await requestPermissionsAsync()
     if (status === "granted") {
         await startLocationTaskAsync();
-        Store.updateStatusText('Tracking...');
-        Store.updateIsTracking(true);
+        Store.setStatusText('Tracking...');
+        Store.setIsTracking(true);
         log("start locating");
     } else {
-        Store.updateIsTracking(false);
-        Store.updateStatusText('Locations services needed');
+        Store.setIsTracking(false);
+        Store.setStatusText('Locations services needed');
     }
 }
 
 export const stopGetLocationAsync = async () => {
     await stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-    Store.updateStatusText('Not Tracking');
-    Store.updateIsTracking(false);
+    Store.setStatusText('Not Tracking');
+    Store.setIsTracking(false);
     Store.sendRoute();
 }
 export default startLocationTaskAsync;
