@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Keyboard, Alert } from "react-native";
+import Constants from 'expo-constants';
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
-//import Card from '../components/Card';
+
 import Input from '../components/Input';
 import Colors from '../constants/colors';
 
@@ -20,7 +21,7 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
     setEnteredText(trackingTimeInterval.toString());
     navigation.goBack();
   }
-  const onForgroundPress =() => {
+  const onForgroundPress = () => {
     navigation.navigate('MapForground');
   }
   const confirmedButtonHandler = () => {
@@ -40,22 +41,30 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
     }
   }
   return (
-    <View style={styles.centeredView}>
-
-      <Text>Time Interval:</Text>
-      <Input
-        style={styles.input}
-        blurOnSubmit
-        autoCapitalize='none'
-        autoCorrect={false}
-        keyboardType='number-pad'
-        maxLength={2}
-        onChangeText={numberInputHandler}
-        value={enteredText}
-      />
-      <View style={styles.button}>
-          <Button title='Forground' color={Colors.primary} onPress={onForgroundPress} />
+    <View style={styles.main}>
+      <View style={styles.lineContainer}>
+        <Text style={styles.text} >Version:</Text>
+        <Text style={styles.text}>{Constants.manifest.version}</Text>
       </View>
+      <View style={styles.lineContainer}>
+        <Text style={styles.text}>Time Interval:</Text>
+        <Input
+          style={styles.input}
+          blurOnSubmit
+          autoCapitalize='none'
+          autoCorrect={false}
+          keyboardType='number-pad'
+          maxLength={2}
+          onChangeText={numberInputHandler}
+          value={enteredText}
+        />
+      </View>
+      <View style={styles.lineContainer}>
+        <View style={styles.button}>
+          <Button title='Forground' color={Colors.primary} onPress={onForgroundPress} />
+        </View>
+      </View>
+    
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
           <Button title="Cancel" color={Colors.secondary} onPress={cacnelButtonHandler} />
@@ -70,28 +79,31 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
 export default inject("store")(observer(ConfigScreen));
 
 const styles = StyleSheet.create({
-  centeredView: {
+  main: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     marginTop: 22
   },
   button: {
     width: 100,
   },
-  cardStyle: {
-    width: 300,
-    maxWidth: '80%',
-    alignItems: 'center',
-  },
   input: {
     width: 50,
-    textAlign: 'center',
+  },
+  text:{
+    marginLeft: 15,
+    fontSize: 18,
+  },
+  lineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 15,
+    paddingTop: 20,
   },
   buttonContainer: {
+    marginTop: 22,
     flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
+    width: '80%',
+    justifyContent: 'center',
     paddingHorizontal: 15,
   },
   textStyle: {
