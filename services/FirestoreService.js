@@ -1,9 +1,9 @@
 import * as firebase from 'firebase'
 import 'firebase/firestore';
-import ApyKeys from '../constants/ApyKeys';
+import ApiKeys from '../constants/ApiKeys';
 import {log, logError} from './Logger';
 
-firebase.initializeApp(ApyKeys.FireBaseConfig);
+firebase.initializeApp(ApiKeys.FireBaseConfig);
 const db = firebase.firestore();
 
 // export const addUser = (fullname, email) => {
@@ -25,3 +25,16 @@ export const addRouteAsync = async (route, name) => {
     logError("Error writing document: ", error);
   });
 };
+
+// use "firebase": "7.9.0", to fix bug  "7.9.1" Can't find variable: atob 
+export const updateUserAsync = async (userData, name) => {
+  log("try to write to firestore user");
+  await db.collection("users").doc(name).set(userData)
+  .then(function () {
+    log("User info successfully written!");
+  })
+  .catch(function(error) {
+    logError("Error writing user: ", error);
+  });
+};
+

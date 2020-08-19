@@ -10,6 +10,7 @@ import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
 import LoggerScreen from './screens/LoggerScreen';
 import ConfigScreen from './screens/ConfigScreen';
+import UserPropsScreen from './screens/UserPropsScreen';
 import MapForgroundScreen from './screens/MapForgroundScreen';
 import AuthContext from './constants/MyContext';
 
@@ -108,6 +109,9 @@ function Router({ navigation }) {
               <>
                 <Stack.Screen name="MainScreen" component={MainScreen}
                   options={{ title: 'Bike Tracker' }}
+                />
+                <Stack.Screen name="UserProps" component={UserPropsScreen} 
+                  options={{ title: 'User Props' }}
                 />
                 <Stack.Screen name="MapForground" component={MapForgroundScreen} />
                 <Stack.Screen name="Logger" component={LoggerScreen} />

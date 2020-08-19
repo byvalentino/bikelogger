@@ -24,6 +24,9 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
   const onForgroundPress = () => {
     navigation.navigate('MapForground');
   }
+  const onUserPropsPress = () => {
+    navigation.navigate('UserProps');
+  }
   const confirmedButtonHandler = () => {
     const intervalNumnber = parseInt(enteredText)
     if (isNaN(intervalNumnber) || intervalNumnber <= 0 || intervalNumnber > 30) {
@@ -62,6 +65,11 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
       <View style={styles.lineContainer}>
         <View style={styles.button}>
           <Button title='Forground' color={Colors.primary} onPress={onForgroundPress} />
+        </View>
+      </View>
+      <View style={styles.lineContainer}>
+        <View style={styles.button}>
+          <Button title='User Props' color={Colors.primary} onPress={onUserPropsPress} />
         </View>
       </View>
     

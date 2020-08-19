@@ -1,10 +1,10 @@
 import { observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
-import { addRouteAsync } from '../services/FirestoreService';
+import { addRouteAsync, updateUserAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
-import { storeLocalData, getLocalData} from '../services/LocalStorage';
-import {log} from '../services/Logger';
+import { storeLocalData, getLocalData } from '../services/LocalStorage';
+import { log } from '../services/Logger';
 //import 'intl';
 
 const INIT_REGION = {
@@ -17,12 +17,12 @@ const INIT_REGION = {
 class Store {
 
     init = async () => {
-        log ('init Store');
+        log('init Store');
         const dataUserToken = await this.initUserToken();
-        const data  = await this.initUserEmail();
-        getLocalData('@password').then(res =>{
-            if (res !== undefined )
-            this.userPassword = res;
+        const data = await this.initUserEmail();
+        getLocalData('@password').then(res => {
+            if (res !== undefined)
+                this.userPassword = res;
         });
         this.setStoreReady(true);
     }
@@ -30,8 +30,8 @@ class Store {
     @action setStoreReady = (value: boolean) => {
         this.isStoreReady = value;
     }
- 
-    /// UI Store //////////////////
+
+    /// UI Store /////////////////////////////////////////////////////////////////////////
     @observable configModalVisible = false;
     @action setConfigModalVisible = (isVisable: boolean) => {
         this.configModalVisible = isVisable;
@@ -46,8 +46,7 @@ class Store {
         this.loggerModalVisable = isVisable;
     }
 
-    
-    /// User Store //////////////////
+    /// User Store ////////////////////////////////////////////////////////////////////
     @observable userToken = '';
     @action setUserToken = (value: string) => {
         this.userToken = value;
@@ -55,7 +54,7 @@ class Store {
     }
     initUserToken = async () => {
         const val = await getLocalData('@userToken');
-        if (val !== undefined){
+        if (val !== undefined) {
             this.setUserToken(val);
         }
     }
@@ -70,7 +69,7 @@ class Store {
     }
     initUserEmail = async () => {
         const email = await getLocalData('@email');
-        if (email !== undefined){
+        if (email !== undefined) {
             this.setUserEmail(email);
         }
     }
@@ -80,7 +79,30 @@ class Store {
         this.userEmail = value;
         storeLocalData('@password', value);
     }
-
+    @observable userFirstName = '';
+    @action setUserFirstName = (value: string) => {
+        this.userFirstName = value;
+    }
+    @observable userLastName = '';
+    @action setUserLastName = (value: string) => {
+        this.userLastName = value;
+    }
+    @action sendUserData = () => {
+        const startTime = this.datesArr[0];
+        const name = "user-" + this.userToken;
+        const userData = {
+            first_name: this.userFirstName,
+            last_name: this.userLastName,
+            email: this.userEmail,
+            created_at: 'sunday',
+            last_logged_in: 'now',
+            locale: 'en',
+        };
+        //log(geojsonRoute);
+        if (userData !== null) {
+            updateUserAsync(userData, name);
+        }
+    }
 
 
     /// Tracking Store //////////////////
@@ -160,10 +182,10 @@ class Store {
     }
     //routeDistance in KM
     @observable routeDistance: number = 0;
-    @action setRouteDistance = (point1:number[]) => {
-        if (this.pointsArr.length > 1){
+    @action setRouteDistance = (point1: number[]) => {
+        if (this.pointsArr.length > 1) {
             let point2 = this.pointsArr[this.pointsArr.length - 2];
-            let addedDist =  getDistanceKm(point1[0],point1[1],point2[0],point2[1]);
+            let addedDist = getDistanceKm(point1[0], point1[1], point2[0], point2[1]);
             this.routeDistance += addedDist;
         }
 
