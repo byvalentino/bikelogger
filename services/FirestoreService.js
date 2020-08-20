@@ -5,16 +5,8 @@ import {log, logError} from './Logger';
 
 firebase.initializeApp(ApiKeys.FireBaseConfig);
 const db = firebase.firestore();
-
-// export const addUser = (fullname, email) => {
-//     const userRef = db.collection("users").add({
-//       fullname: fullname,
-//       email: email
-//     }); 
-//   };
-
-
 // use "firebase": "7.9.0", to fix bug  "7.9.1" Can't find variable: atob 
+
 export const addRouteAsync = async (route, name) => {
   log("try to write to firestore");
   await db.collection("routes").doc(name).set(route)
@@ -26,7 +18,6 @@ export const addRouteAsync = async (route, name) => {
   });
 };
 
-// use "firebase": "7.9.0", to fix bug  "7.9.1" Can't find variable: atob 
 export const setUserAsync = async (userData, name) => {
   await db.collection("users").doc(name).set(userData)
   .then(function () {
@@ -38,7 +29,6 @@ export const setUserAsync = async (userData, name) => {
 };
 
 export const updateUserAsync = async (userData, name) => { 
-  log("try update firestore user");
   await db.collection("users").doc(name).update(userData)
   .then(function () {
     log("User info update ok");
