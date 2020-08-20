@@ -108,30 +108,31 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 22
   },
-  button: {
-    width: 100,
+  lineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems:  'center',
+    paddingHorizontal: 15,
+    paddingTop: 20,
   },
   input: {
-    width: 250,
+    flex: 1,
     height: 40, 
     borderColor: 'gray',
     borderWidth: 1,
     marginLeft: 15,
+    paddingLeft: 10,
     fontSize: 18,
   },
   text:{
     fontSize: 18,
   },
-  lineContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingHorizontal: 15,
-    paddingTop: 20,
+  button: {
+    width: 100,
   },
   buttonContainer: {
     marginTop: 22,
     flexDirection: 'row',
-    width: '80%',
     justifyContent: 'center',
     paddingHorizontal: 15,
   },
