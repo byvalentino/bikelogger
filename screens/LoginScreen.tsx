@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert} from 'react-native';
 import * as firebase from 'firebase'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,7 +16,7 @@ export interface Props {
 //const LoginScreen: React.FC<Props> = (props:Props, navigation : any) => {
 
 function LoginScreen({ navigation }) {
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [myState, setMyState] = useState(
         {
@@ -35,11 +35,11 @@ function LoginScreen({ navigation }) {
         }
     },[Store.isStoreReady])
     
-    const emailInputHandler = (text) => {
+    const emailInputHandler = (text:string) => {
         setEmail(text);
         //Store.setTempMail(text)
     }
-    const passwordInputHandler = (text) => {
+    const passwordInputHandler = (text:string) => {
         setPassword(text);
     }
     const onLoginPress = () => {
@@ -48,22 +48,21 @@ function LoginScreen({ navigation }) {
     const tryLogin = (navPage: string) =>{
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(() => {
-            Store.setUserEmail(email);
-            Store.setUserPassword(password);
-            Store.setUserToken(firebase.auth().currentUser.uid); 
-            console.log("updateUserLastLogin");
-            Store.updateUserLastLogin();
-            setMyState(prev => ({ ...prev, error: '', loading: false, }));
-            // navigation.navigate(navPage);
-            signIn({ email, password });
+                Store.setUserEmail(email);
+                Store.setUserPassword(password);
+                Store.setUserToken(firebase.auth().currentUser.uid); 
+                Store.updateUserLastLogin();
+                setMyState(prev => ({ ...prev, error: '', loading: false, }));
+                // navigation.navigate(navPage);
+                signIn({ email, password });
         })
         .catch((error) => {
             let errorCode = error.code;
             let errorMessage = error.message;
             if (errorCode === 'auth/wrong-password') {
-                alert('Wrong password.');
+                Alert.alert('Wrong password.');
             } else {
-                alert(errorMessage);
+                Alert.alert(errorMessage);
             }
             log(error);
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
