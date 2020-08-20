@@ -10,6 +10,7 @@ npm-debug.*
 web-build/
 web-report/
 constants/ApiKeys.js
+google-services.json
 yarn-error.log
 
 # macOS

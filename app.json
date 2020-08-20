@@ -22,7 +22,8 @@
       "**/*"
     ],
     "android": {
-      "package": "org.uk.bikelogger"
+      "package": "org.uk.bikelogger",
+      "googleServicesFile": "./google-services.json"
     },
     "ios": {
       "supportsTablet": true,
