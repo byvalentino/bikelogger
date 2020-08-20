@@ -45,12 +45,14 @@ function LoginScreen({ navigation }) {
     const onLoginPress = () => {
         tryLogin('MainScreen');
     }
-    const tryLogin = (navPage:string) =>{
+    const tryLogin = (navPage: string) =>{
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(() => {
             Store.setUserEmail(email);
             Store.setUserPassword(password);
-            Store.setUserToken(firebase.auth().currentUser.uid);
+            Store.setUserToken(firebase.auth().currentUser.uid); 
+            console.log("updateUserLastLogin");
+            Store.updateUserLastLogin();
             setMyState(prev => ({ ...prev, error: '', loading: false, }));
             // navigation.navigate(navPage);
             signIn({ email, password });

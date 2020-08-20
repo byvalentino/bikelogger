@@ -27,11 +27,21 @@ export const addRouteAsync = async (route, name) => {
 };
 
 // use "firebase": "7.9.0", to fix bug  "7.9.1" Can't find variable: atob 
-export const updateUserAsync = async (userData, name) => {
-  log("try to write to firestore user");
+export const setUserAsync = async (userData, name) => {
   await db.collection("users").doc(name).set(userData)
   .then(function () {
     log("User info successfully written!");
+  })
+  .catch(function(error) {
+    logError("Error writing user: ", error);
+  });
+};
+
+export const updateUserAsync = async (userData, name) => { 
+  log("try update firestore user");
+  await db.collection("users").doc(name).update(userData)
+  .then(function () {
+    log("User info update ok");
   })
   .catch(function(error) {
     logError("Error writing user: ", error);

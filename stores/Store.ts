@@ -1,7 +1,7 @@
 import { observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
-import { addRouteAsync, updateUserAsync } from '../services/FirestoreService';
+import { addRouteAsync, setUserAsync, updateUserAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
 import { storeLocalData, getLocalData } from '../services/LocalStorage';
 import { log } from '../services/Logger';
@@ -88,22 +88,35 @@ class Store {
         this.userLastName = value;
     }
     @action sendUserData = () => {
-        const startTime = this.datesArr[0];
         const name = "user-" + this.userToken;
+        const DateNow = new Date();
+        const fDate = this.formatDate(DateNow);
         const userData = {
             first_name: this.userFirstName,
             last_name: this.userLastName,
             email: this.userEmail,
             created_at: 'sunday',
-            last_logged_in: 'now',
+            last_logged_in: fDate,
             locale: 'en',
         };
         //log(geojsonRoute);
         if (userData !== null) {
-            updateUserAsync(userData, name);
+            setUserAsync(userData, name);
         }
     }
-
+    @action updateUserLastLogin = () => {
+        const name = "user-" + this.userToken;
+        const DateNow = new Date();
+        const fDate = this.formatDate(DateNow);
+        log('logged',fDate);
+        const userData = {
+            last_logged_in: fDate,
+        };
+        if (userData !== null) {
+            updateUserAsync(userData, name);
+            //setUserAsync('last_logged_in', fDate, name);
+        }
+    }
 
     /// Tracking Store //////////////////
 
@@ -256,9 +269,9 @@ class Store {
     }
 
     formatDate = (dt: Date) => {
-        return `${dt.getDate().toString().padStart(2, '0')}-${
+        return `${dt.getFullYear().toString().padStart(4, '0')}-${
             (dt.getMonth() + 1).toString().padStart(2, '0')}-${
-            dt.getFullYear().toString().padStart(4, '0')},${
+            dt.getDate().toString().padStart(2, '0')},${
             dt.getHours().toString().padStart(2, '0')}:${
             dt.getMinutes().toString().padStart(2, '0')}:${
             dt.getSeconds().toString().padStart(2, '0')}`;

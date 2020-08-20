@@ -13,6 +13,7 @@ import ConfigScreen from './screens/ConfigScreen';
 import UserPropsScreen from './screens/UserPropsScreen';
 import MapForgroundScreen from './screens/MapForgroundScreen';
 import AuthContext from './constants/MyContext';
+import {log} from './services/Logger';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,12 @@ function Router({ navigation }) {
     Store.init();
     bootstrapAsync();
   }, []);
+
+  useEffect(() =>{
+    if (state.userToken !== null){
+      Store.updateUserLastLogin();
+    }
+  },[state.userToken]);
 
   const authContext = React.useMemo(
     () => ({
