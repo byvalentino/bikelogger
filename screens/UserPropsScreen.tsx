@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Keyboard, Alert } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, Alert, Platform } from "react-native";
+import * as Permissions from "expo-permissions";
+import { Notifications } from 'expo';
 import Constants from 'expo-constants';
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
@@ -8,13 +10,20 @@ import Input from '../components/Input';
 import Colors from '../constants/colors';
 import { getCurrentPositionAsync } from 'expo-location';
 import { TextInput } from 'react-native-gesture-handler';
+// import Store from '../stores/Store';
 
 export interface Props {
   store?: any;
 }
 const UserPropsScreen: React.FC<Props> = (props: Props) => {
-  const { userFirstName, setUserFirstName, userLastName, setUserLastName, sendUserData } = props.store;
+  const { userFirstName, setUserFirstName, userLastName, 
+    setUserLastName, setExpoPushToken, postUserData } = props.store;
   const navigation = useNavigation();
+
+  useEffect (() =>{
+    registerForPushNotificationsAsync();
+  },[])
+
   const firstNameHandler = (text: string) => {
     setUserFirstName(text);
   }
@@ -22,9 +31,41 @@ const UserPropsScreen: React.FC<Props> = (props: Props) => {
     setUserLastName(text);
   }
   const confirmedButtonHandler = () => {
-      sendUserData();
+      postUserData();
       navigation.goBack();
   }
+
+  const registerForPushNotificationsAsync = async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Alert.alert('Failed to get push token for push notification!');
+        return;
+      }
+      const token = await Notifications.getExpoPushTokenAsync();
+      console.log(token);
+      if (token !==null && token !== undefined){
+        setExpoPushToken(token);
+      }
+    } else {
+      Alert.alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+    };
+
   return (
     <View style={styles.main}>
       <View style={styles.lineContainer}>

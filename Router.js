@@ -70,6 +70,7 @@ function Router({ navigation }) {
   useEffect(() =>{
     if (state.userToken !== null){
       Store.updateUserLastLogin();
+      Store.fetchUserData();
     }
   },[state.userToken]);
 
