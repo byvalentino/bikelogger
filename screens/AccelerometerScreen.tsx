@@ -3,14 +3,15 @@ import { StyleSheet, Text, TouchableOpacity, View, Button, Modal, Alert } from '
 import { Accelerometer } from 'expo-sensors';
 import { inject, observer } from 'mobx-react';
 import MyModal from '../components/MyModal';
+import {IStore} from '../stores/Store';
 import Colors from '../constants/colors';
 import { log } from '../services/Logger';
 
 export interface Props {
-  store?: any;
+  store?: IStore;
 }
 const AccelerometerScreen: React.FC<Props> = (props: Props) => {
-  const { uiStore} = props.store;
+  const { uiStore} = props.store!;
   const { accelerometerModalVisable, setAccelerometerModalVisable } = uiStore;
   const [data, setData] = useState({});
 
@@ -82,7 +83,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
 }
 export default inject("store")(observer(AccelerometerScreen));
 
-function round(n) {
+function round(n: number) {
   if (!n) {
     return 0;
   }

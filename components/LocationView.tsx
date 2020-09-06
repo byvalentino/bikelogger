@@ -2,13 +2,13 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import FieldValueText from './FieldValueText';
-
+import {IStore} from '../stores/Store';
 export interface Props {
-    store?: any;
+    store?: IStore;
   }
 
 const LocationView: React.FC<Props> = (props:Props) => {
-    const { trackingStore } = props.store;
+    const { trackingStore } = props.store!;
     const { statusText, locationText , speed, accuracy, altitude, routeDistance } = trackingStore;
     return (
         <View style={styles.view}>

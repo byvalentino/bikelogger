@@ -6,6 +6,7 @@ import * as Permissions from "expo-permissions";
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 import LocationView from './LocationView';
+import {IStore} from '../stores/Store';
 import { log } from '../services/Logger';
 import Colors from '../constants/colors';
 
@@ -16,12 +17,12 @@ const INIT_REGION = {
     longitudeDelta: 1,
 }
 export interface Props {
-    store?: any;
+    store?: IStore;
 }
 // map and foregroundLocation using watchPositionAsync
 //function MapForegroundLocation(props,initRegion) {
 const MapForegroundLocation: React.FC<Props> = (props: Props) => {
-    const { trackingStore } = props.store;
+    const { trackingStore } = props.store!;
     const { setLocationData, setStatusText, sendRoute } = trackingStore;
     const [myState, setMyState] = useState(
         {

@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, Button, Keyboard, Alert } from "react-native";
 import { inject, observer } from 'mobx-react';
 //import Card from '../components/Card';
+import { IStore } from '../stores/Store';
 import Input from '../components/Input';
 import Colors from '../constants/colors';
 
 export interface Props {
-    store?: any;
+    store?: IStore;
 }
 const ConfigModalScreen: React.FC<Props> = (props: Props) => {
-    const { uiStore ,trackingStore } = props.store;
+    const { uiStore, trackingStore } = props.store!;
     const { configModalVisible, setConfigModalVisible } = uiStore;
     const { trackingTimeInterval, setTrackingTimeInterval } = trackingStore;
     const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
-    const numberInputHandler = (text) => {
+    const numberInputHandler = (text: string) => {
         setEnteredText(text.replace(/[^0-9]/g, ''));
     }
     const cacnelButtonHandler = () => {
-        setEnteredText(trackingTimeInterval.toString()); 
+        setEnteredText(trackingTimeInterval.toString());
         setConfigModalVisible(false);
     }
     const confirmedButtonHandler = () => {
@@ -28,7 +29,7 @@ const ConfigModalScreen: React.FC<Props> = (props: Props) => {
                 'Interval has to be between 1 and 30 sec.',
                 [{ text: 'Okay', style: 'destructive' }]
             );
-            setEnteredText(trackingTimeInterval.toString()); 
+            setEnteredText(trackingTimeInterval.toString());
             return;
         }
         else {
@@ -47,7 +48,7 @@ const ConfigModalScreen: React.FC<Props> = (props: Props) => {
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                <Text>Time Interval:</Text>
+                    <Text>Time Interval:</Text>
                     <Input
                         style={styles.input}
                         blurOnSubmit

@@ -3,6 +3,8 @@ import { View, Button, StyleSheet, TouchableHighlight } from 'react-native';
 import { defineTask } from "expo-task-manager";
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
+
+import {IStore} from '../stores/Store';
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
 import AccelerometerScreen from '../screens/AccelerometerScreen';
@@ -16,7 +18,7 @@ const LOCATION_TASK_NAME = "background-location-task";
 defineTask(LOCATION_TASK_NAME, LocationTaskExecutor);
 
 export interface Props {
-    store?: any;
+    store?: IStore;
 }
 
 // map and background Location 
@@ -24,7 +26,7 @@ const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
     const {
         trackingStore, 
         uiStore,
-        } = props.store;
+        } = props.store!;
     const {isTracking} = trackingStore;
     const {setAccelerometerModalVisable} = uiStore;   
     const navigation = useNavigation();

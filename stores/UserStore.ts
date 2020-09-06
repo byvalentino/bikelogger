@@ -13,6 +13,11 @@ export default class UserStore {
     }
     rootStore: any;
 
+    init = async () => {
+        const dataUserToken = await this.initUserToken();
+        const data = await this.initUserEmail();
+        const pass = await this.initUserPassword();
+    }
     /// User Store ////////////////////////////////////////////////////////////////////
     @observable userToken = '';
     @action setUserToken = (value: string) => {
@@ -41,6 +46,12 @@ export default class UserStore {
     @action setUserPassword = (value: string) => {
         this.userEmail = value;
         storeLocalData('@password', value);
+    }
+    @action initUserPassword = async () => {
+        const email = await getLocalData('@password').then(res => {
+        if (res !== undefined)
+                this.userPassword = res;
+        });
     }
     @observable userFirstName = '';
     @action setUserFirstName = (value: string) => {

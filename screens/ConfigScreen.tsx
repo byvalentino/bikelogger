@@ -4,14 +4,16 @@ import Constants from 'expo-constants';
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 
+import {IStore} from '../stores/Store';
 import Input from '../components/Input';
 import Colors from '../constants/colors';
 
 export interface Props {
-  store?: any;
+  store?: IStore;
 }
+
 const ConfigScreen: React.FC<Props> = (props: Props) => {
-  const { trackingStore } = props.store;
+  const { trackingStore } = props.store!;
   const { trackingTimeInterval, setTrackingTimeInterval } = trackingStore;
   const navigation = useNavigation();
   const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());

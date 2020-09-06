@@ -4,9 +4,10 @@ import { StyleSheet, SafeAreaView, FlatList, Text, View, TouchableOpacity } from
 import { inject, observer } from 'mobx-react';
 import MyModal from '../components/MyModal';
 import { logHistory } from '../services/Logger';
+import {IStore} from '../stores/Store';
 
 export interface Props {
-  store?: any;
+  store?: IStore;
 }
 const DATA = [
   {

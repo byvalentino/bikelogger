@@ -10,13 +10,13 @@ import Input from '../components/Input';
 import Colors from '../constants/colors';
 import { getCurrentPositionAsync } from 'expo-location';
 import { TextInput } from 'react-native-gesture-handler';
-// import Store from '../stores/Store';
+import {IStore} from '../stores/Store';
 
 export interface Props {
-  store?: any;
+  store?: IStore;
 }
 const UserPropsScreen: React.FC<Props> = (props: Props) => {
-  const {userStore} = props.store;
+  const {userStore} = props.store!;
   const { userFirstName, setUserFirstName, userLastName, 
     setUserLastName, setExpoPushToken, postUserData } = userStore;
   const navigation = useNavigation();

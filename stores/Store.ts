@@ -1,17 +1,19 @@
 import { observable, action } from "mobx";
 
-
 import UiStore from './uiStore';
 import UserStore from './UserStore';
 import TrackingStore from './TrackingStore';
-import { storeLocalData, getLocalData } from '../services/LocalStorage';
 import { log } from '../services/Logger';
 import { USER_FACING_NOTIFICATIONS } from "expo-permissions";
-//import 'intl';
 
+export interface IStore {
+    uiStore: UiStore;
+    userStore: UserStore;
+    trackingStore: TrackingStore;
+    init: () => void; 
+}
 
-
-class Store {
+class Store implements IStore {
     constructor() {
         this.uiStore = new UiStore(this);
         this.userStore = new UserStore(this);
@@ -23,12 +25,7 @@ class Store {
 
     init = async () => {
         log('init Store');
-        const dataUserToken = await this.userStore.initUserToken();
-        const data = await this.userStore.initUserEmail();
-        getLocalData('@password').then(res => {
-            if (res !== undefined)
-                this.userStore.userPassword = res;
-        });
+        const initUSerStore = await this.userStore.init();
         this.setStoreReady(true);
     }
     @observable isStoreReady = false;

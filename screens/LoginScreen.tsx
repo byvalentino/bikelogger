@@ -10,12 +10,14 @@ import {log} from '../services/Logger';
 // import { set } from 'mobx';
 import Colors from '../constants/colors';
 import AuthContext from '../constants/MyContext';
+import {IStore} from '../stores/Store';
 
 export interface Props {
+  store?: IStore;
 }
 //const LoginScreen: React.FC<Props> = (props:Props, navigation : any) => {
-
-function LoginScreen({ navigation }) {
+// function LoginScreen({ navigation }) {
+const LoginScreen: React.FC<Props> = (props: Props) => {    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [myState, setMyState] = useState(
@@ -51,7 +53,7 @@ function LoginScreen({ navigation }) {
         .then(() => {
                 userStore.setUserEmail(email);
                 userStore.setUserPassword(password);
-                userStore.setUserToken(firebase.auth().currentUser.uid); 
+                userStore.setUserToken(firebase.auth().currentUser!.uid); 
                 userStore.updateUserLastLogin();
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
                 // navigation.navigate(navPage);
