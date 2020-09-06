@@ -11,7 +11,8 @@ export interface Props {
   store?: any;
 }
 const ConfigScreen: React.FC<Props> = (props: Props) => {
-  const { trackingTimeInterval, setTrackingTimeInterval } = props.store;
+  const { trackingStore } = props.store;
+  const { trackingTimeInterval, setTrackingTimeInterval } = trackingStore;
   const navigation = useNavigation();
   const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
   const numberInputHandler = (text: string) => {

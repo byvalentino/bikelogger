@@ -6,7 +6,7 @@ import * as Permissions from "expo-permissions";
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 import LocationView from './LocationView';
-import {log} from '../services/Logger';
+import { log } from '../services/Logger';
 import Colors from '../constants/colors';
 
 const INIT_REGION = {
@@ -20,8 +20,9 @@ export interface Props {
 }
 // map and foregroundLocation using watchPositionAsync
 //function MapForegroundLocation(props,initRegion) {
-const MapForegroundLocation: React.FC<Props> = (props: Props) => {    
-    const { setLocationData , setStatusText , sendRoute} = props.store;
+const MapForegroundLocation: React.FC<Props> = (props: Props) => {
+    const { trackingStore } = props.store;
+    const { setLocationData, setStatusText, sendRoute } = trackingStore;
     const [myState, setMyState] = useState(
         {
             locationStatus: false,
@@ -32,7 +33,7 @@ const MapForegroundLocation: React.FC<Props> = (props: Props) => {
         }
     );
     const navigation = useNavigation();
-    const buttonLoggerClick =() =>{
+    const buttonLoggerClick = () => {
         navigation.navigate('Logger');
     }
     const startWatchPositionAsync = async () => {
@@ -55,10 +56,10 @@ const MapForegroundLocation: React.FC<Props> = (props: Props) => {
                 };
                 setLocationData(newLocation);
                 setStatusText('locating...');
-                setMyState((prev:any) => ({ ...prev, location: newLocation, region: region, }));
+                setMyState((prev: any) => ({ ...prev, location: newLocation, region: region, }));
             }
         ).catch((error) => {
-             log(error)
+            log(error)
         });
     };
 
@@ -70,7 +71,7 @@ const MapForegroundLocation: React.FC<Props> = (props: Props) => {
         if (status === "granted") {
             const positionObject = await startWatchPositionAsync();
             log("start locating")
-            setMyState((prev:any) => ({ ...prev, watchPositionObject: positionObject, locationStatus: true }));
+            setMyState((prev: any) => ({ ...prev, watchPositionObject: positionObject, locationStatus: true }));
         } else {
             setMyState(prev => ({ ...prev, error: "Locations services needed", watchPositionObject: null, locationStatus: false }));
         }
@@ -109,7 +110,7 @@ const MapForegroundLocation: React.FC<Props> = (props: Props) => {
                     <Button title='log' color={Colors.primary} onPress={buttonLoggerClick} />
                 </View>
             </View>
-            
+
         </View>
     );
 }

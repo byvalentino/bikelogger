@@ -9,10 +9,11 @@ const LocationTaskExecutor: TaskManagerTaskExecutor = async (body: TaskManagerTa
         return;
     }
     if (body.data) {
+        const { trackingStore } = Store;
         // @ts-ignore
         const { locations } = body.data;
         const locationData  = locations[0];
-        Store.setLocationData(locationData);
+        trackingStore.setLocationData(locationData);
     }
 };
 export default LocationTaskExecutor;

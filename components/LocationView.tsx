@@ -8,7 +8,8 @@ export interface Props {
   }
 
 const LocationView: React.FC<Props> = (props:Props) => {
-    const { statusText, locationText , speed, accuracy, altitude, routeDistance } = props.store;
+    const { trackingStore } = props.store;
+    const { statusText, locationText , speed, accuracy, altitude, routeDistance } = trackingStore;
     return (
         <View style={styles.view}>
             <Text style={styles.status} >{statusText}</Text>

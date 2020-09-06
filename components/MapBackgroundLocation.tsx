@@ -22,9 +22,10 @@ export interface Props {
 // map and background Location 
 const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
     const {
-        isTracking,
+        trackingStore, 
         uiStore,
         } = props.store;
+    const {isTracking} = trackingStore;
     const {setAccelerometerModalVisable} = uiStore;   
     const navigation = useNavigation();
 

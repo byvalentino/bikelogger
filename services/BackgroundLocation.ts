@@ -11,7 +11,7 @@ const startLocationTaskAsync = async () => {
             // @ts-ignore
             enableHighAccuracy: true,
             distanceInterval: 1,
-            timeInterval: Store.trackingTimeInterval * 1000,
+            timeInterval: Store.trackingStore.trackingTimeInterval * 1000,
             foregroundService: {
                 notificationTitle: 'Bike Location',
                 notificationBody: 'Enable this to make GPS alive'
@@ -25,23 +25,25 @@ const startLocationTaskAsync = async () => {
 
 export const startGetLocationAsync = async () => {
     log("startGetLocationAsync - background");
+    const {trackingStore} = Store;
     // Asking for device location permission
     const { status } = await requestPermissionsAsync()
     if (status === "granted") {
         await startLocationTaskAsync();
-        Store.setStatusText('Tracking...');
-        Store.setIsTracking(true);
+        trackingStore.setStatusText('Tracking...');
+        trackingStore.setIsTracking(true);
         log("start locating");
     } else {
-        Store.setIsTracking(false);
-        Store.setStatusText('Locations services needed');
+        trackingStore.setIsTracking(false);
+        trackingStore.setStatusText('Locations services needed');
     }
 }
 
 export const stopGetLocationAsync = async () => {
+    const {trackingStore} = Store;
     await stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-    Store.setStatusText('Not Tracking');
-    Store.setIsTracking(false);
-    Store.sendRoute();
+    trackingStore.setStatusText('Not Tracking');
+    trackingStore.setIsTracking(false);
+    trackingStore.sendRoute();
 }
 export default startLocationTaskAsync;

@@ -5,7 +5,8 @@ import { inject, observer } from 'mobx-react';
 import {toJS} from 'mobx';
 
 function MyMapView(props) {
-    const { isTracking, region } = props.store;
+    const { trackingStore } = props.store;
+    const { isTracking, region } = trackingStore;
     const reactRegion = toJS(region);
 
     return (
