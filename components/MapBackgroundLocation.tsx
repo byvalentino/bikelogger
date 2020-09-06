@@ -5,7 +5,6 @@ import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 import LocationView from './LocationView';
 import MyMapView from './MyMapView';
-import ConfigModalScreen from '../screens/ConfigModalScreen';
 import AccelerometerScreen from '../screens/AccelerometerScreen';
 import { startGetLocationAsync, stopGetLocationAsync } from '../services/BackgroundLocation';
 import LocationTaskExecutor from '../services/taskLocation';

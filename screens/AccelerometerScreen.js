@@ -15,7 +15,6 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     _toggle();
-    log('enter AccelerometerScreen');
   }, []);
 
   useEffect(() => {

@@ -95,24 +95,7 @@ class Store {
             this.updateUserExpoPushToken();
     }
      
-    @action sendUserData1 = () => {
-        //const name = "user-" + this.userToken;
-        const DateNow = new Date();
-        const fDate = this.formatDate(DateNow);
-        const userData = {
-            first_name: this.userFirstName,
-            last_name: this.userLastName,
-            email: this.userEmail,
-            push_token: this.expoPushToken,
-            created_at: 'sunday',
-            last_logged_in: fDate,
-            locale: 'en',
-        };
-        //log(geojsonRoute);
-        if (userData !== null) {
-            this.updateUserToCloud(userData);
-        }
-    }
+    
     @action postUserData = () => {
         //const name = "user-" + this.userToken;
         const DateNow = new Date();
@@ -127,21 +110,24 @@ class Store {
         }
     }
     @action fetchUserData= () => {
-        const name = "user-" + this.userToken;
-        readUserAsync(name)
-            .then((data) =>{
-                if(data){
-                    this.setUserFirstName(data.first_name);
-                    this.setUserLastName(data.last_name);
-                    this.setExpoPushToken(data.push_token, false);
-                }
-                
-            }) 
+        if(this.userToken !== '') {
+            const name = "user-" + this.userToken;
+            readUserAsync(name)
+                .then((data) =>{
+                    if(data){
+                        this.setUserFirstName(data.first_name);
+                        this.setUserLastName(data.last_name);
+                        this.setExpoPushToken(data.push_token, false);
+                    }
+                    
+                }) 
+        }
     }
     @action updateUserLastLogin = () => {
         const DateNow = new Date();
         const fDate = this.formatDate(DateNow);
         log('logged: ' + fDate);
+        // console.log("user-" + this.userToken);
         const userData = {last_logged_in: fDate};
         this.updateUserToCloud(userData);
     }
@@ -152,12 +138,11 @@ class Store {
         this.updateUserToCloud(userData);
     }
     updateUserToCloud = (userData: any) => {
-        const name = "user-" + this.userToken;
-        updateUserAsync(userData, name);
+        if (this.userToken !== ''){
+            const name = "user-" + this.userToken;
+            updateUserAsync(userData, name);
+        }
     }
-
-  
-
     /// Tracking Store //////////////////
 
     //tracking Time Interval in sec

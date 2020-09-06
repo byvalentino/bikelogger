@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { inject, observer } from 'mobx-react';
+import { AppLoading } from 'expo';
 
 import Store from './stores/Store';
 import MainScreen from './screens/MainScreen';
@@ -14,10 +15,12 @@ import UserPropsScreen from './screens/UserPropsScreen';
 import MapForgroundScreen from './screens/MapForgroundScreen';
 import AuthContext from './constants/MyContext';
 import {log} from './services/Logger';
+import { CONTACTS } from 'expo-permissions';
 
 const Stack = createStackNavigator();
 
 function Router({ navigation }) {
+  const [isReady, setIsReady] = React.useState(false);
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -50,6 +53,7 @@ function Router({ navigation }) {
 
   // Fetch the token from storage then navigate to our appropriate place
   const bootstrapAsync = async () => {
+    // console.log('bootstrapAsync');
     let userToken;
     try {
       userToken = await AsyncStorage.getItem('@userToken');
@@ -64,11 +68,11 @@ function Router({ navigation }) {
 
   useEffect(() => {
     Store.init();
-    bootstrapAsync();
+    //bootstrapAsync();
   }, []);
 
   useEffect(() =>{
-    if (state.userToken !== null){
+    if (state.userToken !== null && state.userToken !== '' ){
       Store.updateUserLastLogin();
       Store.fetchUserData();
     }
@@ -97,6 +101,23 @@ function Router({ navigation }) {
     []
   );
 
+  // const _cacheResourcesAsync = async () => {
+  //   const images = [require('./assets/snack-icon.png')];
+  //   const cacheImages = images.map(image => {
+  //     return Asset.fromModule(image).downloadAsync();
+  //   }); 
+  //   return Promise.all(cacheImages);
+  // }
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={bootstrapAsync}
+        onFinish={() => setIsReady(true)}
+        onError={console.warn}
+      />
+    ); }
+    
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
