@@ -9,7 +9,8 @@ export interface Props {
     store?: any;
 }
 const ConfigModalScreen: React.FC<Props> = (props: Props) => {
-    const { configModalVisible, setConfigModalVisible ,trackingTimeInterval, setTrackingTimeInterval} = props.store;
+    const { uiStore ,trackingTimeInterval, setTrackingTimeInterval} = props.store;
+    const { configModalVisible, setConfigModalVisible } = uiStore;
     const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
     const numberInputHandler = (text) => {
         setEnteredText(text.replace(/[^0-9]/g, ''));

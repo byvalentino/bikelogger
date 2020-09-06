@@ -1,6 +1,7 @@
 import { observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
+import UiStore from './uiStore';
 import { addRouteAsync, readUserAsync, setUserAsync, updateUserAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
 import { storeLocalData, getLocalData } from '../services/LocalStorage';
@@ -15,6 +16,10 @@ const INIT_REGION = {
 }
 
 class Store {
+    constructor() {
+        this.uiStore = new UiStore(this);
+    }
+    uiStore: UiStore;
 
     init = async () => {
         log('init Store');
@@ -31,20 +36,6 @@ class Store {
         this.isStoreReady = value;
     }
 
-    /// UI Store /////////////////////////////////////////////////////////////////////////
-    @observable configModalVisible = false;
-    @action setConfigModalVisible = (isVisable: boolean) => {
-        this.configModalVisible = isVisable;
-    }
-    @observable accelerometerModalVisable = false;
-    @action setAccelerometerModalVisable = (isVisable: boolean) => {
-        this.accelerometerModalVisable = isVisable;
-    }
-
-    @observable loggerModalVisable = false;
-    @action setLoggerModalVisable = (isVisable: boolean) => {
-        this.loggerModalVisable = isVisable;
-    }
 
     /// User Store ////////////////////////////////////////////////////////////////////
     @observable userToken = '';
@@ -73,7 +64,7 @@ class Store {
             this.setUserEmail(email);
         }
     }
-    
+
     @observable userPassword = '';
     @action setUserPassword = (value: string) => {
         this.userEmail = value;
@@ -89,13 +80,13 @@ class Store {
     }
 
     @observable expoPushToken = '';
-    @action setExpoPushToken = (value: string, sendToCloud: boolean =true) => {
+    @action setExpoPushToken = (value: string, sendToCloud: boolean = true) => {
         this.expoPushToken = value;
         if (sendToCloud)
             this.updateUserExpoPushToken();
     }
-     
-    
+
+
     @action postUserData = () => {
         //const name = "user-" + this.userToken;
         const DateNow = new Date();
@@ -109,18 +100,18 @@ class Store {
             this.updateUserToCloud(userData);
         }
     }
-    @action fetchUserData= () => {
-        if(this.userToken !== '') {
+    @action fetchUserData = () => {
+        if (this.userToken !== '') {
             const name = "user-" + this.userToken;
             readUserAsync(name)
-                .then((data) =>{
-                    if(data){
+                .then((data) => {
+                    if (data) {
                         this.setUserFirstName(data.first_name);
                         this.setUserLastName(data.last_name);
                         this.setExpoPushToken(data.push_token, false);
                     }
-                    
-                }) 
+
+                })
         }
     }
     @action updateUserLastLogin = () => {
@@ -128,7 +119,7 @@ class Store {
         const fDate = this.formatDate(DateNow);
         log('logged: ' + fDate);
         // console.log("user-" + this.userToken);
-        const userData = {last_logged_in: fDate};
+        const userData = { last_logged_in: fDate };
         this.updateUserToCloud(userData);
     }
     @action updateUserExpoPushToken = () => {
@@ -138,7 +129,7 @@ class Store {
         this.updateUserToCloud(userData);
     }
     updateUserToCloud = (userData: any) => {
-        if (this.userToken !== ''){
+        if (this.userToken !== '') {
             const name = "user-" + this.userToken;
             updateUserAsync(userData, name);
         }

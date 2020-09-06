@@ -10,7 +10,8 @@ export interface Props {
   store?: any;
 }
 const AccelerometerScreen: React.FC<Props> = (props: Props) => {
-  const { accelerometerModalVisable, setAccelerometerModalVisable } = props.store;
+  const { uiStore} = props.store;
+  const { accelerometerModalVisable, setAccelerometerModalVisable } = uiStore;
   const [data, setData] = useState({});
 
   useEffect(() => {

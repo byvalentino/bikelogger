@@ -23,9 +23,9 @@ export interface Props {
 const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
     const {
         isTracking,
-        setConfigModalVisible,
-        setAccelerometerModalVisable,
-        setLoggerModalVisable, } = props.store;
+        uiStore,
+        } = props.store;
+    const {setAccelerometerModalVisable} = uiStore;   
     const navigation = useNavigation();
 
     // const buttonConfigClick = () => {
