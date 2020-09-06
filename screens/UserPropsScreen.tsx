@@ -16,8 +16,9 @@ export interface Props {
   store?: any;
 }
 const UserPropsScreen: React.FC<Props> = (props: Props) => {
+  const {userStore} = props.store;
   const { userFirstName, setUserFirstName, userLastName, 
-    setUserLastName, setExpoPushToken, postUserData } = props.store;
+    setUserLastName, setExpoPushToken, postUserData } = userStore;
   const navigation = useNavigation();
 
   useEffect (() =>{

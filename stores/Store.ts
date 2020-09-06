@@ -2,10 +2,12 @@ import { observable, action } from "mobx";
 import { LocationData } from "expo-location";
 import { firestore } from 'firebase';
 import UiStore from './uiStore';
+import UserStore from './UserStore';
 import { addRouteAsync, readUserAsync, setUserAsync, updateUserAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
 import { storeLocalData, getLocalData } from '../services/LocalStorage';
 import { log } from '../services/Logger';
+import { USER_FACING_NOTIFICATIONS } from "expo-permissions";
 //import 'intl';
 
 const INIT_REGION = {
@@ -18,16 +20,18 @@ const INIT_REGION = {
 class Store {
     constructor() {
         this.uiStore = new UiStore(this);
+        this.userStore = new UserStore(this);
     }
     uiStore: UiStore;
+    userStore: UserStore;
 
     init = async () => {
         log('init Store');
-        const dataUserToken = await this.initUserToken();
-        const data = await this.initUserEmail();
+        const dataUserToken = await this.userStore.initUserToken();
+        const data = await this.userStore.initUserEmail();
         getLocalData('@password').then(res => {
             if (res !== undefined)
-                this.userPassword = res;
+                this.userStore.userPassword = res;
         });
         this.setStoreReady(true);
     }
@@ -37,103 +41,6 @@ class Store {
     }
 
 
-    /// User Store ////////////////////////////////////////////////////////////////////
-    @observable userToken = '';
-    @action setUserToken = (value: string) => {
-        this.userToken = value;
-        storeLocalData('@userToken', value);
-    }
-    initUserToken = async () => {
-        const val = await getLocalData('@userToken');
-        if (val !== undefined) {
-            this.setUserToken(val);
-        }
-    }
-    // @observable tempMail = '';
-    // @action setTempMail = (value: string) => {
-    //     this.tempMail = value;
-    // }
-    @observable userEmail = '';
-    @action setUserEmail = (value: string) => {
-        this.userEmail = value;
-        storeLocalData('@email', value);
-    }
-    initUserEmail = async () => {
-        const email = await getLocalData('@email');
-        if (email !== undefined) {
-            this.setUserEmail(email);
-        }
-    }
-
-    @observable userPassword = '';
-    @action setUserPassword = (value: string) => {
-        this.userEmail = value;
-        storeLocalData('@password', value);
-    }
-    @observable userFirstName = '';
-    @action setUserFirstName = (value: string) => {
-        this.userFirstName = value;
-    }
-    @observable userLastName = '';
-    @action setUserLastName = (value: string) => {
-        this.userLastName = value;
-    }
-
-    @observable expoPushToken = '';
-    @action setExpoPushToken = (value: string, sendToCloud: boolean = true) => {
-        this.expoPushToken = value;
-        if (sendToCloud)
-            this.updateUserExpoPushToken();
-    }
-
-
-    @action postUserData = () => {
-        //const name = "user-" + this.userToken;
-        const DateNow = new Date();
-        const fDate = this.formatDate(DateNow);
-        const userData = {
-            first_name: this.userFirstName,
-            last_name: this.userLastName,
-        };
-        //log(geojsonRoute);
-        if (userData !== null) {
-            this.updateUserToCloud(userData);
-        }
-    }
-    @action fetchUserData = () => {
-        if (this.userToken !== '') {
-            const name = "user-" + this.userToken;
-            readUserAsync(name)
-                .then((data) => {
-                    if (data) {
-                        this.setUserFirstName(data.first_name);
-                        this.setUserLastName(data.last_name);
-                        this.setExpoPushToken(data.push_token, false);
-                    }
-
-                })
-        }
-    }
-    @action updateUserLastLogin = () => {
-        const DateNow = new Date();
-        const fDate = this.formatDate(DateNow);
-        log('logged: ' + fDate);
-        // console.log("user-" + this.userToken);
-        const userData = { last_logged_in: fDate };
-        this.updateUserToCloud(userData);
-    }
-    @action updateUserExpoPushToken = () => {
-        const userData = {
-            push_token: this.expoPushToken,
-        };
-        this.updateUserToCloud(userData);
-    }
-    updateUserToCloud = (userData: any) => {
-        if (this.userToken !== '') {
-            const name = "user-" + this.userToken;
-            updateUserAsync(userData, name);
-        }
-    }
     /// Tracking Store //////////////////
 
     //tracking Time Interval in sec
@@ -273,7 +180,7 @@ class Store {
     @observable isSendRoute = true;
     @action sendRoute = () => {
         const startTime = this.datesArr[0];
-        const name = "route-" + this.userToken + '-' + this.formatDate(startTime);
+        const name = "route-" + this.userStore.userToken + '-' + this.formatDate(startTime);
         const geojsonRoute = this.createGeoJsonRoute(name, startTime, this.routeDistance);
         //log(geojsonRoute);
         if (this.isSendRoute && geojsonRoute !== null) {

@@ -24,6 +24,7 @@ function LoginScreen({ navigation }) {
             loading: false,
         }
     );
+    const {userStore} = Store;
     const { signIn, signUp} = React.useContext(AuthContext);
     // useEffect(() => {
     //     Store.init();
@@ -31,7 +32,7 @@ function LoginScreen({ navigation }) {
     useEffect(() => {
         if (Store.isStoreReady)
         {
-            setEmail(Store.userEmail)
+            setEmail(userStore.userEmail)
         }
     },[Store.isStoreReady])
     
@@ -48,10 +49,10 @@ function LoginScreen({ navigation }) {
     const tryLogin = (navPage: string) =>{
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(() => {
-                Store.setUserEmail(email);
-                Store.setUserPassword(password);
-                Store.setUserToken(firebase.auth().currentUser.uid); 
-                Store.updateUserLastLogin();
+                userStore.setUserEmail(email);
+                userStore.setUserPassword(password);
+                userStore.setUserToken(firebase.auth().currentUser.uid); 
+                userStore.updateUserLastLogin();
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
                 // navigation.navigate(navPage);
                 signIn({ email, password });

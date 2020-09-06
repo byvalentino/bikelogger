@@ -50,6 +50,7 @@ function Router({ navigation }) {
       userToken: null,
     }
   );
+  const {userStore} = Store;
 
   // Fetch the token from storage then navigate to our appropriate place
   const bootstrapAsync = async () => {
@@ -73,8 +74,8 @@ function Router({ navigation }) {
 
   useEffect(() =>{
     if (state.userToken !== null && state.userToken !== '' ){
-      Store.updateUserLastLogin();
-      Store.fetchUserData();
+      userStore.updateUserLastLogin();
+      userStore.fetchUserData();
     }
   },[state.userToken]);
 
