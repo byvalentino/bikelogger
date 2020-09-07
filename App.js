@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { I18nManager } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 // imports Provider and store
 import { Provider } from 'mobx-react';
 import 'mobx-react-lite/batchingForReactNative';
@@ -22,6 +19,7 @@ export default function App() {
   return (
     <Provider store={Store}>
       <Router />
+      <StatusBar style="light" />
     </Provider>
   );
 }

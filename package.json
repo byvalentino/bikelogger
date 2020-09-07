@@ -18,6 +18,7 @@
     "expo-location": "~8.1.0",
     "expo-permissions": "~8.1.0",
     "expo-sensors": "~8.1.0",
+    "expo-status-bar": "^1.0.2",
     "expo-task-manager": "~8.1.0",
     "firebase": "7.9.0",
     "mobx": "^5.15.4",
