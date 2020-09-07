@@ -19,7 +19,8 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "**/*",
+      "assets/*"
     ],
     "android": {
       "package": "org.uk.bikelogger",
