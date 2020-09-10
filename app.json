@@ -7,7 +7,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.2",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/bikelogger-icon.png",
     "splash": {
@@ -23,10 +23,13 @@
       "assets/*"
     ],
     "android": {
-      "package": "org.uk.bikelogger",
+      "versionCode": 1,
+      "package": "il.ac.technion.bikelogger",
       "googleServicesFile": "./google-services.json"
     },
     "ios": {
+      "bundleIdentifier": "com.technion.bikelogger",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "BikeLogger uses your location to track cycleing routes.",
