@@ -164,7 +164,7 @@ export default class TrackingStore {
         const startTime = this.datesArr[0];
         const name = "route-" + this.rootStore.userStore.userToken + '-' + this.formatDate(startTime);
         const geojsonRoute = this.createGeoJsonRoute(name, startTime, this.routeDistance);
-        //log(geojsonRoute);
+        log(geojsonRoute);
         if (this.isSendRoute && geojsonRoute !== null) {
             addRouteAsync(geojsonRoute, name);
         }

@@ -54,7 +54,7 @@ function Router({ navigation }) {
 
   // Fetch the token from storage then navigate to our appropriate place
   const bootstrapAsync = async () => {
-    // console.log('bootstrapAsync');
+    console.log('bootstrapAsync 1');
     let userToken;
     try {
       userToken = await AsyncStorage.getItem('@userToken');
@@ -64,6 +64,7 @@ function Router({ navigation }) {
     // After restoring token, we may need to validate it in production apps
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
+    console.log('bootstrapAsync 2' )
     dispatch({ type: 'RESTORE_TOKEN', token: userToken });
   };
 
@@ -73,11 +74,14 @@ function Router({ navigation }) {
   }, []);
 
   useEffect(() =>{
-    if (state.userToken !== null && state.userToken !== '' ){
+    console.log('useEffect2, token1:', state.userToken);
+    console.log('useEffect2, token2:', userStore.userToken);
+    if (userStore.userToken !== null && userStore.userToken !== '' ){
       userStore.updateUserLastLogin();
       userStore.fetchUserData();
     }
-  },[state.userToken]);
+  },[userStore.userToken]);
+  //},[state.userToken]);
 
   const authContext = React.useMemo(
     () => ({

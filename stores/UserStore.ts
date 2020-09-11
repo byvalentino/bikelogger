@@ -26,6 +26,7 @@ export default class UserStore {
     }
     initUserToken = async () => {
         const val = await getLocalData('@userToken');
+        console.log('init token', val);
         if (val !== undefined) {
             this.setUserToken(val);
         }
@@ -101,6 +102,7 @@ export default class UserStore {
         const DateNow = new Date();
         const fDate = this.formatDate(DateNow);
         log('logged: ' + fDate);
+        log('user token: ' + this.userToken);
         // console.log("user-" + this.userToken);
         const userData = { last_logged_in: fDate };
         this.updateUserToCloud(userData);
