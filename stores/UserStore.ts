@@ -50,10 +50,35 @@ export default class UserStore {
     }
     @action initUserPassword = async () => {
         const email = await getLocalData('@password').then(res => {
-        if (res !== undefined)
+            if (res !== undefined)
                 this.userPassword = res;
         });
     }
+
+    /// @observable signInState:string  = 'RESTORE_TOKEN';
+    @observable isLoadingToken: boolean = true;
+    @observable isSignout: boolean = false;
+    @action setSignInState = (signInData: any) => {
+        // this.setSignInState(actionType.type)
+        switch (signInData.type) {
+            case 'RESTORE_TOKEN':
+                this.isLoadingToken = false;
+                break;
+            case 'SIGN_IN':
+                this.setUserToken(signInData.token);
+                this.isSignout = false;
+                this.setUserEmail(signInData.email);
+                this.setUserPassword(signInData.password);
+                this.updateUserLastLogin();
+                this.fetchUserData();
+                break;
+            case 'SIGN_OUT':
+                this.setUserToken('');
+                this.isSignout = true;
+                break;
+        }
+    };
+
     @observable userFirstName = '';
     @action setUserFirstName = (value: string) => {
         this.userFirstName = value;
@@ -70,7 +95,6 @@ export default class UserStore {
             this.updateUserExpoPushToken();
     }
 
-
     @action postUserData = () => {
         //const name = "user-" + this.userToken;
         const DateNow = new Date();
@@ -84,6 +108,7 @@ export default class UserStore {
             this.updateUserToCloud(userData);
         }
     }
+    // get data on user, like first name, from server 
     @action fetchUserData = () => {
         if (this.userToken !== '') {
             const name = "user-" + this.userToken;
@@ -94,7 +119,6 @@ export default class UserStore {
                         this.setUserLastName(data.last_name);
                         this.setExpoPushToken(data.push_token, false);
                     }
-
                 })
         }
     }
@@ -103,7 +127,6 @@ export default class UserStore {
         const fDate = this.formatDate(DateNow);
         log('logged: ' + fDate);
         log('user token: ' + this.userToken);
-        // console.log("user-" + this.userToken);
         const userData = { last_logged_in: fDate };
         this.updateUserToCloud(userData);
     }

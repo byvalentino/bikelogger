@@ -15,8 +15,7 @@ import {IStore} from '../stores/Store';
 export interface Props {
   store?: IStore;
 }
-//const LoginScreen: React.FC<Props> = (props:Props, navigation : any) => {
-// function LoginScreen({ navigation }) {
+
 const LoginScreen: React.FC<Props> = (props: Props) => {    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,9 +27,7 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
     );
     const {userStore} = Store;
     const { signIn, signUp} = React.useContext(AuthContext);
-    // useEffect(() => {
-    //     Store.init();
-    // },[]);
+
     useEffect(() => {
         if (Store.isStoreReady)
         {
@@ -51,13 +48,9 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
     const tryLogin = (navPage: string) =>{
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(() => {
-                userStore.setUserEmail(email);
-                userStore.setUserPassword(password);
-                userStore.setUserToken(firebase.auth().currentUser!.uid); 
-                userStore.updateUserLastLogin();
+                let userToken = firebase.auth().currentUser!.uid;
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                // navigation.navigate(navPage);
-                signIn({ email, password });
+                signIn({ token: userToken, email: email, password: password });
         })
         .catch((error) => {
             let errorCode = error.code;
@@ -71,15 +64,13 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
         })
     }
-    // const onLoginForgroundPress = () => {
-    //     tryLogin('MapForground');
-    // }
     const onSignUpPress = () => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(() => {
+                let userToken = firebase.auth().currentUser!.uid;
+                console.log(userToken);
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
-                //navigation.navigate('Bike Tracker')
-                signUp({ email, password });
+                signUp({ token: userToken, email: email, password: password });
             })
             .catch(() => {
                 setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
@@ -97,9 +88,6 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
                 <View style={styles.button}>
                     <Button title='Login' color={Colors.primary} onPress={() => { onLoginPress() }} />
                 </View>
-                {/* <View style={styles.button}>
-                    <Button title='Forground' color={Colors.primary} onPress={() => { onLoginForgroundPress() }} />
-                </View> */}
             </View>
         }
 

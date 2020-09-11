@@ -21,35 +21,6 @@ const Stack = createStackNavigator();
 
 function Router({ navigation }) {
   const [isReady, setIsReady] = React.useState(false);
-  const [state, dispatch] = React.useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    }
-  );
   const {userStore} = Store;
 
   // Fetch the token from storage then navigate to our appropriate place
@@ -65,7 +36,7 @@ function Router({ navigation }) {
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
     console.log('bootstrapAsync 2' )
-    dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+    userStore.setSignInState({ type: 'RESTORE_TOKEN', token: userToken });
   };
 
   useEffect(() => {
@@ -74,7 +45,6 @@ function Router({ navigation }) {
   }, []);
 
   useEffect(() =>{
-    console.log('useEffect2, token1:', state.userToken);
     console.log('useEffect2, token2:', userStore.userToken);
     if (userStore.userToken !== null && userStore.userToken !== '' ){
       userStore.updateUserLastLogin();
@@ -91,28 +61,20 @@ function Router({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         console.log("signIn");
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        userStore.setSignInState({ type: 'SIGN_IN', ...data });
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+      signOut: () =>  userStore.setSignInState({ type: 'SIGN_OUT' }),
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         console.log("signUp");
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        userStore.setSignInState({ type: 'SIGN_IN', ...data });
       },
     }),
     []
   );
-
-  // const _cacheResourcesAsync = async () => {
-  //   const images = [require('./assets/snack-icon.png')];
-  //   const cacheImages = images.map(image => {
-  //     return Asset.fromModule(image).downloadAsync();
-  //   }); 
-  //   return Promise.all(cacheImages);
-  // }
 
   if (!isReady) {
     return (
@@ -137,7 +99,7 @@ function Router({ navigation }) {
             },
           }}
         >
-          {state.userToken == null ? (
+          {userStore.userToken == '' ? (
             <Stack.Screen name="Login" component={LoginScreen} />
           ) : (
               <>
