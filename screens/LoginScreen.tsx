@@ -68,7 +68,7 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(() => {
                 let userToken = firebase.auth().currentUser!.uid;
-                console.log(userToken);
+                //console.log(userToken);
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
                 signUp({ token: userToken, email: email, password: password });
             })

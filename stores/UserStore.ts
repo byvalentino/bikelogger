@@ -45,7 +45,7 @@ export default class UserStore {
 
     @observable userPassword = '';
     @action setUserPassword = (value: string) => {
-        this.userEmail = value;
+        this.userPassword = value;
         storeLocalData('@password', value);
     }
     @action initUserPassword = async () => {
@@ -72,6 +72,13 @@ export default class UserStore {
                 this.updateUserLastLogin();
                 this.fetchUserData();
                 break;
+            case 'SIGN_UP':
+                    this.setUserToken(signInData.token);
+                    this.isSignout = false;
+                    this.setUserEmail(signInData.email);
+                    this.setUserPassword(signInData.password);
+                    this.initUserDataToCloud();
+                    break;    
             case 'SIGN_OUT':
                 this.setUserToken('');
                 this.isSignout = true;
@@ -135,6 +142,23 @@ export default class UserStore {
             push_token: this.expoPushToken,
         };
         this.updateUserToCloud(userData);
+    }
+    @action initUserDataToCloud = () => {
+        const DateNow = new Date();
+        const fDate = this.formatDate(DateNow);
+        const userData = {
+            created_at: fDate,
+            email: this.userEmail,
+            first_name: this.userFirstName,
+            last_name: this.userLastName,
+            locale: 'en',
+            last_logged_in: fDate,
+            push_token: this.expoPushToken,
+        };
+        if (this.userToken !== '') {
+            const name = "user-" + this.userToken;
+            setUserAsync(userData, name);
+        }
     }
     updateUserToCloud = (userData: any) => {
         if (this.userToken !== '') {

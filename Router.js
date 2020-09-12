@@ -70,7 +70,7 @@ function Router({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         console.log("signUp");
-        userStore.setSignInState({ type: 'SIGN_IN', ...data });
+        userStore.setSignInState({ type: 'SIGN_UP', ...data });
       },
     }),
     []
