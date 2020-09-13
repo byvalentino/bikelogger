@@ -14,6 +14,7 @@ export interface Props {
 
 const ConfigScreen: React.FC<Props> = (props: Props) => {
   const { trackingStore } = props.store!;
+  const { userStore } = props.store!;
   const { trackingTimeInterval, setTrackingTimeInterval } = trackingStore;
   const navigation = useNavigation();
   const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
@@ -29,6 +30,9 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
   }
   const onUserPropsPress = () => {
     navigation.navigate('UserProps');
+  }
+  const onLogOutPress = () => {
+    userStore.setSignInState({ type: 'SIGN_OUT'});
   }
   const confirmedButtonHandler = () => {
     const intervalNumnber = parseInt(enteredText)
@@ -75,7 +79,11 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
           <Button title='User Props' color={Colors.primary} onPress={onUserPropsPress} />
         </View>
       </View>
-    
+      <View style={styles.lineContainer}>
+        <View style={styles.button}>
+          <Button title='Log out' color={Colors.primary} onPress={onLogOutPress} />
+        </View>
+      </View>
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
           <Button title="Cancel" color={Colors.secondary} onPress={cacnelButtonHandler} />
