@@ -25,27 +25,23 @@ function Router({ navigation }) {
 
   // Fetch the token from storage then navigate to our appropriate place
   const bootstrapAsync = async () => {
-    console.log('bootstrapAsync 1');
+    // console.log('bootstrapAsync start');
     let userToken;
     try {
       userToken = await AsyncStorage.getItem('@userToken');
+      finshInit = await Store.init();
     } catch (e) {
       // Restoring token failed
     }
     // After restoring token, we may need to validate it in production apps
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
-    console.log('bootstrapAsync 2' )
+    // console.log('bootstrapAsync end' )
     userStore.setSignInState({ type: 'RESTORE_TOKEN', token: userToken });
   };
 
-  useEffect(() => {
-    Store.init();
-    //bootstrapAsync();
-  }, []);
-
   useEffect(() =>{
-    console.log('useEffect2, token2:', userStore.userToken);
+    // console.log('useEffect, token2:', userStore.userToken);
     if (userStore.userToken !== null && userStore.userToken !== '' ){
       userStore.updateUserLastLogin();
       userStore.fetchUserData();
