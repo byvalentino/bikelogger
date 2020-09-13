@@ -59,7 +59,7 @@ class ScrollFlatList extends Component {
           initialNumToRender={2}
           renderItem={({ item, index}) => (
               <View style={{...style, backgroundColor: this.getColor(index)}}>
-                <Text>{item.msg}</Text>
+                 <Text>{JSON.stringify(item.msg) }</Text>
               </View>
             )}
           {...this.props}
