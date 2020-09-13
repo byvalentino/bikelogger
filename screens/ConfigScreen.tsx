@@ -107,6 +107,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 50,
+    height: 40, 
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingLeft: 10,
+    marginLeft: 15,
+    fontSize: 18,
   },
   text:{
     marginLeft: 15,
@@ -115,6 +121,7 @@ const styles = StyleSheet.create({
   lineContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems:  'center',
     paddingHorizontal: 15,
     paddingTop: 20,
   },
