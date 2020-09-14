@@ -17,8 +17,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   const { uiStore } = props.store!;
   const { accelerometerModalVisable, setAccelerometerModalVisable } = uiStore;
   const [dataA, setDataA] = useState({ x: 0, y: 0, z: 0 });
-  const [dataG, setDataG] = useState({ xG: 0, yG: 0, zG: 0 });
-  let su
+  const [dataG, setDataG] = useState({ x: 0, y: 0, z: 0 });
 
   useEffect(() => {
     _toggle();
@@ -68,7 +67,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   };
 
   let { x, y, z } = dataA;
-  let { xG, yG, zG } = dataG;
+  let { x:xG, y:yG, z:zG } = dataG;
   return (
     <MyModal
       visible={accelerometerModalVisable}
