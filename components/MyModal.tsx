@@ -33,6 +33,7 @@ export default MyModal;
 
 const styles = StyleSheet.create({
   modalView: {
+    marginTop: 70,
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
