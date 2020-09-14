@@ -31,6 +31,7 @@ const setAsync = async (data, collName, docPath, sucessmsg = '') => {
   await db.collection(collName).doc(docPath).set(data)
     .then(function () {
       if (sucessmsg !== '')
+        log(docPath);
         log(sucessmsg);
     })
     .catch(function (error) {

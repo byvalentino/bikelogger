@@ -18,8 +18,8 @@ export default class TrackingStore {
     appInitialized = false
 
     constructor(rootStore: any) {
-      // init app data
-      this.rootStore = rootStore;
+        // init app data
+        this.rootStore = rootStore;
     }
     rootStore: any;
 
@@ -73,13 +73,22 @@ export default class TrackingStore {
     @action setAltitude = (alt: number) => {
         this.altitude = alt;
     }
+    // point inedex in route
+    @observable pointIndex: number = -1;
+    @action incrementPointIndex = () => {
+        this.pointIndex++;
+    }
+    @action initRoute = () => {
+        this.pointIndex = -1;
+        this.datesArr = [];
+        this.pointsArr = [];
+        this.altArr = [];
+    }
+
     // observable points lat/lon
     @observable pointsArr: any[] = [];
     @action InsertToPointsArr = (point: number[]) => {
         this.pointsArr.push(point);
-    }
-    @action initPointsArr = () => {
-        this.pointsArr = [];
     }
     // observable dates
     @observable datesArr: Date[] = [];
@@ -87,17 +96,13 @@ export default class TrackingStore {
         let date = new Date(timestamp);
         this.datesArr.push(date);
     }
-    @action initDatesArr = () => {
-        this.datesArr = [];
-    }
+
     // observable alts         
     @observable altArr: number[] = [];
     @action insertToAltArr = (alt: number) => {
         this.altArr.push(alt);
     }
-    @action initAltArr = () => {
-        this.altArr = [];
-    }
+
     //routeDistance in KM
     @observable routeDistance: number = 0;
     @action setRouteDistance = (point1: number[]) => {
@@ -113,20 +118,25 @@ export default class TrackingStore {
     @observable locationData: LocationData | null = null;
     @action setLocationData = (data: LocationData) => {
         this.locationData = data;
-        const point: number[] = [data.coords.latitude, data.coords.longitude];
-        this.InsertToPointsArr(point);
-        this.InsertToDatesArr(data.timestamp);
-        this.insertToAltArr(data.coords.altitude);
-        this.setRouteDistance(point);
-        //update ui and log
-        const date = new Date(data.timestamp);
-        const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
-        log(textlog);
-        const textUI = '(' + data.coords.latitude + ', ' + data.coords.longitude + ')';
-        this.setLocationText(textUI);
-        this.setAcuracy(data.coords.accuracy);
-        this.setAltitude(data.coords.altitude);
-        this.setSpeed(data.coords.speed);
+        //ignore first point - might be history grabage
+        if (this.pointIndex >= 0) {
+            const point: number[] = [data.coords.latitude, data.coords.longitude];
+            this.InsertToPointsArr(point);
+            this.InsertToDatesArr(data.timestamp);
+            this.insertToAltArr(data.coords.altitude);
+            this.setRouteDistance(point);
+            //update ui and log
+            const date = new Date(data.timestamp);
+            const textlog = '(' + data.coords.latitude + ',' + data.coords.longitude + ')' + this.formatDate(date);
+            log(textlog);
+            const textUI = '(' + data.coords.latitude + ', ' + data.coords.longitude + ')';
+            this.setLocationText(textUI);
+            this.setAcuracy(data.coords.accuracy);
+            this.setAltitude(data.coords.altitude);
+            this.setSpeed(data.coords.speed);
+        }
+        // increment point index
+        this.incrementPointIndex();
         //update map
         const region = {
             latitude: data.coords.latitude,
@@ -168,9 +178,7 @@ export default class TrackingStore {
         if (this.isSendRoute && geojsonRoute !== null) {
             addRouteAsync(geojsonRoute, name);
         }
-        this.initDatesArr();
-        this.initPointsArr();
-        this.initAltArr();
+        this.initRoute();
     }
 
     formatDate = (dt: Date) => {
