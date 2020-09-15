@@ -72,8 +72,9 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
                 setMyState(prev => ({ ...prev, error: '', loading: false, }));
                 signUp({ token: userToken, email: email, password: password });
             })
-            .catch(() => {
-                setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));
+            .catch((error) => {
+                let errorMessage = error.message;
+                setMyState(prev => ({ ...prev, error: errorMessage, loading: false, }));
             })
     }
     const renderButtonOrLoading = () => {
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     buttonContainer: {
+        marginTop: 15,
         flexDirection: 'row',
         justifyContent: 'space-around',
     },
