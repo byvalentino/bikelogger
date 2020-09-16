@@ -12,7 +12,7 @@ export interface Props {
   store?: IStore;
 }
 
-const ConfigScreen: React.FC<Props> = (props: Props) => {
+const SettingsScreen: React.FC<Props> = (props: Props) => {
   const { trackingStore } = props.store!;
   const { userStore } = props.store!;
   const { trackingTimeInterval, setTrackingTimeInterval } = trackingStore;
@@ -95,7 +95,7 @@ const ConfigScreen: React.FC<Props> = (props: Props) => {
     </View>
   );
 };
-export default inject("store")(observer(ConfigScreen));
+export default inject("store")(observer(SettingsScreen));
 
 const styles = StyleSheet.create({
   main: {

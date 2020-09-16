@@ -80,7 +80,7 @@ const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
 const ConfigButton: React.FC<Props> = (props: Props) => {
     const navigation = useNavigation();
     const buttonConfigClick = () => {
-        navigation.navigate('Config');
+        navigation.navigate('Settings');
     }
     React.useLayoutEffect(() => {
         navigation.setOptions({

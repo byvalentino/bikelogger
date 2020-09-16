@@ -56,9 +56,9 @@ const LoginScreen: React.FC<Props> = (props: Props) => {
             let errorCode = error.code;
             let errorMessage = error.message;
             if (errorCode === 'auth/wrong-password') {
-                Alert.alert('Wrong password.');
+                Alert.alert("Login Failed",'Wrong password.');
             } else {
-                Alert.alert(errorMessage);
+                Alert.alert("Login Failed",errorMessage);
             }
             log(error);
             setMyState(prev => ({ ...prev, error: 'Authentication Failed', loading: false, }));

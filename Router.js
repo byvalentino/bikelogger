@@ -10,7 +10,7 @@ import Store from './stores/Store';
 import MainScreen from './screens/MainScreen';
 import LoginScreen from './screens/LoginScreen';
 import LoggerScreen from './screens/LoggerScreen';
-import ConfigScreen from './screens/ConfigScreen';
+import SettingsScreen from './screens/SettingsScreen';
 import UserPropsScreen from './screens/UserPropsScreen';
 import MapForgroundScreen from './screens/MapForgroundScreen';
 import AuthContext from './constants/MyContext';
@@ -107,7 +107,7 @@ function Router({ navigation }) {
                 />
                 <Stack.Screen name="MapForground" component={MapForgroundScreen} />
                 <Stack.Screen name="Logger" component={LoggerScreen} />
-                <Stack.Screen name="Config" component={ConfigScreen} />
+                <Stack.Screen name="Settings" component={SettingsScreen} />
               </>
             )}
         </Stack.Navigator>
