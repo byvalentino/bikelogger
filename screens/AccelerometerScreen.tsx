@@ -15,7 +15,9 @@ const SLOW_RATE_GYRO: number = 16;
 
 const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   const { uiStore } = props.store!;
+  const { trackingStore}  = props.store!;
   const { accelerometerModalVisable, setAccelerometerModalVisable } = uiStore;
+  const {startSensorInerval, addAcceleromerReading, addGyroReading } = trackingStore;
   const [dataA, setDataA] = useState({ x: 0, y: 0, z: 0 });
   const [dataG, setDataG] = useState({ x: 0, y: 0, z: 0 });
 
@@ -51,10 +53,13 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   };
 
   const _subscribe = () => {
+    startSensorInerval();
     this._subscriptionA = Accelerometer.addListener(accelerometerData => {
+      addAcceleromerReading(accelerometerData);
       setDataA(accelerometerData);
     });
     this._subscriptionG = Gyroscope.addListener(gyroscopeData => {
+      addGyroReading(gyroscopeData);
       setDataG(gyroscopeData);
     });
   };

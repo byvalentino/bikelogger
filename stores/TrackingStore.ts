@@ -3,6 +3,7 @@ import { firestore } from 'firebase';
 import { LocationData } from "expo-location";
 
 import Store from './Store';
+import SensorsInterval from './SensorsStore';
 import { addRouteAsync } from '../services/FirestoreService';
 import { getDistanceKm } from '../services/GeoUtils';
 import { log } from '../services/Logger';
@@ -83,6 +84,7 @@ export default class TrackingStore {
         this.datesArr = [];
         this.pointsArr = [];
         this.altArr = [];
+        this.sensoersIntervalArr = [];
     }
 
     // observable points lat/lon
@@ -96,12 +98,55 @@ export default class TrackingStore {
         let date = new Date(timestamp);
         this.datesArr.push(date);
     }
-
     // observable alts         
     @observable altArr: number[] = [];
     @action insertToAltArr = (alt: number) => {
         this.altArr.push(alt);
     }
+
+    /////Sensoers store///////////////////////////
+    @observable sensoersIntervalLimit: number = 6* 1000;
+    chaeckIntervalLimit = (interval :SensorsInterval) => {
+        const aTime = Date.now();
+        return (aTime - interval.startTime > this.sensoersIntervalLimit);
+    }
+    @observable currentSensoersInterval :SensorsInterval | null =null;
+    @observable sensoersIntervalArr: SensorsInterval[] = [];
+    @action startSensorInerval = () => {
+        console.log( 'startSensorInerval');
+        this.currentSensoersInterval = new SensorsInterval();
+    }
+    @action addAcceleromerReading = (data: any) => {
+        let { x, y, z} = data;
+        //console.log( 'x', x);
+        if (this.currentSensoersInterval && this.currentSensoersInterval.active == true){
+            console.log( 'x', x);
+            this.currentSensoersInterval.addAcceleromerReading(x,y,z)
+            if (this.chaeckIntervalLimit(this.currentSensoersInterval)){
+                this.stopSensorInerval();
+            }
+                
+        }
+    }
+    @action addGyroReading =(data: any) => {
+        let { x, y, z} = data;
+        if (this.currentSensoersInterval && this.currentSensoersInterval.active == true){
+            this.currentSensoersInterval.addGyroReading(x,y,z)
+            if (this.chaeckIntervalLimit(this.currentSensoersInterval)){
+                this.stopSensorInerval();
+            } 
+        }
+    }
+    @action stopSensorInerval = () => {
+        if (this.currentSensoersInterval !== null ){
+            this.currentSensoersInterval.stopInterval()
+            this.sensoersIntervalArr.push(this.currentSensoersInterval);
+            console.log( this.currentSensoersInterval);
+            console.log( this.currentSensoersInterval.acceleromerArr.length);
+        }
+    }
+
+    
 
     //routeDistance in KM
     @observable routeDistance: number = 0;
