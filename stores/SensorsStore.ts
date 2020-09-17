@@ -1,4 +1,4 @@
-import { observable, action } from "mobx"
+import { observable, action } from "mobx";
 
 interface IAcceleromerReading {
     x: number;

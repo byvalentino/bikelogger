@@ -110,23 +110,36 @@ export default class TrackingStore {
         const aTime = Date.now();
         return (aTime - interval.startTime > this.sensoersIntervalLimit);
     }
+    @observable accMsg: string = 'accMsg';
+    @action setAccMsg = (value: string) => {
+        this.accMsg= value;
+    }
+
     @observable currentSensoersInterval :SensorsInterval | null =null;
     @observable sensoersIntervalArr: SensorsInterval[] = [];
     @action startSensorInerval = () => {
         console.log( 'startSensorInerval');
         this.currentSensoersInterval = new SensorsInterval();
     }
+    @observable subscriptionAcc: any = null;
+    @action setSubscriptionAcc = (listener: any) => {
+        this.subscriptionAcc = listener;
+    }
+    @action removeSubscriptionAcc = () => {
+        this.subscriptionAcc && this.subscriptionAcc.remove();
+        this.subscriptionAcc = null;
+    }
     @action addAcceleromerReading = (data: any) => {
-        let { x, y, z} = data;
-        //console.log( 'x', x);
         if (this.currentSensoersInterval && this.currentSensoersInterval.active == true){
-            console.log( 'x', x);
+            let { x, y, z} = data;
+            //console.log( 'x', x);
             this.currentSensoersInterval.addAcceleromerReading(x,y,z)
-            if (this.chaeckIntervalLimit(this.currentSensoersInterval)){
-                this.stopSensorInerval();
-            }
-                
+            // if (this.chaeckIntervalLimit(this.currentSensoersInterval)){
+            //     this.stopSensorInerval();
+            // }
+            return true;   
         }
+        else return false
     }
     @action addGyroReading =(data: any) => {
         let { x, y, z} = data;
@@ -141,8 +154,10 @@ export default class TrackingStore {
         if (this.currentSensoersInterval !== null ){
             this.currentSensoersInterval.stopInterval()
             this.sensoersIntervalArr.push(this.currentSensoersInterval);
-            console.log( this.currentSensoersInterval);
+            //console.log( this.currentSensoersInterval);
             console.log( this.currentSensoersInterval.acceleromerArr.length);
+            console.log( this.currentSensoersInterval.stopTime-  this.currentSensoersInterval.startTime);
+            this.setAccMsg (this.currentSensoersInterval.acceleromerArr.length +"(" + (this.currentSensoersInterval.stopTime-  this.currentSensoersInterval.startTime) +')');
         }
     }
 

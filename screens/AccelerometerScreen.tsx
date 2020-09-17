@@ -10,14 +10,14 @@ import { log } from '../services/Logger';
 export interface Props {
   store?: IStore;
 }
-const FAST_RATE_GYRO: number = 1000;
-const SLOW_RATE_GYRO: number = 16;
+const SlOW_GYRO: number = 1000;
+const FAST_GYRO: number = 5;
 
 const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   const { uiStore } = props.store!;
   const { trackingStore}  = props.store!;
   const { accelerometerModalVisable, setAccelerometerModalVisable } = uiStore;
-  const {startSensorInerval, addAcceleromerReading, addGyroReading } = trackingStore;
+  const {startSensorInerval, addAcceleromerReading, stopSensorInerval, addGyroReading, accMsg} = trackingStore;
   const [dataA, setDataA] = useState({ x: 0, y: 0, z: 0 });
   const [dataG, setDataG] = useState({ x: 0, y: 0, z: 0 });
 
@@ -43,32 +43,35 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   };
 
   const _slow = () => {
-    Accelerometer.setUpdateInterval(FAST_RATE_GYRO);
-    Gyroscope.setUpdateInterval(FAST_RATE_GYRO);
+    Accelerometer.setUpdateInterval(SlOW_GYRO);
+    Gyroscope.setUpdateInterval(SlOW_GYRO);
   };
 
   const _fast = () => {
-    Accelerometer.setUpdateInterval(SLOW_RATE_GYRO);
-    Gyroscope.setUpdateInterval(SLOW_RATE_GYRO);
+    Accelerometer.setUpdateInterval(FAST_GYRO);
+    Gyroscope.setUpdateInterval(FAST_GYRO);
   };
 
   const _subscribe = () => {
+    console.log('_subscribe')
     startSensorInerval();
     this._subscriptionA = Accelerometer.addListener(accelerometerData => {
       addAcceleromerReading(accelerometerData);
-      setDataA(accelerometerData);
+      //setDataA(accelerometerData);
     });
     this._subscriptionG = Gyroscope.addListener(gyroscopeData => {
-      addGyroReading(gyroscopeData);
-      setDataG(gyroscopeData);
+      //addGyroReading(gyroscopeData);
+      //setDataG(gyroscopeData);
     });
   };
 
   const _unsubscribe = () => {
+    console.log('_unsubscribe')
     this._subscriptionA && this._subscriptionA.remove();
     this._subscriptionA = null;
     this._subscriptionG && this._subscriptionG.remove();
     this._subscriptionG = null;
+    stopSensorInerval();
   };
 
   let { x, y, z } = dataA;
@@ -87,6 +90,9 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
         <Text style={styles.text}>
           x: {round(xG)} y: {round(yG)} z: {round(zG)}
         </Text>
+        <Text>
+          {accMsg}
+        </Text> 
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={_toggle} style={styles.button}>
             <Text>Toggle</Text>
