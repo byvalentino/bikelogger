@@ -110,7 +110,7 @@ export default class TrackingStore {
         const aTime = Date.now();
         return (aTime - interval.startTime > this.sensoersIntervalLimit);
     }
-    @observable accMsg: string = 'accMsg';
+    @observable accMsg: string = 'try 15:40';
     @action setAccMsg = (value: string) => {
         this.accMsg= value;
     }
@@ -155,8 +155,8 @@ export default class TrackingStore {
             this.currentSensoersInterval.stopInterval()
             this.sensoersIntervalArr.push(this.currentSensoersInterval);
             //console.log( this.currentSensoersInterval);
-            console.log( this.currentSensoersInterval.acceleromerArr.length);
-            console.log( this.currentSensoersInterval.stopTime-  this.currentSensoersInterval.startTime);
+            //console.log( this.currentSensoersInterval.acceleromerArr.length);
+            //console.log( this.currentSensoersInterval.stopTime-  this.currentSensoersInterval.startTime);
             this.setAccMsg (this.currentSensoersInterval.acceleromerArr.length +"(" + (this.currentSensoersInterval.stopTime-  this.currentSensoersInterval.startTime) +')');
         }
     }

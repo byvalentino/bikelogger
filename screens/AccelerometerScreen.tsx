@@ -11,7 +11,7 @@ export interface Props {
   store?: IStore;
 }
 const SlOW_GYRO: number = 1000;
-const FAST_GYRO: number = 5;
+const FAST_GYRO: number = 1;
 
 const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   const { uiStore } = props.store!;
@@ -20,6 +20,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
   const {startSensorInerval, addAcceleromerReading, stopSensorInerval, addGyroReading, accMsg} = trackingStore;
   const [dataA, setDataA] = useState({ x: 0, y: 0, z: 0 });
   const [dataG, setDataG] = useState({ x: 0, y: 0, z: 0 });
+  const [tugglemsg, setTugglemsg] = useState('start');
 
   useEffect(() => {
     _toggle();
@@ -63,6 +64,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
       //addGyroReading(gyroscopeData);
       //setDataG(gyroscopeData);
     });
+    setTugglemsg('stop');
   };
 
   const _unsubscribe = () => {
@@ -72,6 +74,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
     this._subscriptionG && this._subscriptionG.remove();
     this._subscriptionG = null;
     stopSensorInerval();
+    setTugglemsg('start');
   };
 
   let { x, y, z } = dataA;
@@ -95,7 +98,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
         </Text> 
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={_toggle} style={styles.button}>
-            <Text>Toggle</Text>
+            <Text>{tugglemsg}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={_slow} style={[styles.button, styles.middleButton]}>
             <Text>Slow</Text>
