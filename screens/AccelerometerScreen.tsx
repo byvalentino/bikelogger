@@ -4,6 +4,7 @@ import { Accelerometer, Gyroscope } from 'expo-sensors';
 import { inject, observer } from 'mobx-react';
 import MyModal from '../components/MyModal';
 import { IStore } from '../stores/Store';
+import * as acc from '../services/AccelerometerLogger';
 import Colors from '../constants/colors';
 import { log } from '../services/Logger';
 
@@ -36,7 +37,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
     setAccelerometerModalVisable(false);
   }
   const _toggle = () => {
-    if (this._subscriptionA) {
+    if (global.AccLisnter) {
       _unsubscribe();
     } else {
       _subscribe();
@@ -55,7 +56,8 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
 
   const _subscribe = () => {
     console.log('_subscribe')
-    startSensorInerval();
+    acc.subscribeAcc();
+    /* startSensorInerval();
     this._subscriptionA = Accelerometer.addListener(accelerometerData => {
       addAcceleromerReading(accelerometerData);
       //setDataA(accelerometerData);
@@ -63,17 +65,18 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
     this._subscriptionG = Gyroscope.addListener(gyroscopeData => {
       //addGyroReading(gyroscopeData);
       //setDataG(gyroscopeData);
-    });
+    }); */
     setTugglemsg('stop');
   };
 
   const _unsubscribe = () => {
     console.log('_unsubscribe')
-    this._subscriptionA && this._subscriptionA.remove();
+    acc.unsubscribeAcc();
+   /*  this._subscriptionA && this._subscriptionA.remove();
     this._subscriptionA = null;
     this._subscriptionG && this._subscriptionG.remove();
     this._subscriptionG = null;
-    stopSensorInerval();
+    stopSensorInerval(); */
     setTugglemsg('start');
   };
 
