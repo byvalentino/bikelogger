@@ -42,6 +42,7 @@
         ]
       }
     },
-    "description": "BikeLogger collects cycling travel data. The data is then used to better plan our cycling infrastructure."
+    "description": "BikeLogger collects cycling travel data. The data is then used to better plan our cycling infrastructure.",
+    "sdkVersion": "39.0.0"
   }
 }
