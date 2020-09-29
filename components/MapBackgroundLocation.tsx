@@ -10,6 +10,8 @@ import MyMapView from './MyMapView';
 import AccelerometerScreen from '../screens/AccelerometerScreen';
 import { startGetLocationAsync, stopGetLocationAsync } from '../services/BackgroundLocation';
 import LocationTaskExecutor from '../services/taskLocation';
+import ToastExample from '../services/ToastExample';
+
 import Colors from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -45,8 +47,11 @@ const MapBackgroundLocation: React.FC<Props> = (props: Props) => {
         navigation.navigate('Logger');
     }
     const setLocationStaus = () => {
-        if (!isTracking)
+        if (!isTracking){
             startGetLocationAsync();
+            ToastExample.show('start geo location', ToastExample.SHORT);
+        }
+            
         else
             stopGetLocationAsync();
     }
