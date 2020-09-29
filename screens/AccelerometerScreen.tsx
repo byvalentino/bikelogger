@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Button, Modal, Alert } from '
 import { Accelerometer, Gyroscope } from 'expo-sensors';
 import { inject, observer } from 'mobx-react';
 import MyModal from '../components/MyModal';
+import NativeAccPanel from '../components/NativeAccPanel';
 import { IStore } from '../stores/Store';
 import * as acc from '../services/AccelerometerLogger';
 import Colors from '../constants/colors';
@@ -99,7 +100,8 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
         <Text>
           {accMsg}
         </Text> 
-        <View style={styles.buttonContainer}>
+        <NativeAccPanel />
+        {/* <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={_toggle} style={styles.button}>
             <Text>{tugglemsg}</Text>
           </TouchableOpacity>
@@ -109,7 +111,7 @@ const AccelerometerScreen: React.FC<Props> = (props: Props) => {
           <TouchableOpacity onPress={_fast} style={styles.button}>
             <Text>Fast</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </MyModal>
   );
