@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 import { inject, observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 
-import {IStore} from '../stores/Store';
+import { IStore } from '../stores/Store';
 import Input from '../components/Input';
 import Colors from '../constants/colors';
 
@@ -13,49 +13,47 @@ export interface Props {
 }
 
 const SettingsScreen: React.FC<Props> = (props: Props) => {
+
   const { trackingStore } = props.store!;
   const { userStore } = props.store!;
   const { trackingTimeInterval, setTrackingTimeInterval } = trackingStore;
   const navigation = useNavigation();
-  const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
+  //const [enteredText, setEnteredText] = useState(trackingTimeInterval.toString());
   const numberInputHandler = (text: string) => {
-    setEnteredText(text.replace(/[^0-9]/g, ''));
+    const trackInterval = (text.replace(/[^0-9]/g, ''));
+    trySetIntrvalTime(trackInterval);
   }
-  const cacnelButtonHandler = () => {
-    setEnteredText(trackingTimeInterval.toString());
-    navigation.goBack();
-  }
-  const onForgroundPress = () => {
-    navigation.navigate('MapForground');
-  }
+  // const cacnelButtonHandler = () => {
+  //   setEnteredText(trackingTimeInterval.toString());
+  //   navigation.goBack();
+  // }
+  // const onForgroundPress = () => {
+  //   navigation.navigate('MapForground');
+  // }
   const onUserPropsPress = () => {
     navigation.navigate('UserProps');
   }
   const onLogOutPress = () => {
-    userStore.setSignInState({ type: 'SIGN_OUT'});
+    userStore.setSignInState({ type: 'SIGN_OUT' });
   }
-  const confirmedButtonHandler = () => {
-    const intervalNumnber = parseInt(enteredText)
+  const trySetIntrvalTime = (trackInterval: string) => {
+    const intervalNumnber = parseInt(trackInterval)
     if (isNaN(intervalNumnber) || intervalNumnber <= 0 || intervalNumnber > 30) {
       Alert.alert(
         'Invalid Interval',
         'Interval has to be between 1 and 30 sec.',
         [{ text: 'Okay', style: 'destructive' }]
       );
-      setEnteredText(trackingTimeInterval.toString());
+      //setEnteredText(trackingTimeInterval.toString());
       return;
     }
     else {
       setTrackingTimeInterval(intervalNumnber);
-      navigation.goBack();
+      //navigation.goBack();
     }
   }
   return (
     <View style={styles.main}>
-      <View style={styles.lineContainer}>
-        <Text style={styles.text} >Version:</Text>
-        <Text style={styles.text}>{Constants.manifest.version}</Text>
-      </View>
       <View style={styles.lineContainer}>
         <Text style={styles.text}>Time Interval:</Text>
         <Input
@@ -66,13 +64,8 @@ const SettingsScreen: React.FC<Props> = (props: Props) => {
           keyboardType='number-pad'
           maxLength={2}
           onChangeText={numberInputHandler}
-          value={enteredText}
+          value={trackingTimeInterval.toString()}
         />
-      </View>
-      <View style={styles.lineContainer}>
-        <View style={styles.button}>
-          <Button title='Forground' color={Colors.primary} onPress={onForgroundPress} />
-        </View>
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.button}>
@@ -84,17 +77,27 @@ const SettingsScreen: React.FC<Props> = (props: Props) => {
           <Button title='Log out' color={Colors.primary} onPress={onLogOutPress} />
         </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <Button title="Cancel" color={Colors.secondary} onPress={cacnelButtonHandler} />
-        </View>
-        <View style={styles.button}>
-          <Button title="Confirm" color={Colors.primary} onPress={confirmedButtonHandler} />
-        </View>
-      </View>
     </View>
   );
 };
+//     <View style={styles.lineContainer}>
+//       <Text style={styles.text} >Version:</Text>
+//       <Text style={styles.text}>{Constants.manifest.version}</Text>
+//     </View>
+//     <View style={styles.lineContainer}>
+//       <View style={styles.button}>
+//         <Button title='Forground' color={Colors.primary} onPress={onForgroundPress} />
+//       </View>
+//     </View>
+//     <View style={styles.buttonContainer}>
+//       <View style={styles.button}>
+//         <Button title="Cancel" color={Colors.secondary} onPress={cacnelButtonHandler} />
+//       </View>
+//       <View style={styles.button}>
+//         <Button title="Confirm" color={Colors.primary} onPress={confirmedButtonHandler} />
+//       </View>
+//     </View>
+
 export default inject("store")(observer(SettingsScreen));
 
 const styles = StyleSheet.create({
@@ -107,21 +110,21 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 50,
-    height: 40, 
+    height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     paddingLeft: 10,
     marginLeft: 15,
     fontSize: 18,
   },
-  text:{
+  text: {
     marginLeft: 15,
     fontSize: 18,
   },
   lineContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems:  'center',
+    alignItems: 'center',
     paddingHorizontal: 15,
     paddingTop: 20,
   },
