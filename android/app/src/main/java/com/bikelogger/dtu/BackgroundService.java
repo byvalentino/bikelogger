@@ -143,7 +143,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
     public void onCreate() {
 
         //Bind remote stack trace to activity
-        ExceptionHandler.register(this,"http://python-service-linc-dtu.eu-de.mybluemix.net/bugReport");
+        ExceptionHandler.register(this,"https://tchoicedtu.herokuapp.com/bugReport");
 
         //Start service
         startForeground(12345678, getNotification());
