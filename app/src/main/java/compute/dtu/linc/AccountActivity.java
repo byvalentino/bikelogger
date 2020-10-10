@@ -105,9 +105,9 @@ public class AccountActivity extends AppCompatActivity {
 
         JSONObject jsonParams = new JSONObject();
         try {
-            jsonParams.put("email",Base64.encodeToString(e.getBytes(),Base64.DEFAULT));
-            jsonParams.put("phone",Base64.encodeToString(ph.getBytes(),Base64.DEFAULT));
-            jsonParams.put("id",Base64.encodeToString(id.getBytes(),Base64.DEFAULT));
+            jsonParams.put("email",e.getBytes());
+            jsonParams.put("phone",ph.getBytes());
+            jsonParams.put("id",id.getBytes());
         } catch (JSONException e1) {
             e1.printStackTrace();
         }

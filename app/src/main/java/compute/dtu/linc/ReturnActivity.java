@@ -79,9 +79,9 @@ public class ReturnActivity extends AppCompatActivity {
 
         JSONObject jsonParams = new JSONObject();
         try {
-            jsonParams.put("email", Base64.encodeToString(e.getBytes(),Base64.DEFAULT));
-            String d = "Android, " + Build.MODEL +" "+ Build.MANUFACTURER+" "+Build.BRAND + " SDK: "+ Build.VERSION.SDK + " Version: " + Build.VERSION.RELEASE + " " + Build.DISPLAY;
-            jsonParams.put("device", Base64.encodeToString(d.getBytes(),Base64.DEFAULT));
+            jsonParams.put("email", e);
+            //String d = "Android, " + Build.MODEL +" "+ Build.MANUFACTURER+" "+Build.BRAND + " SDK: "+ Build.VERSION.SDK + " Version: " + Build.VERSION.RELEASE + " " + Build.DISPLAY;
+            //jsonParams.put("device", d.getBytes());
         } catch (JSONException e1) {
             e1.printStackTrace();
         }
@@ -98,8 +98,8 @@ public class ReturnActivity extends AppCompatActivity {
                     conn.setReadTimeout(2000);
                     conn.setConnectTimeout(4000);
                     conn.connect();
-                    DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 
+                    DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
                     String output = jsonParams.toString();
                     System.out.println(output);
                     wr.writeBytes(output);
@@ -119,7 +119,7 @@ public class ReturnActivity extends AppCompatActivity {
                         //System.out.println("Response from server: " + response);
 
                         SharedPreferences.Editor sharedPreferences = getApplicationContext().getSharedPreferences("app",0).edit();
-                        sharedPreferences.putString("id",jsonobj.getString("id")).commit();
+                        sharedPreferences.putString("id",jsonobj.getString("_id")).commit();
                         sharedPreferences.putString("name",jsonobj.getString("name")).commit();
                         sharedPreferences.putString("email",jsonobj.getString("email")).commit();
                         sharedPreferences.putString("phone",jsonobj.getString("phone")).commit();

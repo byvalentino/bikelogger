@@ -149,9 +149,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                     String output = ja.toString();
 
-                    //wr.writeBytes(output);
-                    //wr.flush();
-                    //wr.close();
+                    wr.writeBytes(output);
+                    wr.flush();
+                    wr.close();
                     //System.out.println("Response from server-->: " + output);
 
                     try {
@@ -168,7 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
                         //JSONObject jObject = new JSONObject(response);
                         //String _id = jObject.getString("_id");
                         //System.out.println("Response from server: " + jObject.getString("_id"));
-                        System.out.println("Response from server>>: " + response);
+                        //System.out.println("Response from server>>: " + response);
 
                         //Handle error throwback if any:
                         if(response.contains("Error")){
@@ -178,7 +178,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                         SharedPreferences.Editor sharedPreferences = getApplicationContext().getSharedPreferences("app",0).edit();
 
-                        sharedPreferences.putString("id",response).commit();
+                        sharedPreferences.putString("id",response.toString()).commit();
                         sharedPreferences.putString("name",n).commit();
                         sharedPreferences.putString("email",e).commit();
                         sharedPreferences.putString("phone",ph).commit();

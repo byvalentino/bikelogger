@@ -210,7 +210,7 @@ public class WebServicesUtil {
     //Result: Webservice call tells the webservice the questionnaire is completed
     public static void sendQuestionnaireCompletedRequest(String name){
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("app",0);
-        String id = sharedPreferences.getString("id", null);
+        String id = sharedPreferences.getString("_id", null);
 
         JSONObject jsonParams = new JSONObject();
         try {
