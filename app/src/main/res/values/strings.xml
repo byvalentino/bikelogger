@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">LINC</string>
+    <string name="title_activity_map_view">Map</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="open">Open</string>
+    <string name="close">close</string>
+    <string name="user_location_permission_explanation">Give LINC access to your location data on DTU Campus Lyngby. The data will be used for scientific purposes only.</string>
+    <string name="user_location_permission_not_granted">LINC is missing location data access, please see app settings.</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="accept_and_submit">Accept and Submit</string>
+    <string name="already_signed_up">Already signed up?</string>
+    <string name="remail">Repeat email</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone number</string>
+    <string name="linc_intro">Welcome to the LINC app. Here you can sign up as a test passenger to LINC’s test of autonomous shuttles at DTU. As a test passenger, you have free access to the shuttles during the test period, where you should use the LINC app. Your use of the app makes it possible for researchers at DTU and RUC to send you questionnaires about your experience of the shuttles, your transport habits and track you in and around the shuttles at DTU Lyngby campus. We use this data to understand, how the shuttles can become a part of the future for transport. You can read more about the test <a href="http://www.google.com">here</a>. To become a test passenger you must give consent to the researchers at RUC and DTU, to process your data. Read the full consent form <a href="https://lincproject.dk/">here</a>.</string>
+    <string name="experiment">Experiment</string>
+    <string name="routes">Routes</string>
+    <string name="return_description">It is only possible for users who have previously signed up via the app or website to use this feature.</string>
+    <string name="submit_and_rejoin">Submit and Rejoin</string>
+    <string name="show_routes">Toggle routes</string>
+    <string name="public_transport">Public transport</string>
+    <string name="linc_shuttle_stop" translatable="false">LINC shuttle stop</string>
+    <string name="linc_shuttle" translatable="false">LINC shuttle</string>
+    <string name="boarded_shuttle">Boarded shuttle</string>
+    <string name="click_for_info">Click us on the map for more info!</string>
+    <string name="return_to_the_experiment">Return to the experiment</string>
+    <string name="map">Map</string>
+    <string name="questionnaire">Questionnaire</string>
+    <string name="linc_website">LINC website</string>
+    <string name="about">Frequently asked questions</string>
+
+    <!--Strings referenced from code (mostly toasts)-->
+    <string name="ff_toast">Please fill in the form</string>
+    <string name="email_toast">Please enter a valid email</string>
+    <string name="network_err_toast">Network error, please try again later</string>
+    <string name="bus_arrival">Bus arrives in</string>
+    <string name="bus_route_name">Route</string>
+    <string name="notification">New Questionnaires are now available, Please help LINC by filling them out</string>
+    <string name="bluetoothtitle">Bluetooth not enabled</string>
+    <string name="bluetoothmessage">Please enable bluetooth on your device as otherwise certain features of the app will be unavaliable</string>
+    <string name="email_match_error">Emails must match</string>
+    <string name="checkbox_not_checked_error">To join the LINC experiment you must provide consent</string>
+    <string name="account">Account</string>
+    <string name="account_info_placeholder">Name: \n%1$s \n\nEmail: \n%2$s \n\nPhone Number: \n%3$s</string>
+    <string name="participant_id">Participant ID:</string>
+    <string name="change_email">Change email</string>
+    <string name="change_phone_number">Change phone number</string>
+    <string name="update_account">Update account</string>
+    <string name="if_you_have_any_questions_about_the_expierment_please_contatct_kenneth_j_rgsen_phone_12141241412_or_via_email_test_test_dk_for_app_related_questions_or_issues_contact_studenthelper_dtu_dk">If you have any questions about the LINC project, issues or technical questions please contact: Linc-project-placeholder@gmail.com.</string>
+    <string name="messages">Messages</string>
+    <string name="new_messages">New Messages from LINC</string>
+    <string name="new_message_text">Open the app to read new messages</string>
+    <string name="schedule_today_title">Schedule(s) for today:</string>
+    <string name="communication_module_title">Messages from LINC</string>
+    <string name="LINC_map_title">LINC Map</string>
+    <string name="upcoming_service_at_stop_text">"Upcoming service at: "</string>
+    <string name="upcoming_service_from">"Upcoming service from "</string>
+    <string name="upcoming_bus_stops_for">"Upcoming busstops for "</string>
+    <string name="see_full_schedule_for_today">See full schedule for today</string>
+    <string name="bus_schedule">Bus schedule</string>
+
+</resources>

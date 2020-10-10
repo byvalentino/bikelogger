@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/website"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/linc_website"
+        android:state_checked="true"/>
+
+    <item
+        android:id="@+id/experiment"
+        android:icon="@drawable/baseline_directions_bus_black_24dp"
+        android:title="@string/experiment" />
+
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/baseline_contact_support_black_24dp"
+        android:title="@string/about" />
+
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/baseline_account_circle_black_24dp"
+        android:title="@string/account" />
+    <item
+        android:id="@+id/messages"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/messages" />
+    <item
+        android:id="@+id/schedule_button"
+        android:icon="@drawable/baseline_schedule_black_24dp"
+        android:title="@string/bus_schedule" />
+</menu>

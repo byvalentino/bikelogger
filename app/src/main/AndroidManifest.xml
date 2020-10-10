@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.linc">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name="compute.dtu.linc.Schedule"
+            android:parentActivityName="compute.dtu.linc.MapViewActivity"
+            android:screenOrientation="portrait"/>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <activity
+            android:name="compute.dtu.linc.CommunicationsModule"
+            android:parentActivityName="compute.dtu.linc.MapViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="compute.dtu.linc.AccountActivity"
+            android:parentActivityName="compute.dtu.linc.MapViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="compute.dtu.linc.WebViewActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="compute.dtu.linc.ReturnActivity"
+            android:parentActivityName="compute.dtu.linc.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="compute.dtu.linc.MapViewActivity"
+            android:label="LINC"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="compute.dtu.linc.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <service android:name="compute.dtu.linc.Services.BackgroundService" />
+
+        <receiver android:name="compute.dtu.linc.Services.QuestionnaireUpdateBroadcastReceiver" />
+        <receiver android:name="compute.dtu.linc.Services.ActivityRecognitionReceiver" />
+        <receiver
+            android:name="compute.dtu.linc.Services.SystemStartReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="compute.dtu.linc.Services.GeofenceBroadcastReceiver" />
+    </application>
+
+</manifest>

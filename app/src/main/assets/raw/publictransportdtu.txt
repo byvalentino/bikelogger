@@ -1,0 +1,8 @@
+55.779848, 12.520948, Building 450 Bus 180/181/190
+55.782993, 12.520380, Building 404 Bus 180/181/190
+55.783661, 12.525810, Lundtoftegårdsvej Bus 190
+55.785951, 12.520057, Anker Engelunds Vej Bus 30E/180/181/190/300s
+55.783362, 12.511663, Lundtoftevej Bus 180/181/300S
+55.780864, 12.510394, Lyngby Svømmehal Bus 300s
+55.785456, 12.513882, Lyngby Handelsskole Knord Bus 30E/180/181/300s
+55.787353, 12.515960, Bøgeparken Bus 190
