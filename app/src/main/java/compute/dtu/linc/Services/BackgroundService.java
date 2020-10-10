@@ -751,7 +751,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
                         result.append(line);
                     }
                     String response = result.toString();
-                    //System.out.println("Response from server: " + response);
+                    System.out.println("Response from server: -->" + response);
                     WebServicesUtil.checkForNewQuestionnaires(response,this);
 
 
