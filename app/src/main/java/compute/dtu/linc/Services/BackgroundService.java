@@ -127,7 +127,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
     private boolean alarmStarted = false;
 
 
-    private int geofenceRange = 3200;
+    private int geofenceRange = 320000;
     private double geofenceLat = 55.785706;
     private double geofenceLon = 12.521729;
 
@@ -152,8 +152,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
         //Set everything up
         setupSensors();
         setupBeaconManager();
-        setupGeoFence();
-        setupQuestionnaireUpdateAlarm();
+        //setupGeoFence();
+        //setupQuestionnaireUpdateAlarm();
+        startTracking();
         //get database access
         rep = new Repository(getApplicationContext());
 
@@ -308,7 +309,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
         fence.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
-                .setRequestId("DTU")
+                .setRequestId("Kastrup")
                 .setCircularRegion(geofenceLat, geofenceLon, geofenceRange) //test reset to 3600meter
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
@@ -405,7 +406,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
             public void onSensorChanged(SensorEvent event) {
                 Sensor sensor = event.sensor;
                 if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                    //Log.i(TAG, "Gyroscope: " + event.values.toString());
+                    //Log.i(TAG, "Gyroscope: " + event.values[0]);
                     rotX = event.values[0];
                     rotY = event.values[1];
                     rotZ = event.values[2];
@@ -573,8 +574,10 @@ public class BackgroundService extends Service implements BeaconConsumer {
                             Log.i(TAG, "Count: " + currentCount);
                             if (currentCount >= rowCurrentCountLimit) {
                                 //If the service is accessable, attempt upload:
-                                if (WebServicesUtil.getPostService(Variables.webServiceEndPoint+"/ping", null)) {
-                                    List<Record> records = rep.getAllRecords();
+                                //TO DO: Fix this condition to make sure the server is reachable
+                                //if (WebServicesUtil.getPostService(Variables.webServiceEndPoint+"/test", null)) {
+                                if (true) {
+                                        List<Record> records = rep.getAllRecords();
 
                                     //Temp storage
                                     ArrayList<Record> recordsForDeletion = new ArrayList<Record>();
@@ -751,7 +754,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
                         result.append(line);
                     }
                     String response = result.toString();
-                    System.out.println("Response from server: -->" + response);
+                    System.out.println("Response from server: " + response);
                     WebServicesUtil.checkForNewQuestionnaires(response,this);
 
 
