@@ -27,7 +27,8 @@ public class Repository {
     //Result: Passes a Record object to insertTask(Record)
     public void insertTask(double accX, double accY, double accZ, double rotX, double rotY, double rotZ, double magX, double magY, double magZ, double longitude, double lattitude, float speed, Date timestamp, ArrayList<Beacon> activeBeacons, int state, int confidence) {
         SharedPreferences sharedPreferences = con.getSharedPreferences("app",0);
-        String userID = sharedPreferences.getString("id", null);
+        //String userID = sharedPreferences.getString("id", "111");
+        String userID = "111";
         System.out.println("UserID = "+userID);
         if(userID!=null){
             //prepare record

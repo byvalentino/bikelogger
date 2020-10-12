@@ -313,17 +313,17 @@ public class MapViewActivity extends AppCompatActivity  implements
                 }
                 //Run again in x sec, meanwhile execute a new fetch:
                 handler.postDelayed(this, refreshdelay);
-                fetchNewBusLocations();
+                //fetchNewBusLocations();
 
                 //TODO make these seperate layers (bus image id)
 
                 //Update schedule data every 10 sec
-                if(refresh_schedule_data > 20){
+                /*   if(refresh_schedule_data > 20){
                     refresh_schedule_data = 0;
                     WebServicesUtil.sendScheduleRequest(getBaseContext());
                 }else{
                     refresh_schedule_data++;
-                }
+                }*/
             }
         }
     };
@@ -711,7 +711,7 @@ public class MapViewActivity extends AppCompatActivity  implements
 
                         }else{
                             Toast toast = Toast.makeText(getApplicationContext(),
-                                    "Unknown network error",
+                                    "network error - busStops",
                                     Toast.LENGTH_LONG);
                             //System.out.println("App failure toast activated");
 
@@ -1394,7 +1394,7 @@ public class MapViewActivity extends AppCompatActivity  implements
 
     public void bluetoothEnabledCheck(){
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!mBluetoothAdapter.isEnabled()) {
+        if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
             WebServicesUtil.createNotification(getString(R.string.bluetoothtitle), getString(R.string.bluetoothmessage), this);
             // Bluetooth is not enabled :)
         }

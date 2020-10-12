@@ -128,8 +128,8 @@ public class BackgroundService extends Service implements BeaconConsumer {
 
 
     private int geofenceRange = 320000;
-    private double geofenceLat = 55.785706;
-    private double geofenceLon = 12.521729;
+    private double geofenceLat = 32.08;
+    private double geofenceLon = 34.78;
 
     //Debug
     long tracking_sleeper = 0;
