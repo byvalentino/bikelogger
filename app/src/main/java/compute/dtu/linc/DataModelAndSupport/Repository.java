@@ -23,7 +23,7 @@ public class Repository {
         appDatabase = Room.databaseBuilder(context, AppDatabase.class, DB_NAME).build();
     }
 
-    //Requires: Valid data equal to that of a Record object
+        //Requires: Valid data equal to that of a Record object
     //Result: Passes a Record object to insertTask(Record)
     public void insertTask(double accX, double accY, double accZ, double rotX, double rotY, double rotZ, double magX, double magY, double magZ, double longitude, double lattitude, float speed, Date timestamp, ArrayList<Beacon> activeBeacons, int state, int confidence) {
         SharedPreferences sharedPreferences = con.getSharedPreferences("app",0);
@@ -53,6 +53,35 @@ public class Repository {
 
             rec.setBeacons(activeBeacons);
 
+            rec.setStateAndConfidence(state,confidence);
+
+            //Insert record
+            insertTask(rec);
+        }
+    }
+
+    //Requires: Valid data equal to that of a Record object
+    //Result: Passes a Record object to insertTask(Record)
+    public void insertTask2(ArrayList<AccRecord> acc, ArrayList<GyrRecord> gyr, ArrayList<MagRecord> mag, double longitude, double lattitude, float speed, Date timestamp, ArrayList<Beacon> activeBeacons, int state, int confidence) {
+        SharedPreferences sharedPreferences = con.getSharedPreferences("app",0);
+        //String userID = sharedPreferences.getString("id", "111");
+        String userID = "112";
+        System.out.println("UserID = "+userID);
+        if(userID!=null){
+            //prepare record
+            Record rec = new Record();
+            rec.setId(userID);
+
+            rec.setAcc(acc);
+            rec.setGyr(gyr);
+            rec.setMag(mag);
+
+            rec.setLongitude(longitude);
+            rec.setLatitude(lattitude);
+            rec.setSpeed(speed);
+            rec.setTimeStamp(timestamp);
+
+            rec.setBeacons(activeBeacons);
             rec.setStateAndConfidence(state,confidence);
 
             //Insert record

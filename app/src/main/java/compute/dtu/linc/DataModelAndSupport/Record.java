@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+// import sun.awt.www.content.audio.x_aiff;
 
 import org.altbeacon.beacon.Beacon;
 import org.json.JSONArray;
@@ -23,7 +24,7 @@ public class Record {
 
     @NonNull
     private String id;
-
+    
     private double accX;
     private double accY;
     private double accZ;
@@ -36,6 +37,12 @@ public class Record {
     private double magY;
     private double magZ;
 
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.GERMANY);
+    // json array of acc records, converted to string (for db)
+    private String acc;
+    private String gyr;
+    private String mag;
+ 
     private double longitude;
     private double latitude;
     private double speed;
@@ -46,7 +53,6 @@ public class Record {
     //Beacons are saved as a string (representing a json array) to ease local storage
     private String beacons; // Contains: uuid, major, minor, rssi, prox
 
-
     //default recognition somewhere:
     private int stationary = 0;
     private int walking = 0;
@@ -55,6 +61,10 @@ public class Record {
     private int cycling = 0;
     private int unknown = 0;
     private int confidence = 0; // activity detection algorithms cofidence.
+
+    public String formatDate(Date timestamp) {
+        return SIMPLE_DATE_FORMAT.format(timestamp);
+    }
 
     public void setStateAndConfidence(int state,int confidence){
         System.out.println("Current state: " + state);
@@ -76,6 +86,14 @@ public class Record {
         try {
             JSONObject js = new JSONObject();
             js.put("id", id);
+
+            JSONArray jsonArrAcc = new JSONArray(acc);
+            js.put("acc",jsonArrAcc);
+            JSONArray jsonArrGyr = new JSONArray(gyr);
+            js.put("gyr", jsonArrGyr);
+            JSONArray jsonArrMag = new JSONArray(mag);
+            js.put("mag",jsonArrMag);
+
             js.put("accX",accX);
             js.put("accY",accY);
             js.put("accZ",accZ);
@@ -87,14 +105,12 @@ public class Record {
             js.put("magX",magX);
             js.put("magY",magY);
             js.put("magZ",magZ);
-
             js.put("longitude",longitude);
             js.put("latitude",latitude);
             js.put("speed",speed);
 
             //convert timestamp:
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.GERMANY);
-            String stampString = simpleDateFormat.format(timeStamp);
+            String stampString = formatDate(timeStamp);
             js.put("TimeStamp",stampString);
 
             JSONArray beac = new JSONArray(beacons);
@@ -145,6 +161,52 @@ public class Record {
         }
     }
 
+    //Requires: An ArrayList of AccRecord
+    //Result: Generates a String, containing a JSON array of acc, with relevant info.
+    public void setAcc(ArrayList<AccRecord> accList) {
+        try {
+            JSONArray jsonArr = new JSONArray();
+            for (AccRecord acc : accList) {
+                JSONObject o = acc.toJSON();
+                jsonArr.put(o);
+            }
+            setAcc(jsonArr.toString()); 
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Requires: An ArrayList of GyrRecord
+    //Result: Generates a String, containing a JSON array of gyro, with relevant info.
+    public void setGyr(ArrayList<GyrRecord> gryList){
+        try {
+            JSONArray jsonArr = new JSONArray();
+            for (GyrRecord GyrRecord : gryList) {
+                JSONObject o = GyrRecord.toJSON();
+                jsonArr.put(o);
+            }  
+            setGyr(jsonArr.toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    
+    //Requires: An ArrayList of MagRecord
+    //Result: Generates a String, containing a JSON array of mag, with relevant info.
+    public void setMag(ArrayList<MagRecord> magList){
+        try {
+            JSONArray jsonArr = new JSONArray();
+            for (MagRecord magRecord : magList) {
+                JSONObject o = magRecord.toJSON();
+                jsonArr.put(o);
+            }
+            setMag(jsonArr.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //------------------------------------------------------------------------------------------
     //----------------------------Default getters/setters/toString------------------------------
     //------------------------------------------------------------------------------------------
@@ -164,6 +226,27 @@ public class Record {
 
     public void setId(@NonNull String id) {
         this.id = id;
+    }
+
+    public String getAcc(){
+        return acc;
+    }
+    public void setAcc(String acc){
+        this.acc = acc;
+    }
+
+    public String getGyr(){
+        return gyr;
+    }
+    public void setGyr(String gyr){
+        this.gyr = gyr;
+    }
+
+    public String getMag(){
+        return mag;
+    }
+    public void setMag (String mag) {
+        this.mag = mag;
     }
 
     public double getAccX() {
@@ -277,6 +360,33 @@ public class Record {
         this.beacons = s;
     }
 
+    // @Override
+    // public String toString() {
+    //     //convert timestamp:
+    //     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
+    //     String stampString = simpleDateFormat.format(timeStamp);
+
+    //     return "Record{" +
+    //             "pk=" + pk +
+    //             ", id='" + id + '\'' +
+    //             ", acc=" + acc +
+    //             ", gry=" + gry +
+    //             ", mag=" + mag +
+    //             ", longitude=" + longitude +
+    //             ", latitude=" + latitude +
+    //             ", speed=" + speed +
+    //             ", timeStamp='" + stampString + '\'' +
+    //             ", beacons='" + beacons + '\'' +
+    //             ", stationary=" + stationary +
+    //             ", walking=" + walking +
+    //             ", running=" + running +
+    //             ", automotive=" + automotive +
+    //             ", cycling=" + cycling +
+    //             ", unknown=" + unknown +
+    //             ", confidence=" + confidence +
+    //             '}';
+    // }
+
     @Override
     public String toString() {
         //convert timestamp:
@@ -286,6 +396,9 @@ public class Record {
         return "Record{" +
                 "pk=" + pk +
                 ", id='" + id + '\'' +
+                ", acc=" + acc  + '\'' +
+                ", gyr=" + gyr + '\'' +
+                ", mag=" + mag + '\'' +
                 ", accX=" + accX +
                 ", accY=" + accY +
                 ", accZ=" + accZ +
@@ -309,6 +422,8 @@ public class Record {
                 ", confidence=" + confidence +
                 '}';
     }
+
+
 
     public int getStationary() {
         return stationary;

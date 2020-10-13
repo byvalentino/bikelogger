@@ -27,6 +27,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import compute.dtu.linc.DataModelAndSupport.AccRecord;
+import compute.dtu.linc.DataModelAndSupport.MagRecord;
+import compute.dtu.linc.DataModelAndSupport.GyrRecord;
 import compute.dtu.linc.DataModelAndSupport.Record;
 import compute.dtu.linc.DataModelAndSupport.Repository;
 import com.example.linc.R;
@@ -51,6 +54,7 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -99,9 +103,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
     public boolean tracking = false;
 
     //Controls upload rate of Records
-    private int rowCurrentCountLimit = 100;
-    private int rowCountDefault = 100;
-    private int rowCountIterator = 100;
+    private int rowCurrentCountLimit = 5;
+    private int rowCountDefault = 5;
+    private int rowCountIterator = 5;
 
     //Used to store temp data
     private Repository rep;
@@ -147,7 +151,10 @@ public class BackgroundService extends Service implements BeaconConsumer {
 
         //Start service
         startForeground(12345678, getNotification());
-        Log.i(TAG, "Foreground-background service started");
+        
+        SimpleDateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.GERMANY);
+        String dateStr = readFormat.format(new Date());
+        Log.i(TAG, "Foreground-background service started " + dateStr);
 
         //Set everything up
         setupSensors();
@@ -157,6 +164,10 @@ public class BackgroundService extends Service implements BeaconConsumer {
         startTracking();
         //get database access
         rep = new Repository(getApplicationContext());
+
+        //Delete all prev records
+        // rep.deleteAll();
+        // Log.i(TAG, "delete all records");
 
         try {
             final PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
@@ -563,7 +574,24 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 SimpleDateFormat writeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 Date date = writeFormat.parse(dateStr);
 
-                rep.insertTask(accX, accY, accZ, rotX, rotY, rotZ, magX, magY, magZ, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons,state ,confidence);
+                AccRecord accRec = new AccRecord(accX, accY, accZ,date);
+                AccRecord accRec2 = new AccRecord(1.1, 1.2, 1.3,date);
+                ArrayList<AccRecord> accArr = new ArrayList<>(); 
+                accArr.add(accRec);
+                accArr.add(accRec2);
+                GyrRecord gyrRec = new GyrRecord(rotX, rotY, rotZ,date);
+                GyrRecord gyrRec2 = new GyrRecord(2.1, 2.2, 2.3,date);
+                ArrayList<GyrRecord> gyrArr = new ArrayList<>();
+                gyrArr.add(gyrRec);
+                gyrArr.add(gyrRec2);
+                MagRecord magRec = new MagRecord(magX, magY, magZ,date);
+                MagRecord magRec2 = new MagRecord(3.1, 3.22, 3.333 ,date);
+                ArrayList<MagRecord> magArr = new ArrayList<>();
+                magArr.add(magRec);
+                magArr.add(magRec2);
+                rep.insertTask2(accArr, gyrArr, magArr, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons, state ,confidence);
+                //rep.insertTask(accX, accY, accZ, rotX, rotY, rotZ, magX, magY, magZ, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons,state ,confidence);
+
                 //Database functionality must be on a new thread
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
@@ -585,7 +613,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
 
                                     int uploadBreakdown = 0;
                                     for (int i = 0; i < records.size(); i++) {
-                                        jparams.put(records.get(i).toJSON());
+                                        JSONObject jsonObj = records.get(i).toJSON();
+                                        //Log.i(TAG, jsonObj.toString());
+                                        jparams.put(jsonObj);
                                         recordsForDeletion.add(records.get(i));
 
                                         //split the upload into chucks if too big
