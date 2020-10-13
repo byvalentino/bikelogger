@@ -589,9 +589,8 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 ArrayList<MagRecord> magArr = new ArrayList<>();
                 magArr.add(magRec);
                 magArr.add(magRec2);
-                rep.insertTask2(accArr, gyrArr, magArr, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons, state ,confidence);
-                //rep.insertTask(accX, accY, accZ, rotX, rotY, rotZ, magX, magY, magZ, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons,state ,confidence);
-
+                rep.insertTask(accArr, gyrArr, magArr, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons, state ,confidence);
+                
                 //Database functionality must be on a new thread
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
