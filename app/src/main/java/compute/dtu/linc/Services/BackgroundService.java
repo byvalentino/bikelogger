@@ -107,8 +107,18 @@ public class BackgroundService extends Service implements BeaconConsumer {
     private int rowCountDefault = 5;
     private int rowCountIterator = 5;
 
-    //Used to store temp data
+    //Used to store temp data in sql 
     private Repository rep;
+
+    // sensors consts: in microseconds - Android 2.3 (API level 9) onwards. or in 
+    // const values : SENSOR_DELAY_FASTEST (18-20 ms), SENSOR_DELAY_GAME (37-39 ms), 
+    // SENSOR_DELAY_UI (85-87 ms), SENSOR_DELAY_NORMAL (215-230 ms).
+    // actual times, might be different by sensors.   
+    private final int ACC_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_NORMAL;
+    private final int GYR_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_NORMAL;
+    private final int MAG_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_NORMAL;
+
+    //sensors temp arr
     private ArrayList<AccRecord> accList; 
     private ArrayList<GyrRecord> gyrList;
     private ArrayList<MagRecord> magList;
@@ -483,10 +493,10 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
                 //SensorManager.SENSOR_DELAY_GAME)
-                sm.registerListener(mSensorListener, gyro, 10000000);
-                sm.registerListener(mSensorListener, acc, 10000000);
-                sm.registerListener(mSensorListener, mag, 10000000);
-
+                sm.registerListener(mSensorListener, acc, ACC_SAMPLE_PERIOD);
+                sm.registerListener(mSensorListener, gyro, GYR_SAMPLE_PERIOD);
+                sm.registerListener(mSensorListener, mag, MAG_SAMPLE_PERIOD);
+                
                 startActivityRecognition();
 
                 //WebServicesUtil.createNotification("Started Tracking", "",this);
