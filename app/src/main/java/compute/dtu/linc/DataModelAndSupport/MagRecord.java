@@ -10,11 +10,11 @@ public class MagRecord {
     public final double magX, magY, magZ;
     public final long timeStamp;
   
-    public MagRecord (double x, double y, double z, Date timestamp) {
+    public MagRecord (double x, double y, double z, long timestamp) {
         this.magX = x;
         this.magY = y;
         this.magZ = z;
-        this.timeStamp = timestamp.getTime();
+        this.timeStamp = timestamp;
     }
 
     public JSONObject toJSON(){

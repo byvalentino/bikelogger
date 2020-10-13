@@ -9,12 +9,13 @@ public class GyrRecord {
     public final double gyrX, gyrY, gyrZ;
     public final long timeStamp;
     
-    public GyrRecord (double x, double y, double z, Date timestamp) {
+    public GyrRecord (double x, double y, double z, long timestamp) {
         this.gyrX = x;
         this.gyrY = y;
         this.gyrZ = z;
-        this.timeStamp = timestamp.getTime();
+        this.timeStamp = timestamp;
     }
+
     public JSONObject toJSON(){
         try {
             JSONObject js = new JSONObject();
@@ -27,6 +28,5 @@ public class GyrRecord {
             e.printStackTrace();
         }
         return null;
-    
     }
 }

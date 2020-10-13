@@ -28,15 +28,14 @@ import java.util.Locale;
 // }
 
 public class AccRecord {
-    public final double accX;
-    public final double accY;
-    public final double accZ;
+    public final double accX, accY, accZ;
     public final long timeStamp;
-    public AccRecord (double x, double y, double z, Date timestamp) {
+    
+    public AccRecord (double x, double y, double z, long timestamp) {
         this.accX = x;
         this.accY = y;
         this.accZ = z;
-        this.timeStamp = timestamp.getTime();
+        this.timeStamp = timestamp;
     }
     
     public JSONObject toJSON(){

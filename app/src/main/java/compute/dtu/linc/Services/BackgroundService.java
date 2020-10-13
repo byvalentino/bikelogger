@@ -109,18 +109,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
 
     //Used to store temp data
     private Repository rep;
-    private double accX;
-    private double accY;
-    private double accZ;
-
-    private double rotX;
-    private double rotY;
-    private double rotZ;
-
-    private double magX;
-    private double magY;
-    private double magZ;
-
+    private ArrayList<AccRecord> accList; 
+    private ArrayList<GyrRecord> gyrList;
+    private ArrayList<MagRecord> magList;
     public ArrayList<Beacon> activeBeacons = new ArrayList<>();
 
     private int state;
@@ -164,6 +155,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
         startTracking();
         //get database access
         rep = new Repository(getApplicationContext());
+        accList = new ArrayList<>(); 
+        gyrList = new ArrayList<>();
+        magList = new ArrayList<>();
 
         //Delete all prev records
         // rep.deleteAll();
@@ -418,20 +412,16 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 Sensor sensor = event.sensor;
                 if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                     //Log.i(TAG, "Gyroscope: " + event.values[0]);
-                    rotX = event.values[0];
-                    rotY = event.values[1];
-                    rotZ = event.values[2];
+                    GyrRecord gyrRec = new GyrRecord(event.values[0], event.values[1], event.values[2], event.timestamp);
+                    gyrList.add(gyrRec);
                 } else if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     //Log.i(TAG, "Accelerometer: " + event.values.toString());
-                    accX = event.values[0];
-                    accY = event.values[1];
-                    accZ = event.values[2];
+                    AccRecord accRec = new AccRecord(event.values[0], event.values[1], event.values[2], event.timestamp);
+                    accList.add(accRec);
                 } else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
                     //Log.i(TAG, "Magnetic: " + event.values.toString());
-                    magX = event.values[0];
-                    magY = event.values[1];
-                    magZ = event.values[2];
-
+                    MagRecord magRec = new MagRecord(event.values[0], event.values[1], event.values[2],event.timestamp);
+                    magList.add(magRec);
                 }
             }
         };
@@ -574,23 +564,12 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 SimpleDateFormat writeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 Date date = writeFormat.parse(dateStr);
 
-                AccRecord accRec = new AccRecord(accX, accY, accZ,date);
-                AccRecord accRec2 = new AccRecord(1.1, 1.2, 1.3,date);
-                ArrayList<AccRecord> accArr = new ArrayList<>(); 
-                accArr.add(accRec);
-                accArr.add(accRec2);
-                GyrRecord gyrRec = new GyrRecord(rotX, rotY, rotZ,date);
-                GyrRecord gyrRec2 = new GyrRecord(2.1, 2.2, 2.3,date);
-                ArrayList<GyrRecord> gyrArr = new ArrayList<>();
-                gyrArr.add(gyrRec);
-                gyrArr.add(gyrRec2);
-                MagRecord magRec = new MagRecord(magX, magY, magZ,date);
-                MagRecord magRec2 = new MagRecord(3.1, 3.22, 3.333 ,date);
-                ArrayList<MagRecord> magArr = new ArrayList<>();
-                magArr.add(magRec);
-                magArr.add(magRec2);
-                rep.insertTask(accArr, gyrArr, magArr, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons, state ,confidence);
-                
+                rep.insertTask(accList, gyrList, magList, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons, state ,confidence);
+                //claen the lists of sensors
+                accList.clear();
+                gyrList.clear();
+                magList.clear();
+
                 //Database functionality must be on a new thread
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
