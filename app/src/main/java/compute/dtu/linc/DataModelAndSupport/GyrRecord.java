@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import compute.dtu.linc.Util.GenUtils;
+
 public class GyrRecord {
     public final double gyrX, gyrY, gyrZ;
     public final long timeStamp;
+    public static int PRECISION = 4;
     
     public GyrRecord (double x, double y, double z, long timestamp) {
-        this.gyrX = x;
-        this.gyrY = y;
-        this.gyrZ = z;
+        this.gyrX = GenUtils.round(x,PRECISION);
+        this.gyrY = GenUtils.round(y,PRECISION);
+        this.gyrZ = GenUtils.round(z,PRECISION);
         this.timeStamp = timestamp;
     }
 

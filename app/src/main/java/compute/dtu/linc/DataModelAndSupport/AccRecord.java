@@ -7,34 +7,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-//Database entity, any variable comes a colimn name in the SQLLite db.
-
-// public class ProductTypeConverters {
-//     @TypeConverter
-//     public static List<AccRecord> stringToMeasurements(String json) {
-//         JSONObject gson = new JSONObject();
-//         Type type = new TypeToken<List<AccRecord>>() {}.getType();
-//         List<AccRecord> accList = JSONObject.fromJson(json, type);
-//         return accList;
-//     }
-
-//     @TypeConverter
-//     public static String measurementsToString(List<Measurement> list) {
-//         Gson gson = new Gson();
-//         Type type = new TypeToken<List<Measurement>>() {}.getType();
-//         String json = gson.toJson(list, type);
-//         return json;
-//     }
-// }
+import compute.dtu.linc.Util.GenUtils;
 
 public class AccRecord {
     public final double accX, accY, accZ;
     public final long timeStamp;
-    
+    public static int PRECISION = 4;
+
     public AccRecord (double x, double y, double z, long timestamp) {
-        this.accX = x;
-        this.accY = y;
-        this.accZ = z;
+        this.accX = GenUtils.round(x,PRECISION);
+        this.accY = GenUtils.round(y,PRECISION);
+        this.accZ = GenUtils.round(z,PRECISION);
+        // this.accX = x;
+        // this.accY = y;
+        // this.accZ = z;
         this.timeStamp = timestamp;
     }
     
