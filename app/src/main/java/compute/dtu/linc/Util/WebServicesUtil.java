@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,12 +32,107 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import compute.dtu.linc.Variables.Variables;
+import jdk.nashorn.internal.ir.ReturnNode;
 
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 //Class for containing general use webservice calls
 public class WebServicesUtil {
     private final String TAG = "WebService util";
+
+    //Requires: a string containing all json
+    //Returns: true if data is successfully uploaded, false otherwise
+    public static boolean uploadDataToService1(String jsonParams, String userID){
+        boolean successState = false;
+        if(userID != null){
+            try {
+                String url = Variables.webServiceEndPoint+"/";
+                URL urlObj = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setReadTimeout(40000);
+                conn.setConnectTimeout(60000);
+                
+                conn.connect();
+                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+                wr.writeBytes(jsonParams);
+                wr.flush();
+                wr.close();
+                try {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    String response = result.toString();
+                    System.out.println("Response from server: " + response);
+                    // WebServicesUtil.checkForNewQuestionnaires(response,this);
+
+                    // if all tasks ended without error
+                    successState = true;
+
+                } catch (IOException ioe) {
+                    if (conn != null && conn.getErrorStream() != null) {
+                      InputStream errorStream = conn.getErrorStream();
+                      try (BufferedReader reader = new BufferedReader(new InputStreamReader(errorStream))) {
+                        StringBuffer response = reader.lines().reduce(new StringBuffer(), StringBuffer::append, (buffer1, buffer2) -> buffer1);
+                        System.out.println("Unexpected response from server. Response: "+ response);
+                      } catch (IOException e) {
+                        e.printStackTrace();
+                      }
+                    } else {
+                        ioe.printStackTrace();
+                    }
+                } catch (Exception e3) {
+                    e3.printStackTrace();
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            } catch (IOException ee) {
+                ee.printStackTrace();
+
+            }
+        }
+        return successState;
+    }
+
+    public static int uploadDataToService(String jsonParams, String userID){
+        int code = 400;
+        if(userID != null){
+            try {
+                String urlStr = Variables.webServiceEndPoint+"/";
+                URL url = new URL(urlStr);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setReadTimeout(40000);
+                conn.setConnectTimeout(60000);
+                try (DataOutputStream outputStream = new DataOutputStream(conn.getOutputStream())) {
+                    outputStream.write(jsonParams.getBytes());
+                    outputStream.flush();
+                    outputStream.close();
+                    code = conn.getResponseCode();
+                } catch (Exception e3) {
+                    e3.printStackTrace();
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            } catch (Exception ee) {
+                ee.printStackTrace();
+            }
+        }
+        return code;
+    }
+
 
     //Requires: a string url, and parameters
     //Returns: true if operation succeeds

@@ -103,9 +103,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
     public boolean tracking = false;
 
     //Controls upload rate of Records
-    private int rowCurrentCountLimit = 5;
-    private int rowCountDefault = 5;
-    private int rowCountIterator = 5;
+    private int rowCurrentCountLimit = 1;
+    private int rowCountDefault = 1;
+    private int rowCountIterator = 1;
 
     //Used to store temp data in sql 
     private Repository rep;
@@ -114,9 +114,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
     // const values : SENSOR_DELAY_FASTEST (18-20 ms), SENSOR_DELAY_GAME (37-39 ms), 
     // SENSOR_DELAY_UI (85-87 ms), SENSOR_DELAY_NORMAL (215-230 ms).
     // actual times, might be different by sensors.   
-    private final int ACC_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_NORMAL;
-    private final int GYR_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_NORMAL;
-    private final int MAG_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_NORMAL;
+    private final int ACC_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_FASTEST;
+    private final int GYR_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_FASTEST;
+    private final int MAG_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_FASTEST;
 
     //sensors temp arr
     private ArrayList<AccRecord> accList; 
@@ -575,91 +575,109 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 Date date = writeFormat.parse(dateStr);
 
                 rep.insertTask(accList, gyrList, magList, location.getLongitude(), location.getLatitude(), location.getSpeed(), date, activeBeacons, state ,confidence);
-                //claen the lists of sensors
+                //clean the lists of sensors
                 accList.clear();
                 gyrList.clear();
                 magList.clear();
-
-                //Database functionality must be on a new thread
-                Thread thread = new Thread(new Runnable() {
-                    public void run() {
-                        lock.lock();
-                        try{
-                            //If we have enough data, attempt upload
-                            int currentCount = rep.getRowCount();
-                            Log.i(TAG, "Count: " + currentCount);
-                            if (currentCount >= rowCurrentCountLimit) {
-                                //If the service is accessable, attempt upload:
-                                //TO DO: Fix this condition to make sure the server is reachable
-                                //if (WebServicesUtil.getPostService(Variables.webServiceEndPoint+"/test", null)) {
-                                if (true) {
-                                        List<Record> records = rep.getAllRecords();
-
-                                    //Temp storage
-                                    ArrayList<Record> recordsForDeletion = new ArrayList<Record>();
-                                    JSONArray jparams = new JSONArray();
-
-                                    int uploadBreakdown = 0;
-                                    for (int i = 0; i < records.size(); i++) {
-                                        JSONObject jsonObj = records.get(i).toJSON();
-                                        //Log.i(TAG, jsonObj.toString());
-                                        jparams.put(jsonObj);
-                                        recordsForDeletion.add(records.get(i));
-
-                                        //split the upload into chucks if too big
-                                        uploadBreakdown++;
-                                        if(uploadBreakdown > rowCountDefault){
-                                            if(uploadDataToService(jparams.toString())){
-                                                //delete all records uploaded succesfully
-                                                for(Record r : recordsForDeletion){
-                                                    rep.deleteSingleRecord(r.getTimeStamp());
-                                                }
-                                                jparams = new JSONArray();
-                                                recordsForDeletion = new ArrayList<Record>(); //once all keys are deleted clear list
-                                                uploadBreakdown = 0;
-                                            }else{return;}
-                                        }
-                                    }
-
-                                    if (uploadDataToService(jparams.toString())) {
-                                        for(Record r : recordsForDeletion){
-                                            rep.deleteSingleRecord(r.getTimeStamp());
-                                        }
-                                        Log.i(TAG, "Successfully executed data upload");
-                                        rowCurrentCountLimit = rowCountDefault;
-
-                                    }
-                                } else {
-                                    rowCurrentCountLimit = rowCurrentCountLimit + rowCountIterator; // try again a little later
-                                }
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }finally{
-                            lock.unlock();
-                        }
-                        //Attempt to re-upload completed questionnaire
-                        SharedPreferences sp = getApplicationContext().getSharedPreferences("app",0);
-                        SharedPreferences.Editor spEdit = getApplicationContext().getSharedPreferences("app",0).edit();
-                        Set<String> set = sp.getStringSet("completedQuestionnaires",null);
-                        if(set != null && set.size() > 0){
-                            for(String name: set){
-                                //Remove the name, commit and attempt to resend completetion event
-                                set.remove(name);
-                                spEdit.putStringSet("completedQuestionnaires",set).commit();
-                                WebServicesUtil.sendQuestionnaireCompletedRequest(name);
-
-                            }
-                        }
-                        updateSleepMode(false);
-
-
-                    }
-                });
-                thread.start();
+                UploadDataIf();
             }catch (Exception e){
                 e.printStackTrace();
             }
+        }
+
+        private void UploadDataIf() {
+            //Database functionality must be on a new thread
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    lock.lock();
+                    try{
+                        SimpleDateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.GERMANY);
+                        String dateStr = readFormat.format(new Date());
+                        //If we have enough data, attempt upload
+                        int currentCount = rep.getRowCount();
+                        Log.i(TAG, "Count: " + currentCount);
+                        if (currentCount >= rowCurrentCountLimit) {
+                            //If the service is accessable, attempt upload:
+                            //TO DO: Fix this condition to make sure the server is reachable
+                            //if (WebServicesUtil.getPostService(Variables.webServiceEndPoint+"/test", null)) {
+                            if (true) {
+                                List<Record> records = rep.getAllRecords();
+                                //Temp storage
+                                ArrayList<Record> recordsForDeletion = new ArrayList<Record>();
+                                JSONArray jparams = new JSONArray();
+                                SharedPreferences sharedPreferences = getSharedPreferences("app",0);
+                                String userID = sharedPreferences.getString("id", null);
+
+                                int uploadBreakdown = 0;
+                                for (int i = 0; i < records.size(); i++) {
+                                    Record currRecord = records.get(i);
+                                    JSONObject jsonObj = currRecord.toJSON();
+                                    String date = readFormat.format(currRecord.getTimeStamp());
+                                    String sDAta = jsonObj.toString();
+                                    Log.i(TAG, date + ": " + String.valueOf(sDAta.length()));
+                                    //Log.i(TAG, jsonObj.toString());
+                                    jparams.put(jsonObj);
+                                    recordsForDeletion.add(records.get(i));
+                                    //split the upload into chucks if too big
+                                    uploadBreakdown++;
+                                    if(uploadBreakdown > rowCountDefault){
+                                        int statusCode = WebServicesUtil.uploadDataToService(jparams.toString(), userID);
+                                        Log.i(TAG, "statusCode: "+String.valueOf(statusCode));
+                                        if(statusCode==200 || statusCode==413 ){
+                                            if (statusCode==413){
+                                                Log.i(TAG, "Delete json file, Upload Too Large ");
+                                            } 
+                                            //delete all records uploaded succesfully or too large
+                                            for(Record r : recordsForDeletion){
+                                                rep.deleteSingleRecord(r.getTimeStamp());
+                                            }
+                                            jparams = new JSONArray();
+                                            recordsForDeletion = new ArrayList<Record>(); //once all keys are deleted clear list
+                                            uploadBreakdown = 0;
+                                        }else{return;}
+                                    }
+                                }
+                                int statusCode = WebServicesUtil.uploadDataToService(jparams.toString(), userID);
+                                Log.i(TAG, "statusCode: "+String.valueOf(statusCode));
+                                if(statusCode==200 || statusCode==413){
+                                    if (statusCode==413){
+                                        Log.i(TAG, "Delete json file, Upload Too Large");
+                                    } else {
+                                        Log.i(TAG, "Successfully executed data upload");
+                                    }
+                                    for(Record r : recordsForDeletion){
+                                        rep.deleteSingleRecord(r.getTimeStamp());
+                                    }
+                                    rowCurrentCountLimit = rowCountDefault;
+                                }
+                            } else {
+                                rowCurrentCountLimit = rowCurrentCountLimit + rowCountIterator; // try again a little later
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally{
+                        lock.unlock();
+                    }
+                    //Attempt to re-upload completed questionnaire
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("app",0);
+                    SharedPreferences.Editor spEdit = getApplicationContext().getSharedPreferences("app",0).edit();
+                    Set<String> set = sp.getStringSet("completedQuestionnaires",null);
+                    if(set != null && set.size() > 0){
+                        for(String name: set){
+                            //Remove the name, commit and attempt to resend completetion event
+                            set.remove(name);
+                            spEdit.putStringSet("completedQuestionnaires",set).commit();
+                            WebServicesUtil.sendQuestionnaireCompletedRequest(name);
+
+                        }
+                    }
+                    updateSleepMode(false);
+
+
+                }
+            });
+            thread.start();
         }
 
         @Override
@@ -733,64 +751,5 @@ public class BackgroundService extends Service implements BeaconConsumer {
 
         } catch (RemoteException e) {    }
     }
-
-    //------------------------------------------------------------------------------------------
-    //----------------------------Network and utility-------------------------------------------
-    //------------------------------------------------------------------------------------------
-
-    //Requires: a string containing all json
-    //Returns: true if data is successfully uploaded, false otherwise
-    public boolean uploadDataToService(String jsonParams){
-        boolean successState = false;
-        SharedPreferences sharedPreferences = getSharedPreferences("app",0);
-        String userID = sharedPreferences.getString("id", null);
-        if(userID != null){
-            try {
-                String url = Variables.webServiceEndPoint+"/";
-                URL urlObj = new URL(url);
-                HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-
-                conn.setReadTimeout(40000);
-                conn.setConnectTimeout(60000);
-
-                conn.connect();
-
-                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                wr.writeBytes(jsonParams);
-                wr.flush();
-                wr.close();
-
-                try {
-                    InputStream in = new BufferedInputStream(conn.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-                    String response = result.toString();
-                    System.out.println("Response from server: " + response);
-                    WebServicesUtil.checkForNewQuestionnaires(response,this);
-
-
-                    // if all tasks ended without error
-                    successState = true;
-
-                } catch (Exception e3) {
-                    e3.printStackTrace();
-                } finally {
-                    if (conn != null) {
-                        conn.disconnect();
-                    }
-                }
-            } catch (IOException ee) {
-                ee.printStackTrace();
-
-            }
-        }
-        return successState;
-    }
+    
 }

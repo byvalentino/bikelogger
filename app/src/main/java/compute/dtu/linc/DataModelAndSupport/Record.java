@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+import android.util.Log;
 // import sun.awt.www.content.audio.x_aiff;
 
 import org.altbeacon.beacon.Beacon;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
 
 //Database entity, any variable comes a colimn name in the SQLLite db.
 @Entity
@@ -147,7 +149,9 @@ public class Record {
                 JSONObject o = acc.toJSON();
                 jsonArr.put(o);
             }
-            setAcc(jsonArr.toString()); 
+            setAcc(jsonArr.toString());
+            Log.i("Record", "acclist : " + String.valueOf(accList.size()));
+            Log.i("Record", "acc size : " + String.valueOf(acc.length()));
         } catch (Exception e){
             e.printStackTrace();
         }
