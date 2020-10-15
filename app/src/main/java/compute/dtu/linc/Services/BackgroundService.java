@@ -90,51 +90,32 @@ public class BackgroundService extends Service implements BeaconConsumer {
     private GeofencingClient geofencingClient;
     private PendingIntent geofencePendingIntent;
 
-    //Sensors
-    private SensorManager sm;
-    private Sensor gyro;
-    private Sensor acc;
-    private Sensor mag;
-    private SensorEventListener mSensorListener;
-
     //Tracking settings
-    private final int LOCATION_INTERVAL = 1000;
-    private final int LOCATION_DISTANCE = 0;
     public boolean tracking = false;
-
     //Controls upload rate of Records
-    private int rowCurrentCountLimit = 1;
-    private int rowCountDefault = 1;
-    private int rowCountIterator = 1;
-
+    private int rowCurrentCountLimit = Variables.rowCountDefault;
+   
     //Used to store temp data in sql 
     private Repository rep;
 
-    // sensors consts: in microseconds - Android 2.3 (API level 9) onwards. or in 
-    // const values : SENSOR_DELAY_FASTEST (18-20 ms), SENSOR_DELAY_GAME (37-39 ms), 
-    // SENSOR_DELAY_UI (85-87 ms), SENSOR_DELAY_NORMAL (215-230 ms).
-    // actual times, might be different by sensors.   
-    private final int ACC_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_FASTEST;
-    private final int GYR_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_FASTEST;
-    private final int MAG_SAMPLE_PERIOD = SensorManager.SENSOR_DELAY_FASTEST;
-
-    //sensors temp arr
+    //Sensors
+    private SensorManager sm;
+    private SensorEventListener mSensorListener;
+    private Sensor gyro;
+    private Sensor acc;
+    private Sensor mag;
+    //sensors temp lists
     private ArrayList<AccRecord> accList; 
     private ArrayList<GyrRecord> gyrList;
     private ArrayList<MagRecord> magList;
+    //beacos temp lists
     public ArrayList<Beacon> activeBeacons = new ArrayList<>();
 
     private int state;
     private int confidence;
 
     private final ReentrantLock lock = new ReentrantLock();
-
     private boolean alarmStarted = false;
-
-
-    private int geofenceRange = 320000;
-    private double geofenceLat = 32.08;
-    private double geofenceLon = 34.78;
 
     //Debug
     long tracking_sleeper = 0;
@@ -142,7 +123,6 @@ public class BackgroundService extends Service implements BeaconConsumer {
     boolean sleep_mode = false;
 
     private PowerManager.WakeLock wakeLock;
-
 
     @Override
     public void onCreate() {
@@ -275,8 +255,8 @@ public class BackgroundService extends Service implements BeaconConsumer {
     public void startSleepmode() {
         try {
             Log.i("SleepMode", "Starting sleep mode");
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, 10, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, 10, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Variables.LOCATION_INTERVAL, Variables.LOCATION_SLEEP_DISTANCE, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Variables.LOCATION_INTERVAL, Variables.LOCATION_SLEEP_DISTANCE, mLocationListener);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -286,8 +266,8 @@ public class BackgroundService extends Service implements BeaconConsumer {
     public void exitSleepmode(){
         try {
             Log.i("SleepMode", "Exiting sleep mode");
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Variables.LOCATION_INTERVAL, Variables.LOCATION_DISTANCE, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Variables.LOCATION_INTERVAL, Variables.LOCATION_DISTANCE, mLocationListener);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -325,7 +305,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
                 .setRequestId("Kastrup")
-                .setCircularRegion(geofenceLat, geofenceLon, geofenceRange) //test reset to 3600meter
+                .setCircularRegion(Variables.geofenceLon, Variables.geofenceLon, Variables.geofenceRange) //test reset to geofenceRange
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                         Geofence.GEOFENCE_TRANSITION_EXIT | Geofence.GEOFENCE_TRANSITION_DWELL)
@@ -420,15 +400,15 @@ public class BackgroundService extends Service implements BeaconConsumer {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 Sensor sensor = event.sensor;
-                if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                if (sensor.getType() == Sensor.TYPE_GYROSCOPE && gyrList.size() < Variables.GYR_SAMPLE_LIMIT) {
                     //Log.i(TAG, "Gyroscope: " + event.values[0]);
                     GyrRecord gyrRec = new GyrRecord(event.values[0], event.values[1], event.values[2], event.timestamp);
                     gyrList.add(gyrRec);
-                } else if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                } else if (sensor.getType() == Sensor.TYPE_ACCELEROMETER && accList.size() < Variables.ACC_SAMPLE_LIMIT) {
                     //Log.i(TAG, "Accelerometer: " + event.values.toString());
                     AccRecord accRec = new AccRecord(event.values[0], event.values[1], event.values[2], event.timestamp);
                     accList.add(accRec);
-                } else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                } else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD && magList.size() < Variables.MAG_SAMPLE_LIMIT) {
                     //Log.i(TAG, "Magnetic: " + event.values.toString());
                     MagRecord magRec = new MagRecord(event.values[0], event.values[1], event.values[2],event.timestamp);
                     magList.add(magRec);
@@ -461,15 +441,9 @@ public class BackgroundService extends Service implements BeaconConsumer {
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-
-                            Location locationB = new Location("point B");
-                            locationB.setLatitude(geofenceLat);
-                            locationB.setLongitude(geofenceLon);
-
-                            float distance = location.distanceTo(locationB);
-                            Log.i(TAG, "Distance between points: " + distance);
-                            //If distance from DTU is smaller than 3.6km, start tracking
-                            if(distance < geofenceRange - 200){
+                            isInsideGeofence(location);
+                            //If isInside Geofence, start tracking
+                            if(isInsideGeofence(location)){
                                 //WebServicesUtil.createNotification("Started Tracking - IF", "",getBaseContext());
                                 Log.i(TAG,"Started tracking (softly)");
                                 startTracking();
@@ -482,6 +456,17 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 });
     }
 
+    //return true if distance from center of geofence is smaller than Variables.geofenceRange,
+    private boolean isInsideGeofence(Location location){
+        Location locationB = new Location("point B");
+        locationB.setLatitude(Variables.geofenceLat);
+        locationB.setLongitude(Variables.geofenceLon);
+        float distance = location.distanceTo(locationB);
+        Log.i(TAG, "Distance between points: " + distance);
+        boolean isInside = distance < Variables.geofenceRange - 200;
+        return isInside;
+    }
+
     //Starts location updates and data recording
     public void startTracking() {
         Log.i(TAG, "Started Tracking");
@@ -489,16 +474,12 @@ public class BackgroundService extends Service implements BeaconConsumer {
             if(!tracking) {
                 initializeLocationManager();
                 mLocationListener = new LocationListener(LocationManager.GPS_PROVIDER);
-
-                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
-                //SensorManager.SENSOR_DELAY_GAME)
-                sm.registerListener(mSensorListener, acc, ACC_SAMPLE_PERIOD);
-                sm.registerListener(mSensorListener, gyro, GYR_SAMPLE_PERIOD);
-                sm.registerListener(mSensorListener, mag, MAG_SAMPLE_PERIOD);
-                
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Variables.LOCATION_INTERVAL, Variables.LOCATION_DISTANCE, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Variables.LOCATION_INTERVAL, Variables.LOCATION_DISTANCE, mLocationListener);
+                sm.registerListener(mSensorListener, acc, Variables.ACC_SAMPLE_PERIOD);
+                sm.registerListener(mSensorListener, gyro, Variables.GYR_SAMPLE_PERIOD);
+                sm.registerListener(mSensorListener, mag, Variables.MAG_SAMPLE_PERIOD);
                 startActivityRecognition();
-
                 //WebServicesUtil.createNotification("Started Tracking", "",this);
                 tracking = true;
             }else{
@@ -509,7 +490,6 @@ public class BackgroundService extends Service implements BeaconConsumer {
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
-
     }
 
     //Stops all data recording except for beacons
@@ -520,9 +500,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
                 sm.unregisterListener(mSensorListener, gyro);
                 sm.unregisterListener(mSensorListener, acc);
                 sm.unregisterListener(mSensorListener, mag);
-
                 stopActivityRecognition();
-
                 //WebServicesUtil.createNotification("Stopped tracking","",this);
                 tracking = false;
             } catch (Exception ex) {
@@ -530,14 +508,12 @@ public class BackgroundService extends Service implements BeaconConsumer {
             }
         }
     }
+
     //Support method for notifications
     private Notification getNotification() {
-
         NotificationChannel channel = new NotificationChannel("channel_01", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
-
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
-
         Notification.Builder builder = new Notification.Builder(getApplicationContext(), "channel_01").setAutoCancel(true);
         return builder.build();
     }
@@ -620,7 +596,7 @@ public class BackgroundService extends Service implements BeaconConsumer {
                                     recordsForDeletion.add(records.get(i));
                                     //split the upload into chucks if too big
                                     uploadBreakdown++;
-                                    if(uploadBreakdown > rowCountDefault){
+                                    if(uploadBreakdown > Variables.rowCountDefault){
                                         int statusCode = WebServicesUtil.uploadDataToService(jparams.toString(), userID);
                                         Log.i(TAG, "statusCode: "+String.valueOf(statusCode));
                                         if(statusCode==200 || statusCode==413 ){
@@ -648,10 +624,11 @@ public class BackgroundService extends Service implements BeaconConsumer {
                                     for(Record r : recordsForDeletion){
                                         rep.deleteSingleRecord(r.getTimeStamp());
                                     }
-                                    rowCurrentCountLimit = rowCountDefault;
+                                    //restore rowCurrentCountLimit to default
+                                    rowCurrentCountLimit = Variables.rowCountDefault;
                                 }
                             } else {
-                                rowCurrentCountLimit = rowCurrentCountLimit + rowCountIterator; // try again a little later
+                                rowCurrentCountLimit = rowCurrentCountLimit + Variables.rowCountIterator; // try again a little later
                             }
                         }
                     }catch (Exception e){

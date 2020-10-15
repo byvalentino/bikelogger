@@ -150,8 +150,7 @@ public class Record {
                 jsonArr.put(o);
             }
             setAcc(jsonArr.toString());
-            Log.i("Record", "acclist : " + String.valueOf(accList.size()));
-            Log.i("Record", "acc size : " + String.valueOf(acc.length()));
+            // Log.i("Record", "acclist: " + String.valueOf(accList.size()) + ", " + String.valueOf(acc.length()));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -192,17 +191,42 @@ public class Record {
     //----------------------------Default getters/setters/toString------------------------------
     //------------------------------------------------------------------------------------------
 
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        //convert timestamp:
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
+        String stampString = simpleDateFormat.format(timeStamp);
+        return "Record{" +
+                "pk=" + pk +
+                ", id='" + id + '\'' +
+                ", acc=" + acc  + '\'' +
+                ", gyr=" + gyr + '\'' +
+                ", mag=" + mag + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", speed=" + speed +
+                ", timeStamp='" + stampString + '\'' +
+                ", beacons='" + beacons + '\'' +
+                ", stationary=" + stationary +
+                ", walking=" + walking +
+                ", running=" + running +
+                ", automotive=" + automotive +
+                ", cycling=" + cycling +
+                ", unknown=" + unknown +
+                ", confidence=" + confidence +
+                '}';
+    }
     public Integer getPk() {
         return pk;
     }
 
     public void setPk(Integer id) {
         this.pk = pk;
-    }
-
-    @NonNull
-    public String getId() {
-        return id;
     }
 
     public void setId(@NonNull String id) {
@@ -267,33 +291,6 @@ public class Record {
 
     public void setBeacons(String s){
         this.beacons = s;
-    }
-
-    @Override
-    public String toString() {
-        //convert timestamp:
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-        String stampString = simpleDateFormat.format(timeStamp);
-
-        return "Record{" +
-                "pk=" + pk +
-                ", id='" + id + '\'' +
-                ", acc=" + acc  + '\'' +
-                ", gyr=" + gyr + '\'' +
-                ", mag=" + mag + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", speed=" + speed +
-                ", timeStamp='" + stampString + '\'' +
-                ", beacons='" + beacons + '\'' +
-                ", stationary=" + stationary +
-                ", walking=" + walking +
-                ", running=" + running +
-                ", automotive=" + automotive +
-                ", cycling=" + cycling +
-                ", unknown=" + unknown +
-                ", confidence=" + confidence +
-                '}';
     }
 
     public int getStationary() {
